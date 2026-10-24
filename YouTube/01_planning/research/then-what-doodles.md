@@ -1,50 +1,48 @@
 # チャンネル分析：Then what?（@ThenWhatDoodles）
 
-調査日: 2026-10-24
-元情報: Xの投稿のスクリーンショット（`images/then-what-doodles-channel.png`。どの投稿かは未確認、投稿のエンゲージメントは返信13・RT35・いいね211）
-※ このチャンネルはWeb検索では見つからず、データはスクリーンショットに写っている分だけです。
+調査日: 2026-10-24（YouTubeから直接取得）
+元情報: @ytautomation6 の投稿（https://x.com/ytautomation6/status/2113565521266212893）の1枚目の画像 → `images/x-posts/ytautomation6_0.jpg`
+チャンネル: https://www.youtube.com/@ThenWhatDoodles
 
-## 基本データ（スクショ時点）
-| 項目 | 値 |
-| --- | --- |
-| 登録者 | 1,130人 |
-| 動画数 | 36本 |
-| 言語 | 英語 |
-| 形式 | 長尺（9〜13分）＋ショートあり |
+## 基本データ
+| 項目 | スクショ時（数日前） | 2026-10-24 |
+| --- | --- | --- |
+| 登録者 | 1,130 | **1,960**（数日で+73%） |
+| 動画数 | 36 | 37 |
 
-## 人気順の動画
-| タイトル | 再生数 | 公開 | 長さ |
+## 全動画（新しい順、取得できた17本）
+| 再生数 | 公開 | 長さ | タイトル |
 | --- | --- | --- | --- |
-| What You'd See If You Lived Until The End Of Time | 14.6万 | 2週間前 | 12:53 |
-| You're Frozen Until the Year 1,000,000. Then What? | 2.2万 | 13日前 | 9:03 |
-| What ACTUALLY happens if you travel back in time | 1.1万 | 3週間前 | 12:29 |
-| What You Would See If You Went Back to the Big Bang | 不明 | 不明 | 不明 |
+| 550 | 18時間前 | 8:41 | What You Would See on the Strangest Planets Ever Found |
+| **2.1万** | 2日前 | 8:17 | What You Would See If You Went Back to the Big Bang |
+| 4,100 | 3日前 | 9:06 | What You Would See If You Fell Into a Black Hole |
+| **1.5万** | 4日前 | 10:12 | You're the Last Person on Earth. Then What? |
+| 3,100 | 12日前 | 10:55 | What Happens If You Never Stop Shrinking? |
+| **6.4万** | 2週間前 | 9:03 | You're Frozen Until the Year 1,000,000. Then What? |
+| **24.5万** | 2週間前 | 12:53 | What You'd See If You Lived Until The End Of Time |
+| 2,700 | 2週間前 | 10:26 | A Nuclear Bomb Hits Your City. Then What? |
+| 1,400 | 2週間前 | 12:35 | The ONLY Way To Survive On a Desert Island |
+| 1,200 | 2週間前 | 10:23 | What Would ACTUALLY Happen If a Zombie Outbreak Started? |
+| 581 | 3週間前 | 14:20 | What Would ACTUALLY Happen If You Broke Into AREA51 |
+| 690 | 3週間前 | 11:49 | You Upload Your Brain To A Computer. Then What? |
+| 1,100 | 3週間前 | 11:49 | Do We ACTUALLY Live In A Simulation? |
+| **7.2万** | 3週間前 | 12:29 | What ACTUALLY happens if you travel back in time |
+| 805 | 3週間前 | 17:16 | How Close We Actually Came to Nuclear War |
+| 170 | 4週間前 | 15:42 | What ACTUALLY happens if we stopped aging |
+| 2,200 | 4週間前 | 14:12 | What ACTUALLY happens if an asteroid hits Earth |
 
 ## 読み取れること
-1. **登録者に比べて再生が多い**：登録者1,130人で14.6万再生（登録者の約130倍）。登録者ではなく、YouTubeのおすすめで伸びている。人気上位はすべてここ3週間以内の動画なので、最近になって型がはまった可能性が高い。
-2. **型は「二人称（あなた）＋極端な時間軸の思考実験」**
-   - 「あなたが〇〇したら、何が見える？／それからどうなる？（Then what?）」
-   - 題材は遠い未来・宇宙の終わり・タイムトラベル・ビッグバン。どれも科学的な根拠がありつつ、想像をかき立てる題材。
-   - チャンネル名の「Then what?」が、そのままシリーズの決まり文句になっている。
-3. **見た目**
-   - 手描き風のゆるい絵（doodle）。ベージュ系の暖かい色。
-   - 白くて丸い、猫耳のついたマスコットが毎回の主人公（＝視聴者の分身）。
-   - サムネイル：**大きな年号の数字（YEAR 5,000,000,000）**＋状況の中にいる主人公。「TODAY → YEAR 1,000,000」のような左右の比較も使う。
-4. **作り方の推測**（確認はできていません）：一枚絵（AIか手描き）を並べて、ゆっくりズームやパンで動かす紙芝居形式＋ナレーション、だと思われる。
+1. **当たりと外れがはっきりしている**：伸びたのは「**極端な時間**（宇宙の終わり・100万年後・過去・ビッグバン）」と「地球最後の一人」。核爆弾、ゾンビ、エリア51、シミュレーション仮説、老化などは数百〜数千回。
+   → 「時間の旅 × あなたが見る景色」が、このチャンネルの勝ちパターン。
+2. **当たりのネタに寄せてきている**：最近はブラックホール、ビッグバン、奇妙な惑星など「What You Would See（あなたが見る景色）」型が増えている。
+3. **タイトルの型**：
+   - 「What You'd See If You 〜」（〜したら、あなたは何を見る？）
+   - 「You're 〜. Then What?」（あなたは〜。それから、どうなる？）
+4. **長さ**：最初は14〜17分 → 当たってからは8〜10分に短くなっている。
+5. **見た目**（`images/thenwhat_vs_vaience_thumbs.jpg`）：手描き風の棒人間（黄色いシャツ）、明るい色、大きな年号（YEAR 5,000,000,000 / YEAR 1300）。
 
-## 似た型の参考（海外）
-- Ifverse（@IfverseTales）：棒人間のキャラクター「Leo」が主人公の「もしも」ストーリー。一番人気の動画は約410万再生（第三者サイトの情報）。
-- 棒人間・doodleで顔出しなしのチャンネルは、教育・コメディ・物語のどれでも成立している。
-
-## 日本語版の市場について
-- 日本では「宇宙の終わり」「未来」の題材は **ゆっくり解説**（ゆっくり音声＋キャラ立ち絵）が主流。
-- 「もしも×科学」のジャンルには、日本でも **VAIENCE（66万人超）や What If 日本語版** などの競合がいる（→ `similar-channels.md`）。
-- 差別化のポイントは「二人称（あなた）で体験するストーリー」「極端な時間のスケール」「doodleのマスコット」「日本向けのネタ」の組み合わせ。
-- 要確認：YouTubeで次のキーワードを検索し、上位の動画の再生数・投稿日・チャンネル規模をメモする
-  - 「もしも 100万年後」「宇宙の終わりまで生きたら」「タイムトラベル 過去に行ったら」「ビッグバン 見たら」「コールドスリープ 目覚めたら」
-
-## 出典
-- [15 Faceless stick figure animation channels - facelesslist](https://facelesslist.com/categories/stick-figure-animations/)
-- [What Faceless AI Creators Copy From YouTube's Giants - starbelo](https://starbelo.com/guides/faceless-ai-creators-youtube-giants/)
-- [現在から宇宙の終焉まで【宇宙の歴史②(未来編)】 - YouTube](https://www.youtube.com/watch?v=o5DeLXaYNZM)
-- [【雑学】宇宙の最期とその寿命【ゆっくり解説】 - YouTube](https://www.youtube.com/watch?v=sflQrP8CJWs)
+## 日本語版の市場
+→ `japan-demand-vaience-whatif.md`
+- **時間軸のネタ自体は、日本ではVAIENCEがすでに大量に当てている**（1億年後の地球 411万、宇宙の果て 520万、タイムトラベル 196万など）
+- ただし、VAIENCEは **暗い・リアルなCG＋派手な文字**。Then what?型の **明るいゆるい手描き＋二人称** とは、見た目と雰囲気でははっきり違う
+- 「地球最後の一人」は、テイコウペンギン（アニメ、291万）やフェルミ研究所（漫画、650万）が当てている → ゆるい絵でも数百万回再生される実績がある
