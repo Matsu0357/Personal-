@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "NotoJP"; font-weight: 500; src: url("assets/NotoSansJP-500.ttf"); }
+  @font-face { font-family: "NotoJP"; font-weight: 900; src: url("assets/NotoSansJP-900.ttf"); }
+  html, body { margin: 0; background: #000; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+// 自販機ルール動画のレンダラー。window.renderFrame(t) で t 秒目の絵を描く。
+const W = 1280, H = 720;
+const cv = document.getElementById("c");
+const g = cv.getContext("2d");
+const C = {
+  night: "#0a0c12", street: "#141821", white: "#eef1f4", grey: "#8a93a3",
+  red: "#e63946", glow: "#cfe6ff", blue: "#3a86ff", amber: "#ffb703", dark: "#05060a",
+};
+let TL = null;
+
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const ease = x => { x = clamp(x); return x * x * (3 - 2 * x); };
+const lerp = (a, b, x) => a + (b - a) * x;
+
+function sceneAt(t) {
+  for (const s of TL.scenes) if (t >= s.start && t < s.end) return s;
+  return TL.scenes[TL.scenes.length - 1];
+}
+function lineAt(s, t) {
+  let idx = -1;
+  s.lines.forEach((l, i) => { if (t >= l.start) idx = i; });
+  return idx;
+}
+function lineProg(s, i, t) {
+  const l = s.lines[i];
+  return l ? clamp((t - l.start) / (l.end - l.start)) : 0;
+}
+
+// ---------- 描画の部品 ----------
+function rrect(x, y, w, h, r) {
+  g.beginPath();
+  g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+function text(str, x, y, size, color, weight = 900, align = "center", base = "middle") {
+  g.font = `${weight} ${size}px NotoJP`;
+  g.fillStyle = color; g.textAlign = align; g.textBaseline = base;
+  g.fillText(str, x, y);
+}
+function glow(x, y, r, color, a) {
+  const gr = g.createRadialGradient(x, y, 0, x, y, r);
+  gr.addColorStop(0, color); gr.addColorStop(1, "rgba(0,0,0,0)");
+  g.globalAlpha = a; g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2); g.globalAlpha = 1;
+}
+function background(lightness = 1) {
+  g.fillStyle = C.night; g.fillRect(0, 0, W, H);
+  g.fillStyle = C.street; g.fillRect(0, 560, W, 160);
+  g.strokeStyle = "#1f2430"; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(0, 560); g.lineTo(W, 560); g.stroke();
+}
+// 人（白くて丸い頭のシンプルなキャラ）
+function person(x, y, s = 1, walk = 0, facing = 1) {
+  g.save(); g.translate(x, y); g.scale(s * facing, s);
+  g.strokeStyle = C.white; g.fillStyle = C.white; g.lineWidth = 9; g.lineCap = "round";
+  const sw = Math.sin(walk) * 18;
+  g.beginPath(); g.moveTo(0, -60); g.lineTo(sw, 0); g.moveTo(0, -60); g.lineTo(-sw, 0); g.stroke();
+  rrect(-20, -135, 40, 80, 16); g.fill();
+  g.beginPath(); g.moveTo(0, -120); g.lineTo(-sw * 0.8, -70); g.moveTo(0, -120); g.lineTo(sw * 0.8, -70); g.stroke();
+  g.beginPath(); g.arc(0, -165, 30, 0, Math.PI * 2); g.fill();
+  g.fillStyle = C.dark; g.beginPath(); g.arc(10, -170, 4, 0, Math.PI * 2); g.fill();
+  g.restore();
+}
+// 自販機
+function machine(x, y, s, o = {}) {
+  const light = o.light ?? 1;
+  g.save(); g.translate(x, y); g.scale(s, s);
+  glow(0, -200, 380, "rgba(190,220,255,0.55)", 0.55 * light);
+  g.fillStyle = C.white; rrect(-130, -420, 260, 420, 14); g.fill();
+  g.fillStyle = "#c9ced6"; g.fillRect(-130, -20, 260, 20);
+  // 見本のケース
+  g.fillStyle = light > 0.05 ? `rgba(207,230,255,${0.25 + 0.75 * light})` : "#1a1e27";
+  rrect(-112, -400, 224, 200, 8); g.fill();
+  const cols = ["#e63946", "#3a86ff", "#ffb703", "#2a9d8f", "#8338ec", "#fb5607"];
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 6; i++) {
+    const cx = -95 + i * 36, cy = -385 + r * 95;
+    const lit = (o.lights ?? 12) > r * 6 + i;
+    g.fillStyle = lit ? cols[(i + r * 2) % 6] : "#2a2f3a";
+    if (o.blank && r === 1 && i === 3) g.fillStyle = lit ? "#ffffff" : "#2a2f3a";
+    rrect(cx, cy, 26, 52, 6); g.fill();
+    // ボタン
+    let bc = lit ? "#3b414d" : "#22262f", label = null;
+    if (o.soldOut) { bc = C.red; label = "売切"; }
+    if (o.blank && r === 1 && i === 3) { bc = "#ffffff"; label = null; }
+    g.fillStyle = bc; rrect(cx - 2, cy + 62, 30, 16, 4); g.fill();
+    if (label) text(label, cx + 13, cy + 70, 10, "#fff", 900);
+    if (o.blank && r === 1 && i === 3) {
+      glow(cx + 13, cy + 70, 60, "rgba(255,255,255,0.9)", 0.6 + 0.3 * Math.sin(o.t * 6));
+      text("0円", cx + 13, cy + 92, 13, C.red, 900);
+    }
+  }
+  // 表示パネル
+  g.fillStyle = "#0b0d12"; rrect(-100, -185, 200, 50, 6); g.fill();
+  if (o.display) {
+    const blink = o.blink ? (Math.sin(o.t * 14) > -0.2 ? 1 : 0.15) : 1;
+    g.globalAlpha = blink;
+    text(o.display, 0, -160, o.displaySize || 30, o.displayColor || C.red, 900);
+    g.globalAlpha = 1;
+  }
+  // 硬貨投入口・おつり口
+  g.fillStyle = "#3b414d"; rrect(60, -120, 40, 12, 3); g.fill();
+  g.fillStyle = "#1a1d24"; rrect(55, -95, 50, 28, 4); g.fill();
+  // 取り出し口
+  g.fillStyle = C.dark; rrect(-105, -80, 150, 50, 8); g.fill();
+  g.restore();
+}
+function can(x, y, s, label = "つめた〜い", color = C.blue, warm = 0) {
+  g.save(); g.translate(x, y); g.scale(s, s);
+  g.fillStyle = "#d9dee5"; rrect(-60, -150, 120, 300, 24); g.fill();
+  g.fillStyle = color; g.fillRect(-60, -80, 120, 150);
+  text(label, 0, -5, 24, "#fff", 900);
+  if (warm > 0) {
+    g.strokeStyle = `rgba(255,140,90,${warm})`; g.lineWidth = 5;
+    for (let i = -1; i <= 1; i++) {
+      g.beginPath();
+      for (let k = 0; k <= 20; k++) {
+        const yy = -190 - k * 4;
+        g.lineTo(i * 35 + Math.sin(k * 0.6 + warm * 8) * 8, yy);
+      }
+      g.stroke();
+    }
+  }
+  g.restore();
+}
+function coin(x, y, r, label, a = 1) {
+  g.globalAlpha = a;
+  g.fillStyle = "#c0c6cf"; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = "#8d949f"; g.lineWidth = r * 0.08; g.beginPath(); g.arc(x, y, r * 0.85, 0, Math.PI * 2); g.stroke();
+  if (label) { text("100", x, y - r * 0.15, r * 0.45, "#5b626e", 900); text(label, x, y + r * 0.42, r * 0.22, "#5b626e", 900); }
+  g.globalAlpha = 1;
+}
+function ruleCard(s, t) {
+  const p = clamp((t - s.start) / 1.6);
+  if (p >= 1) return false;
+  g.fillStyle = C.dark; g.fillRect(0, 0, W, H);
+  const a = ease(p * 4) * (1 - ease((p - 0.8) * 5));
+  g.globalAlpha = a;
+  text(s.rule, W / 2, H / 2 - 70, 110, C.red, 900);
+  text(s.big, W / 2, H / 2 + 70, 64, C.white, 900);
+  g.globalAlpha = 1;
+  return true;
+}
+function label(s) {
+  if (!s.rule) return;
+  g.fillStyle = C.red; rrect(30, 28, 150, 52, 8); g.fill();
+  text(s.rule, 105, 55, 30, "#fff", 900);
+  text(s.big, 200, 55, 30, C.white, 900, "left");
+}
+function subtitle(s, t) {
+  const i = lineAt(s, t);
+  if (i < 0) return;
+  const l = s.lines[i];
+  if (t > l.end + 0.25) return;
+  g.font = "500 38px NotoJP";
+  const w = g.measureText(l.text).width;
+  g.fillStyle = "rgba(0,0,0,0.72)"; rrect(W / 2 - w / 2 - 24, H - 96, w + 48, 64, 10); g.fill();
+  text(l.text, W / 2, H - 63, 38, "#fff", 500);
+}
+
+// ---------- シーン ----------
+const S = {
+  title(s, t) {
+    const lt = t - s.start, z = 1 + lt * 0.012;
+    background();
+    g.save(); g.translate(W / 2, 600); g.scale(z, z); g.translate(-W / 2, -600);
+    machine(W / 2, 600, 1, { t, display: lt > 1.5 ? "あたり" : "", blink: true });
+    g.restore();
+    const i = lineAt(s, t);
+    if (i >= 3) {
+      const a = ease((t - s.lines[3].start) * 3);
+      g.globalAlpha = a; g.fillStyle = "rgba(0,0,0,0.55)"; g.fillRect(0, 0, W, 150);
+      text("4本目は", W / 2 - 170, 80, 84, C.white); text("押すな", W / 2 + 170, 80, 84, C.red);
+      g.globalAlpha = 1;
+    }
+  },
+  streak(s, t) {
+    background();
+    const i = lineAt(s, t);
+    const spinning = i >= 0 && lineProg(s, i, t) < 0.25;
+    const digits = spinning ? String(Math.floor(t * 30) % 10).repeat(3) : (i >= 0 && i <= 2 ? "あたり" : "");
+    machine(380, 600, 1.05, { t, display: digits, blink: !spinning && i >= 0 && i <= 2, displayColor: i === 2 ? C.amber : C.red });
+    for (let k = 0; k < 3; k++) {
+      const x = 760 + k * 150, y = 330;
+      g.strokeStyle = "#2b3140"; g.lineWidth = 4; rrect(x - 55, y - 110, 110, 220, 16); g.stroke();
+      if (i >= k) {
+        const a = ease((t - s.lines[k].start - 1.0) * 2);
+        g.globalAlpha = a; can(x, y, 0.6, k === 2 ? "?" : "あたり", k === 2 ? C.amber : C.blue); g.globalAlpha = 1;
+      }
+      text(`${k + 1}本目`, x, y + 145, 28, C.grey, 900);
+    }
+    if (i >= 3) {
+      g.globalAlpha = ease((t - s.lines[3].start) * 3);
+      g.fillStyle = C.red; rrect(760 - 55, 520, 410, 60, 10); g.fill();
+      text("ここから 手順に従え", 965, 551, 32, "#fff");
+      g.globalAlpha = 1;
+    }
+  },
+  can_warm(s, t) {
+    if (ruleCard(s, t)) return;
+    background(); label(s);
+    const i = lineAt(s, t);
+    const warm = i >= 2 ? ease((t - s.lines[2].start) / 1.5) : 0;
+    can(480, 360, 1.2, "つめた〜い", C.blue, warm);
+    // 温度計
+    const temp = Math.round(lerp(4, 36, warm));
+    g.fillStyle = "#1c212c"; rrect(820, 150, 60, 360, 30); g.fill();
+    const hgt = lerp(30, 320, warm);
+    g.fillStyle = warm > 0.5 ? C.red : C.blue; rrect(830, 500 - hgt, 40, hgt, 20); g.fill();
+    text(`${temp}℃`, 960, 330, 72, warm > 0.5 ? C.red : C.white, 900, "left");
+    if (i >= 3) text("＝ 人の手の温度", 960, 410, 34, C.grey, 900, "left");
+    if (i >= 5) {
+      // 缶に残った手の跡
+      g.globalAlpha = 0.55 * ease((t - s.lines[5].start) * 2);
+      g.fillStyle = "#ffb4a0";
+      g.beginPath(); g.ellipse(480, 390, 55, 70, 0, 0, Math.PI * 2); g.fill();
+      for (let f = 0; f < 4; f++) { g.beginPath(); g.ellipse(440 + f * 27, 300 - Math.abs(f - 1.5) * 8, 11, 34, 0, 0, Math.PI * 2); g.fill(); }
+      g.globalAlpha = 1;
+    }
+  },
+  coins(s, t) {
+    if (ruleCard(s, t)) return;
+    background(); label(s);
+    const i = lineAt(s, t);
+    if (i < 3) {
+      // おつり口からあふれる小銭
+      g.fillStyle = "#1a1d24"; rrect(440, 240, 400, 170, 20); g.fill();
+      g.fillStyle = C.dark; rrect(470, 270, 340, 110, 14); g.fill();
+      const n = Math.min(60, Math.floor((t - s.lines[0].start) * 9));
+      for (let k = 0; k < n; k++) {
+        const fx = 500 + ((k * 73) % 280), age = (t - s.lines[0].start) - k / 9;
+        const fy = Math.min(430 + ((k * 37) % 120), 340 + age * 500);
+        coin(fx, fy, 22, null);
+      }
+      if (i >= 2) {
+        g.globalAlpha = ease((t - s.lines[2].start) * 3);
+        g.strokeStyle = C.red; g.lineWidth = 14;
+        g.beginPath(); g.arc(640, 360, 230, 0, Math.PI * 2); g.stroke();
+        g.beginPath(); g.moveTo(477, 523); g.lineTo(803, 197); g.stroke();
+        g.globalAlpha = 1;
+      }
+    } else {
+      const years = ["昭和48年", "昭和59年", "平成3年"];
+      years.forEach((y, k) => {
+        const a = ease((t - s.lines[3].start - k * 0.9) * 2);
+        coin(330 + k * 310, 330, 120, y, a);
+      });
+      if (i >= 4) text("4本目を押した人が 最後に入れた小銭", W / 2, 520, 36, C.amber);
+    }
+  },
+  sold_out(s, t) {
+    if (ruleCard(s, t)) return;
+    background(); label(s);
+    const i = lineAt(s, t);
+    const z = i >= 2 ? lerp(1.15, 1.7, ease((t - s.lines[2].start) / 2)) : 1.15;
+    g.save(); g.translate(640, 330); g.scale(z, z); g.translate(-640, -330);
+    machine(640, 640, 1.1, { t, soldOut: i >= 0, blank: i >= 1, display: i >= 3 ? "4本目" : "" });
+    g.restore();
+    if (i >= 4) {
+      const a = ease((t - s.lines[4].start) * 3);
+      g.globalAlpha = a; g.fillStyle = C.red; rrect(860, 300, 360, 80, 12); g.fill();
+      text("押すな", 1040, 342, 50, "#fff"); g.globalAlpha = 1;
+    }
+  },
+  voice(s, t) {
+    if (ruleCard(s, t)) return;
+    g.fillStyle = C.dark; g.fillRect(0, 0, W, H); label(s);
+    // 取り出し口の大写し
+    g.fillStyle = C.white; rrect(140, 110, 1000, 400, 40); g.fill();
+    g.fillStyle = "#000"; rrect(200, 170, 880, 280, 30); g.fill();
+    const flap = 0.85 + 0.03 * Math.sin(t * 1.3);
+    g.fillStyle = "#d3d8df"; g.fillRect(200, 170, 880, 280 * (1 - flap));
+    const i = lineAt(s, t);
+    if (i >= 1) {
+      const a = ease((t - s.lines[1].start) / 1.2) * (0.6 + 0.2 * Math.sin(t * 3));
+      g.globalAlpha = a; text("ありがとう", 640, 340, 46, "#9aa3b2", 500); g.globalAlpha = 1;
+    }
+    if (i >= 3) {
+      const a = ease((t - s.lines[3].start) * 3);
+      g.globalAlpha = a;
+      text("×「どういたしまして」", 420, 565, 34, C.red);
+      text("×「誰ですか」", 880, 565, 34, C.red);
+      g.globalAlpha = 1;
+    }
+  },
+  walk_away(s, t) {
+    if (ruleCard(s, t)) return;
+    const i = lineAt(s, t);
+    const lt = t - (s.start + 1.6);
+    const offs = i >= 1 ? Math.min(12, Math.floor((t - s.lines[1].start) / 0.6) * 3) : 0;
+    background(); label(s);
+    machine(220, 560, 0.8, { t, lights: 12 - offs, light: clamp(1 - offs / 12 * 0.9) });
+    // 街灯
+    g.fillStyle = "#2b3140"; g.fillRect(1090, 200, 12, 360);
+    g.fillRect(1040, 200, 70, 12);
+    glow(1050, 230, 260, "rgba(255,210,150,0.6)", 0.8);
+    g.fillStyle = "rgba(255,210,150,0.12)";
+    g.beginPath(); g.moveTo(1030, 215); g.lineTo(900, 560); g.lineTo(1180, 560); g.closePath(); g.fill();
+    const px = lerp(420, 980, clamp(lt / ((s.end - s.start) - 2.5)));
+    person(px, 560, 0.9, lt * 5, 1);
+    if (i >= 3) {
+      g.globalAlpha = ease((t - s.lines[3].start) * 3);
+      text("走るな", 560, 170, 50, C.red); text("振り向くな", 820, 170, 50, C.red);
+      g.globalAlpha = 1;
+    }
+  },
+  inside(s, t) {
+    const i = lineAt(s, t);
+    g.fillStyle = C.dark; g.fillRect(0, 0, W, H);
+    // 断面図
+    g.strokeStyle = C.white; g.lineWidth = 8; rrect(390, 60, 500, 560, 20); g.stroke();
+    g.fillStyle = "#11141b"; rrect(400, 70, 480, 540, 16); g.fill();
+    for (let r = 0; r < 4; r++) { g.fillStyle = "#1e2330"; g.fillRect(420, 110 + r * 90, 260, 10); }
+    if (i >= 1) {
+      const a = ease((t - s.lines[1].start) * 1.5);
+      g.globalAlpha = a; person(780, 590, 1.0 + 0.01 * Math.sin(t * 2), 0, -1); g.globalAlpha = 1;
+    }
+    if (i >= 2) {
+      // 缶を送る
+      const cyc = ((t - s.lines[2].start) % 1.6) / 1.6;
+      can(lerp(720, 520, ease(cyc)), lerp(400, 560, cyc * cyc), 0.25, "", C.blue);
+    }
+    g.fillStyle = C.dark; rrect(430, 560, 200, 40, 8); g.fill();
+    if (i >= 5) {
+      g.globalAlpha = ease((t - s.lines[5].start) * 2);
+      g.fillStyle = "rgba(0,0,0,0.6)"; g.fillRect(0, 0, W, H);
+      text("「あたり」は", W / 2, 280, 70, C.white);
+      text(i >= 6 ? "交代要員の募集" : "幸運ではない", W / 2, 390, 90, C.red);
+      g.globalAlpha = 1;
+    }
+  },
+  ending(s, t) {
+    const i = lineAt(s, t);
+    const p = ease((t - s.start) / (s.end - s.start));
+    background();
+    const z = lerp(1, 3.2, p);
+    g.save(); g.translate(610, 545); g.scale(z, z); g.translate(-610, -545);
+    machine(640, 600, 1, { t, light: 1 - p * 0.6 });
+    g.restore();
+    if (i >= 1 && i < 4) {
+      g.globalAlpha = ease((t - s.lines[1].start) * 2);
+      g.fillStyle = "rgba(0,0,0,0.8)"; rrect(W / 2 - 190, 60, 380, 100, 14); g.fill();
+      text("12年前の冬", W / 2, 110, 56, C.amber); g.globalAlpha = 1;
+    }
+    if (i >= 5) {
+      // 取り出し口の暗闇に目が光る
+      const a = ease((t - s.lines[5].start) / 1.2);
+      g.globalAlpha = a; g.fillStyle = C.white;
+      g.beginPath(); g.arc(590, 470, 9, 0, Math.PI * 2); g.arc(650, 470, 9, 0, Math.PI * 2); g.fill();
+      g.globalAlpha = 1;
+    }
+  },
+  outro(s, t) {
+    const lt = t - s.start;
+    background();
+    machine(640, 640, 1.2, { t, display: "交代まで あと1人", displaySize: 22, blink: lt > 1 });
+    const a = ease((lt - 6.5) / 1.5);
+    if (a > 0) {
+      g.globalAlpha = a; g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
+      text("もし自販機の「あたり」が3回連続で出たら", W / 2, 300, 44, C.white);
+      text("4本目は 絶対に押すな", W / 2, 390, 64, C.red);
+      g.globalAlpha = 1;
+    }
+  },
+};
+
+window.renderFrame = function (t) {
+  const s = sceneAt(t);
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  S[s.visual](s, t);
+  const fadeIn = clamp(t / 1.0), fadeOut = clamp((TL.duration - t) / 1.5);
+  subtitle(s, t);
+  const f = Math.min(fadeIn, fadeOut);
+  if (f < 1) { g.fillStyle = `rgba(0,0,0,${1 - f})`; g.fillRect(0, 0, W, H); }
+};
+// サムネイル（Bradikinin型：黒×赤、大きな文字2語＋物ひとつ）
+window.renderThumb = function (variant) {
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  const red = variant === "red";
+  g.fillStyle = red ? C.red : "#000"; g.fillRect(0, 0, W, H);
+  machine(930, 700, 1.45, { t: 0.3, display: "あたり", displaySize: 34, displayColor: red ? "#fff" : C.red, blank: true });
+  text("4本目は", 60, 210, 150, red ? "#000" : C.white, 900, "left");
+  text("押すな", 60, 410, 190, red ? "#fff" : C.red, 900, "left");
+  g.fillStyle = red ? "#000" : C.red; rrect(66, 520, 420, 90, 14); g.fill();
+  text("あたり ×3", 276, 566, 60, "#fff", 900);
+};
+window.init = async function (timeline) {
+  TL = timeline;
+  await document.fonts.load("900 40px NotoJP");
+  await document.fonts.load("500 40px NotoJP");
+  return true;
+};
+</script>
+</body>
+</html>
