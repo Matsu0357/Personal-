@@ -18,6 +18,12 @@
 - 「これは診断ではない」と明言。「当てはまったら毒親育ち」とは言わない
 - 「親にも事情があったのかもしれない。それでも、あなたが傷ついたことは本当のこと」と、親を一方的に断罪しない
 
+## 縦型ショート版（1080x1920、1分52秒）
+- 台本：`script_short.json`（8つを1〜2行ずつに短縮）。各シーンの `"map"` で、短縮した行を本編の何行目の絵に合わせるかを指定し、本編と同じ絵を使い回す
+- 画面：上に「1 / 8」と見出し（キーワードだけ赤）、中央に本編のシーン、下に大きな字幕、最下部に「※医学的な診断を目的としたものではありません」
+- 作り方：`python3 build_audio.py script_short.json build_short` → `node render.js --short` → `build_short/video.mp4`
+- YouTubeショートは3分まで。TikTok・Instagramリールにもそのまま使える
+
 ## ファイル・作り直し方
 `../gaslighting/README.md` と同じ（`python3 build_audio.py` → `node render.js` → `node render.js --thumb`）
 

@@ -1,25 +1,45 @@
 """script.json → ナレーション（1行ずつ）→ build/timeline.json と BGM・効果音入りの build/audio.wav（リスト型の解説動画用）
 
-使い方: python3 build_audio.py
+使い方: python3 build_audio.py                              （横長の本編）
+        python3 build_audio.py script_short.json build_short  （縦型ショート）
 必要: edge-tts, ffmpeg, numpy
 行は文字列のほか {"text", "pitch", "rate", "gain"} でも書ける（心の声など）。
+台本の "pace" で間の長さを上書きできる（ショートは詰める）。
+シーンの "map" は、短縮した行が元のシーンの何行目の絵に当たるか（例 [0, 3]）。
 """
 import json
 import os
 import subprocess
+import sys
 import wave
 
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BUILD = os.path.join(HERE, "build")
+SCRIPT = os.path.join(HERE, sys.argv[1] if len(sys.argv) > 1 else "script.json")
+BUILD = os.path.join(HERE, sys.argv[2] if len(sys.argv) > 2 else "build")
 SR = 48000
 
-GAP_LINE = 0.45   # 行と行のあいだ
-GAP_SCENE = 1.2   # シーンとシーンのあいだ
-CARD = 2.2        # 「サイン1」などのカード（ナレーション前）
-LEAD_IN = 1.5
-TAIL = 4.0
+PACE = {
+    "gap_line": 0.45,   # 行と行のあいだ
+    "gap_scene": 1.2,   # シーンとシーンのあいだ
+    "card": 2.2,        # 「サイン1」などのカード（ナレーション前）
+    "lead_in": 1.5,
+    "tail": 4.0,
+}
+
+
+def expand(lines, mapping):
+    """短縮した行を、元のシーンの行番号に並べ直す。
+
+    飛ばした行は次の行と同じ時刻に始まる扱いにするので、
+    絵の側は元の行番号のまま動く。
+    """
+    out = []
+    for k, line in enumerate(lines):
+        while len(out) <= mapping[k]:
+            out.append(dict(line))
+    return out
 
 
 def tts(line, voice, rate, out_mp3):
@@ -88,8 +108,10 @@ def music(n, sections):
 
 def main():
     os.makedirs(BUILD, exist_ok=True)
-    script = json.load(open(os.path.join(HERE, "script.json"), encoding="utf-8"))
+    script = json.load(open(SCRIPT, encoding="utf-8"))
     voice, rate = script["voice"], script["rate"]
+    pace = {**PACE, **script.get("pace", {})}
+    GAP_LINE, GAP_SCENE, CARD, LEAD_IN, TAIL = (pace[k] for k in ("gap_line", "gap_scene", "card", "lead_in", "tail"))
 
     t = LEAD_IN
     timeline = {"title": script["title"], "scenes": []}
@@ -110,6 +132,8 @@ def main():
                                    "start": round(t, 3), "end": round(t + dur, 3)})
             clips.append((t, samples))
             t += dur + GAP_LINE
+        if sc.get("map"):
+            scene["lines"] = expand(scene["lines"], sc["map"])
         t += GAP_SCENE - GAP_LINE
         scene["end"] = round(t, 3)
         timeline["scenes"].append(scene)
@@ -139,7 +163,7 @@ def main():
     chime = note(HZ(76), 1.2, 0.12)
     chime[int(0.12 * SR):] += note(HZ(83), 1.2 - 0.12, 0.08)[: len(chime) - int(0.12 * SR)]
     for s_ in timeline["scenes"]:
-        if s_.get("card"):
+        if s_.get("card") or s_.get("num"):
             put(s_["start"] + 0.15, chime)
 
     mix = voice_track + bgm + sfx

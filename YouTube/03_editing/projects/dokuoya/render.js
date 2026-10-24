@@ -2,6 +2,7 @@
 // 使い方:
 //   node render.js                 → build/video.mp4（音声付き）
 //   node render.js --preview 5,30  → build/preview_5.jpg などの確認用画像
+//   node render.js --short         → build_short/video.mp4（縦型 1080x1920。先に build_audio.py script_short.json build_short）
 //   node render.js --thumb         → build/thumbnail_a.png / thumbnail_b.png
 const { chromium } = require("playwright");
 const { spawn } = require("child_process");
@@ -9,13 +10,14 @@ const fs = require("fs");
 const path = require("path");
 
 const FPS = 30;
-const BUILD = path.join(__dirname, "build");
+const SHORT = process.argv.includes("--short");
+const BUILD = path.join(__dirname, SHORT ? "build_short" : "build");
 
 (async () => {
   const timeline = JSON.parse(fs.readFileSync(path.join(BUILD, "timeline.json"), "utf8"));
   const browser = await chromium.launch();
-  const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
-  await page.goto("file://" + path.join(__dirname, "render.html"));
+  const page = await browser.newPage({ viewport: SHORT ? { width: 1080, height: 1920 } : { width: 1280, height: 720 } });
+  await page.goto("file://" + path.join(__dirname, "render.html") + (SHORT ? "?v=1" : ""));
   await page.evaluate(tl => window.init(tl), timeline);
 
   const grab = t => page.evaluate(t => {
@@ -60,5 +62,5 @@ const BUILD = path.join(__dirname, "build");
   ff.stdin.end();
   await new Promise(r => ff.on("close", r));
   await browser.close();
-  console.log("done: build/video.mp4");
+  console.log(`done: ${path.relative(__dirname, BUILD)}/video.mp4`);
 })();

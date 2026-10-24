@@ -14,8 +14,18 @@
 <script>
 // 毒親育ち解説のレンダラー（Inspire and Thrive 型：黒地・白い棒人間・キーワードだけ赤）
 const W = 1280, H = 720;
+// ?v=1 で縦型（1080x1920）。シーンは横長のキャンバスに描いて、縦の画面の中央に貼る
+const VERT = location.search.includes("v=1");
+const VW = 1080, VH = 1920;
 const cv = document.getElementById("c");
-const g = cv.getContext("2d");
+let g, m;
+if (VERT) {
+  cv.width = VW; cv.height = VH;
+  const off = document.createElement("canvas"); off.width = W; off.height = H;
+  g = off.getContext("2d"); m = cv.getContext("2d");
+} else {
+  g = cv.getContext("2d");
+}
 const C = { bg: "#000", white: "#f5f5f2", grey: "#9aa0aa", red: "#ff3b3b", dim: "#5b606a", warm: "#ffd27a", ink: "#000" };
 let TL = null;
 
@@ -155,7 +165,56 @@ function card(s, t) {
   title(s.big, s.key, W / 2, 370, 76, a);
   return true;
 }
-function header(s, t) { if (s.big) title(s.big, s.key, W / 2, 78, 54, 1); if (s.num) text(s.num, 70, 78, 54, C.red); }
+function header(s, t) { if (VERT) return; if (s.big) title(s.big, s.key, W / 2, 78, 54, 1); if (s.num) text(s.num, 70, 78, 54, C.red); }
+
+// ---------- 縦型のレイアウト ----------
+// 文字を幅に合わせて折り返す。key の部分だけ赤
+function wrapRich(ctx, str, key, maxW, size, weight) {
+  ctx.font = `${weight} ${size}px NotoJP`;
+  const k0 = key && str.includes(key) ? str.indexOf(key) : -1, k1 = k0 + (key ? key.length : 0);
+  const rows = [[]]; let w = 0;
+  const noStart = "、。，．」』）！？ーぁぃぅぇぉっゃゅょ…";  // 行頭に置かない文字（禁則）
+  [...str].forEach((ch, i) => {
+    const cw = ctx.measureText(ch).width;
+    if (w + cw > maxW && rows[rows.length - 1].length && !noStart.includes(ch)) { rows.push([]); w = 0; }
+    rows[rows.length - 1].push({ ch, red: i >= k0 && i < k1 && k0 >= 0, w: cw }); w += cw;
+  });
+  return rows;
+}
+function drawRich(ctx, rows, cx, top, size, lineH, color = C.white) {
+  rows.forEach((row, r) => {
+    const rw = row.reduce((a, c) => a + c.w, 0);
+    let x = cx - rw / 2;
+    row.forEach(c => { ctx.fillStyle = c.red ? C.red : color; ctx.fillText(c.ch, x, top + r * lineH); x += c.w; });
+  });
+}
+function vertical(s, t) {
+  m.setTransform(1, 0, 0, 1, 0, 0);
+  m.fillStyle = C.bg; m.fillRect(0, 0, VW, VH);
+  m.textBaseline = "middle"; m.textAlign = "left";
+  // 上：番号と見出し（シーンに見出しがなければシリーズ名）
+  if (s.num) {
+    m.font = "900 64px NotoJP"; m.fillStyle = C.red; m.textAlign = "center";
+    m.fillText(`${s.num} / 8`, VW / 2, 250); m.textAlign = "left";
+  }
+  const head = s.big ? [s.big, s.key] : ["毒親育ちの8つのクセ", "毒親育ち"];
+  const rows = wrapRich(m, head[0], head[1], VW - 120, 84, 900);
+  drawRich(m, rows, VW / 2, s.num ? 370 : 330, 84, 104);
+  // 中央：シーン（左右の余白を 100px ずつ切って、等倍で貼る）
+  const crop = (W - VW) / 2, sh = H, sy = 540;
+  m.drawImage(g.canvas, crop, 0, VW, H, 0, sy, VW, sh);
+  // 下：大きな字幕
+  const i = lineAt(s, t);
+  if (i >= 0 && t <= s.lines[i].end + 0.3) {
+    const sub = wrapRich(m, s.lines[i].text, "", VW - 140, 54, 900);
+    drawRich(m, sub, VW / 2, sy + sh + 110, 54, 74);
+  }
+  m.font = "500 26px NotoJP"; m.fillStyle = C.dim; m.textAlign = "center";
+  m.fillText("※医学的な診断を目的としたものではありません", VW / 2, VH - 110);
+  m.textAlign = "left";
+  const f = Math.min(clamp(t / 0.5), clamp((TL.duration - t) / 1.0));
+  if (f < 1) { m.fillStyle = `rgba(0,0,0,${1 - f})`; m.fillRect(0, 0, VW, VH); }
+}
 
 // ---------- シーン ----------
 const S = {
@@ -388,6 +447,7 @@ window.renderFrame = function (t) {
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
   S[s.visual](s, t);
+  if (VERT) { vertical(s, t); return; }
   subtitle(s, t);
   const f = Math.min(clamp(t / 1.0), clamp((TL.duration - t) / 1.2));
   if (f < 1) { g.fillStyle = `rgba(0,0,0,${1 - f})`; g.fillRect(0, 0, W, H); }
