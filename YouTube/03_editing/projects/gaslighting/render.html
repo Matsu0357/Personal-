@@ -129,9 +129,20 @@ function subtitle(s, t) {
   const l = s.lines[i]; if (t > l.end + 0.3) return;
   g.save();
   g.font = "500 34px NotoJP"; g.textAlign = "center"; g.textBaseline = "middle";
-  const w = Math.min(W - 40, g.measureText(l.text).width);
-  g.fillStyle = "rgba(0,0,0,0.75)"; rrect(W / 2 - w / 2 - 20, H - 92, w + 40, 58, 10); g.fill();
-  g.fillStyle = C.white; g.fillText(l.text, W / 2, H - 62, W - 60);
+  // 長い行は、真ん中に近い「。」か「、」で2行に分ける
+  let rows = [l.text];
+  if (g.measureText(l.text).width > W - 120) {
+    const mid = l.text.length / 2;
+    let cut = -1;
+    [...l.text].forEach((ch, k) => { if ((ch === "。" || ch === "、" || ch === "」") && k < l.text.length - 1 && (cut < 0 || Math.abs(k - mid) < Math.abs(cut - mid))) cut = k; });
+    if (cut < 0) cut = Math.floor(mid) - 1;
+    rows = [l.text.slice(0, cut + 1), l.text.slice(cut + 1)];
+  }
+  const w = Math.min(W - 40, Math.max(...rows.map(r => g.measureText(r).width)));
+  const h = rows.length * 46 + 14, top = H - 34 - h;
+  g.fillStyle = "rgba(0,0,0,0.75)"; rrect(W / 2 - w / 2 - 20, top, w + 40, h, 10); g.fill();
+  g.fillStyle = C.white;
+  rows.forEach((r, k) => g.fillText(r, W / 2, top + 30 + k * 46, W - 60));
   g.restore();
 }
 function card(s, t) {
@@ -152,12 +163,16 @@ const S = {
     const i = lineAt(s, t);
     floor();
     figure(400, 600, 1, { t, pose: i >= 0 ? "point" : "stand", color: C.grey, hair: true, mood: "stern" });
-    figure(820, 600, i >= 2 ? 0.9 : 1, { t, pose: i >= 2 ? "shrink" : "stand", flip: true, mood: "worried", marks: i >= 0 });
-    bubble("そんなこと、言ってないよ", 470, 230, 32, fadeIn(s, 0, t) * (i <= 1 ? 1 : 0.35));
-    bubble("また、気にしすぎてる", 520, 140, 32, fadeIn(s, 1, t) * (i <= 1 ? 1 : 0.35));
-    if (i >= 4) {
-      g.fillStyle = `rgba(0,0,0,${0.7 * fadeIn(s, 4, t)})`; g.fillRect(0, 0, W, H);
-      title("それ、ガスライティングかも", "ガスライティング", W / 2, 330, 80, fadeIn(s, 4, t));
+    figure(840, 600, i >= 3 ? 0.9 : 1, { t, pose: i >= 3 ? "shrink" : "stand", flip: true, mood: "worried", marks: i >= 0 });
+    const dim = i <= 2 ? 1 : 0.35;
+    bubble("え、そんなこと言ってないけど？", 470, 300, 30, fadeIn(s, 0, t) * dim);
+    bubble("また被害妄想？", 560, 215, 30, fadeIn(s, 1, t) * dim);
+    bubble("普通、そんなことで怒らないよ", 500, 130, 30, fadeIn(s, 2, t) * dim);
+    if (i >= 3 && i < 5) { thought(980, 200, 80, fadeIn(s, 3, t)); g.globalAlpha = fadeIn(s, 3, t); text("わたしが", 980, 180, 24, C.ink); text("おかしいのかな", 980, 215, 24, C.ink); g.globalAlpha = 1; }
+    if (i >= 5) {
+      g.fillStyle = `rgba(0,0,0,${0.75 * fadeIn(s, 5, t)})`; g.fillRect(0, 0, W, H);
+      text("モラハラの手口のひとつ", W / 2, 250, 40, C.grey, 900);
+      title("それ、ガスライティングかも", "ガスライティング", W / 2, 340, 80, fadeIn(s, 5, t));
     }
   },
   what(s, t) {
@@ -165,43 +180,39 @@ const S = {
     if (i <= 1) {
       floor();
       figure(640, 600, 1, { t, pose: "think", mood: "worried" });
-      thought(800, 230, 90, fadeIn(s, 0, t));
-      text("わたしの記憶", 800, 230, 34, C.ink);
-      if (i >= 0) { g.globalAlpha = fadeIn(s, 0, t, 1.5); g.strokeStyle = C.red; g.lineWidth = 10; g.beginPath(); g.moveTo(700, 190); g.lineTo(900, 270); g.stroke(); g.globalAlpha = 1; }
+      thought(820, 230, 95, fadeIn(s, 0, t));
+      g.globalAlpha = fadeIn(s, 0, t); text("わたしの記憶", 820, 210, 30, C.ink); text("わたしの気持ち", 820, 255, 30, C.ink); g.globalAlpha = 1;
+      if (i >= 0) { g.globalAlpha = fadeIn(s, 0, t, 1.5); g.strokeStyle = C.red; g.lineWidth = 10; g.beginPath(); g.moveTo(710, 180); g.lineTo(930, 285); g.stroke(); g.globalAlpha = 1; }
       if (i >= 1) title("「おかしいのは自分のほうだ」", "自分", W / 2, 90, 52, fadeIn(s, 1, t));
     } else if (i === 2) {
-      // ガス燈
-      const a = fadeIn(s, 2, t);
-      g.globalAlpha = a;
-      const fl = 0.75 + 0.25 * Math.sin(t * 7) * Math.sin(t * 3.1);
-      const gr = g.createRadialGradient(640, 250, 0, 640, 250, 260);
-      gr.addColorStop(0, `rgba(255,210,122,${0.5 * fl})`); gr.addColorStop(1, "rgba(0,0,0,0)");
-      g.fillStyle = gr; g.fillRect(380, 0, 520, 520);
-      g.strokeStyle = C.white; g.lineWidth = 8; g.beginPath(); g.moveTo(640, 600); g.lineTo(640, 330); g.stroke();
-      g.fillStyle = C.white; g.beginPath(); g.moveTo(590, 330); g.lineTo(690, 330); g.lineTo(670, 200); g.lineTo(610, 200); g.closePath(); g.fill();
-      g.fillStyle = `rgba(255,210,122,${fl})`; g.beginPath(); g.ellipse(640, 270, 16, 28, 0, 0, Math.PI * 2); g.fill();
-      text("映画『ガス燈』（1944年）", 640, 100, 46, C.white);
-      g.globalAlpha = 1;
-    } else if (i <= 4) {
+      // どんな関係でも起こる
       floor();
-      // 口げんか ≠ ガスライティング → 力の差とくり返し
-      if (i === 3) {
-        figure(430, 600, 0.8, { t, pose: "point", color: C.grey, hair: true });
-        figure(760, 600, 0.8, { t, pose: "point", flip: true });
-        title("ただの口げんか ≠ ガスライティング", "≠", W / 2, 100, 50, fadeIn(s, 3, t));
-      } else {
-        const a = fadeIn(s, 4, t);
-        figure(440, 600, 1.15, { t, pose: "point", color: C.grey, hair: true, mood: "stern" });
-        figure(800, 600, 0.7, { t, pose: "shrink", flip: true, mood: "worried" });
-        g.globalAlpha = a; g.strokeStyle = C.red; g.lineWidth = 8;
-        const r0 = (t * 2) % (Math.PI * 2);
-        g.beginPath(); g.arc(640, 300, 120, r0, r0 + Math.PI * 1.5); g.stroke();
-        g.globalAlpha = 1;
-        title("力の差 × くり返し", "くり返し", W / 2, 100, 56, a);
-      }
+      title("立場に差がある関係なら、どこでも", "どこでも", W / 2, 90, 46, fadeIn(s, 2, t, 0.6));
+      ["夫婦・恋人", "職場の上司", "親", "友だち"].forEach((lab, k) => {
+        const a = ease((t - s.lines[2].start - k * 0.7) / 0.5), x = 200 + k * 293;
+        figure(x - 45, 560, 0.62, { t, pose: "point", color: C.grey, hair: k % 2 === 0, mood: "stern", alpha: a });
+        figure(x + 55, 560, 0.5, { t, pose: "shrink", flip: true, mood: "worried", alpha: a });
+        g.globalAlpha = a; text(lab, x, 250, 32, C.white); g.globalAlpha = 1;
+      });
+    } else if (i === 3) {
+      floor();
+      figure(640, 600, 1, { t, pose: "shrink", mood: "worried" });
+      bubble("波風を立てたくない", 420, 220, 32, fadeIn(s, 3, t), "right");
+      bubble("自分が我慢すれば…", 880, 300, 32, fadeIn(s, 3, t, 1.6), "left");
+      title("やさしい人ほど、気づきにくい", "気づきにくい", W / 2, 90, 48, fadeIn(s, 3, t, 2.5));
+    } else if (i === 4) {
+      floor();
+      const a = fadeIn(s, 4, t);
+      figure(440, 600, 1.15, { t, pose: "point", color: C.grey, hair: true, mood: "stern" });
+      figure(820, 600, 0.75, { t, pose: "shrink", flip: true, mood: "worried" });
+      g.globalAlpha = a; g.strokeStyle = C.red; g.lineWidth = 8;
+      const r0 = (t * 2) % (Math.PI * 2);
+      g.beginPath(); g.arc(640, 310, 115, r0, r0 + Math.PI * 1.5); g.stroke();
+      g.globalAlpha = 1;
+      title("一回きり ではなく くり返し", "くり返し", W / 2, 90, 52, a);
     } else {
       title("これは「診断」ではありません", "診断", W / 2, 300, 62, fadeIn(s, 5, t));
-      if (i >= 6) text("いくつも重なるなら、立ち止まって考えてみる", W / 2, 400, 36, C.grey, 500);
+      if (i >= 6) text("いくつも重なるなら、少しだけ立ち止まってみる", W / 2, 400, 34, C.grey, 500);
     }
   },
   sorry(s, t) {
@@ -211,27 +222,47 @@ const S = {
     const n = i < 0 ? 0 : Math.min(14, 1 + Math.floor((t - s.lines[0].start) * 1.6));
     for (let k = 0; k < n; k++) {
       const ang = k * 2.4, r = 200 + (k % 3) * 60;
-      bubble("ごめん", 640 + Math.cos(ang) * r * 1.3, 330 + Math.sin(ang) * r * 0.55, 26, 0.9 - k * 0.04, k % 2 ? "left" : "right");
+      bubble("すみません", 640 + Math.cos(ang) * r * 1.3, 330 + Math.sin(ang) * r * 0.55, 24, 0.9 - k * 0.04, k % 2 ? "left" : "right");
     }
   },
   memory(s, t) {
     if (card(s, t)) return; header(s, t); floor();
     const i = lineAt(s, t);
-    figure(360, 600, 1, { t, pose: "point", color: C.grey, hair: true, mood: "stern" });
-    figure(900, 600, 1, { t, pose: i >= 3 ? "think" : "stand", flip: true, mood: "worried", marks: i >= 2 });
-    bubble("そんなこと言ってない", 470, 220, 32, fadeIn(s, 1, t));
-    // 記憶の吹き出しが薄れていく
-    const fade = i >= 2 ? 1 - ease(since(s, 2, t) / 4) * 0.8 : 1;
-    thought(940, 230, 80, fade);
-    g.globalAlpha = fade; figure(915, 270, 0.25, { color: C.dim, pose: "point", hair: true }); figure(975, 270, 0.25, { color: C.dim, flip: true }); g.globalAlpha = 1;
-    if (i >= 3) text("？", 1030, 150, 70, C.red);
+    if (i < 3) {
+      figure(360, 600, 1, { t, pose: "point", color: C.grey, hair: true, mood: "stern" });
+      figure(900, 600, 1, { t, pose: i >= 2 ? "think" : "stand", flip: true, mood: "worried", marks: i >= 2 });
+      bubble("その日、空いてるって言ったよね", 830, 200, 28, fadeIn(s, 1, t), "right");
+      bubble("え、言ってないけど？", 430, 290, 30, fadeIn(s, 1, t, 2.2));
+      if (i >= 2) text("？", 1030, 150, 70, C.red);
+    } else {
+      // あとでトークを見返す
+      floor();
+      figure(470, 600, 1, { t, pose: "phone", mood: "worried" });
+      const a = fadeIn(s, 3, t);
+      g.globalAlpha = a;
+      g.fillStyle = C.grey; rrect(700, 160, 260, 420, 28); g.fill();
+      g.fillStyle = "#111"; rrect(715, 185, 230, 370, 16); g.fill();
+      g.fillStyle = C.white; rrect(730, 230, 150, 40, 14); g.fill(); text("今週どう？", 805, 250, 18, C.ink);
+      g.fillStyle = "#7bd88f"; rrect(780, 290, 150, 40, 14); g.fill(); text("土曜は空いてるよ", 855, 310, 17, C.ink);
+      g.strokeStyle = C.red; g.lineWidth = 6; rrect(770, 280, 170, 60, 16); g.stroke();
+      text("やっぱり言ってた", 830, 400, 26, C.red);
+      g.globalAlpha = 1;
+    }
   },
   simulate(s, t) {
     if (card(s, t)) return; header(s, t); floor();
     const i = lineAt(s, t);
+    if (i === 2) {
+      // 玄関のドアの前で
+      g.fillStyle = "#2a2d35"; rrect(700, 230, 220, 370, 6); g.fill();
+      g.fillStyle = C.grey; g.beginPath(); g.arc(890, 420, 10, 0, Math.PI * 2); g.fill();
+      figure(560, 600, 1, { t, pose: "slump", mood: "worried" });
+      bubble("ふぅ…", 470, 250, 32, fadeIn(s, 2, t, 1.0), "right");
+      return;
+    }
     figure(640, 600, 1, { t, pose: "think", mood: "worried" });
-    const labels = ["この言い方なら…？", "このタイミングなら…？", "怒らないかな…"];
-    [[330, 240], [640, 170], [950, 240]].forEach(([x, y], k) => {
+    const labels = ["今日は機嫌いいかな", "この言い方なら…", "怒らないかな…"];
+    [[330, 280], [640, 230], [950, 280]].forEach(([x, y], k) => {
       const a = i >= 0 ? ease((t - s.lines[0].start - k * 0.8) / 0.5) : 0;
       thought(x, y, 100, a);
       g.globalAlpha = a; text(labels[k], x, y, 24, C.ink); g.globalAlpha = 1;
@@ -243,36 +274,40 @@ const S = {
     const i = lineAt(s, t);
     figure(360, 600, 1, { t, pose: "point", color: C.grey, hair: true, mood: "stern" });
     figure(900, 600, 1, { t, pose: "slump", flip: true, mood: "worried" });
-    bubble("気にしすぎ", 450, 220, 34, fadeIn(s, 1, t));
-    bubble("考えすぎ", 520, 140, 34, fadeIn(s, 1, t, 1.2));
+    bubble("気にしすぎ", 430, 330, 32, fadeIn(s, 0, t, 1.5));
+    bubble("被害妄想", 600, 255, 32, fadeIn(s, 0, t, 2.5));
+    bubble("冗談なのに", 380, 180, 30, fadeIn(s, 1, t));
+    bubble("そんなことで怒る？", 700, 170, 28, fadeIn(s, 1, t, 1.5));
     const sc = i >= 2 ? lerp(1, 0.35, ease(since(s, 2, t) / 4)) : 1;
     heart(900, 290, sc, C.red);
   },
   explain(s, t) {
     if (card(s, t)) return; header(s, t); floor();
     const i = lineAt(s, t);
-    figure(300, 600, 0.9, { t, mood: "worried", color: C.grey });
-    figure(980, 600, 0.9, { t, flip: true, mood: "worried", color: C.grey });
-    figure(640, 600, 1, { t, pose: "open", mood: "worried" });
-    bubble("でも、本当はいい人で…", 700, 200, 32, fadeIn(s, 1, t));
-    if (i >= 2) { bubble("…", 280, 300, 30, fadeIn(s, 2, t), "right", C.grey); bubble("…", 1000, 300, 30, fadeIn(s, 2, t), "left", C.grey); }
+    // 外ではいい人
+    const glowA = 0.5 + 0.3 * Math.sin(t * 3);
+    g.globalAlpha = glowA; text("✦", 320, 300, 34, C.warm); text("✦", 470, 320, 26, C.warm); g.globalAlpha = 1;
+    figure(400, 600, 1, { t, pose: "open", color: C.grey, hair: true, mood: "happy" });
+    figure(640, 600, 0.85, { t, flip: true, color: C.dim, mood: "happy" });
+    figure(980, 600, 0.95, { t, flip: true, pose: i >= 2 ? "slump" : "stand", mood: "worried" });
+    if (i >= 1) bubble("優しそうな人なのに", 700, 230, 30, fadeIn(s, 1, t), "left", C.grey);
+    if (i >= 2) { g.globalAlpha = fadeIn(s, 2, t); g.strokeStyle = C.red; g.lineWidth = 6; g.beginPath(); g.moveTo(940, 240); g.lineTo(1020, 240); g.stroke(); text("話すのをやめた", 980, 200, 26, C.red); g.globalAlpha = 1; }
   },
   evidence(s, t) {
     if (card(s, t)) return; header(s, t); floor();
     const i = lineAt(s, t);
-    figure(460, 600, 1, { t, pose: "write", mood: "worried" });
-    // ノート
-    const a = fadeIn(s, 1, t);
-    g.globalAlpha = a;
-    g.fillStyle = C.white; rrect(700, 220, 240, 300, 10); g.fill();
-    g.fillStyle = C.ink; for (let k = 0; k < 6; k++) g.fillRect(730, 280 + k * 36, 180 * (0.5 + 0.5 * ((k * 7) % 5) / 4), 6);
-    text("10/24", 760, 250, 26, C.red);
-    // スマホ
-    g.fillStyle = C.grey; rrect(990, 260, 120, 220, 16); g.fill();
-    g.fillStyle = C.ink; rrect(1000, 280, 100, 180, 8); g.fill();
-    g.fillStyle = C.white; rrect(1010, 300, 70, 26, 8); g.fill(); rrect(1020, 340, 70, 26, 8); g.fill();
-    g.globalAlpha = 1;
-    if (i >= 3) title("自分を確かめるため", "確かめる", W / 2, 165, 40, fadeIn(s, 3, t));
+    figure(400, 600, 1, { t, pose: "write", mood: "worried" });
+    const items = [[620, "スクショ"], [820, "手帳"], [1020, "ボイスメモ"]];
+    items.forEach(([x, lab], k) => {
+      const a = i >= 1 ? ease((t - s.lines[1].start - k * 0.9) / 0.5) : 0;
+      g.globalAlpha = a;
+      if (k === 0) { g.fillStyle = C.grey; rrect(x - 50, 260, 100, 180, 14); g.fill(); g.fillStyle = "#111"; rrect(x - 40, 275, 80, 150, 8); g.fill(); g.fillStyle = "#7bd88f"; rrect(x - 30, 300, 55, 20, 6); g.fill(); g.fillStyle = C.white; rrect(x - 25, 330, 55, 20, 6); g.fill(); }
+      if (k === 1) { g.fillStyle = C.white; rrect(x - 70, 260, 140, 180, 8); g.fill(); g.fillStyle = C.ink; for (let r = 0; r < 4; r++) g.fillRect(x - 50, 310 + r * 28, 90, 5); text("10/24", x - 15, 285, 20, C.red); }
+      if (k === 2) { g.fillStyle = C.white; rrect(x - 25, 280, 50, 90, 25); g.fill(); g.strokeStyle = C.white; g.lineWidth = 6; g.beginPath(); g.arc(x, 345, 45, 0.2, Math.PI - 0.2); g.stroke(); g.beginPath(); g.moveTo(x, 390); g.lineTo(x, 430); g.stroke(); g.fillStyle = C.red; g.beginPath(); g.arc(x + 40, 270, 10, 0, Math.PI * 2); g.fill(); }
+      text(lab, x, 480, 26, C.white);
+      g.globalAlpha = 1;
+    });
+    if (i >= 2) title("自分を確かめたいだけ", "確かめたい", W / 2, 165, 40, fadeIn(s, 2, t));
   },
   past(s, t) {
     if (card(s, t)) return; header(s, t); floor();
@@ -292,11 +327,11 @@ const S = {
     figure(640, 600, 1, { t, pose: "phone", mood: "worried" });
     g.fillStyle = C.grey; rrect(700, 440, 34, 60, 6); g.fill();
     g.fillStyle = "#cfe6ff"; rrect(705, 446, 24, 44, 4); g.fill();
-    ["何を食べる？", "何を着る？", "誰と会う？"].forEach((q, k) => {
+    ["今日の夕飯", "週末の予定", "実家に帰る？"].forEach((q, k) => {
       const a = i >= 1 ? ease((t - s.lines[1].start - k * 0.6) / 0.4) : 0;
       bubble(q, 300 + k * 340, 230 - (k % 2) * 50, 28, a, "left", C.grey);
     });
-    bubble("これでいい？", 820, 360, 32, fadeIn(s, 2, t), "left");
+    bubble("これでいいかな？", 840, 360, 30, fadeIn(s, 2, t), "left");
   },
   after(s, t) {
     const i = lineAt(s, t);
@@ -308,26 +343,17 @@ const S = {
       figure(640, 600, 1, { t, pose: i >= 2 ? "stand" : "slump", mood: i >= 2 ? undefined : "worried" });
       if (i >= 2) title("あなたが感じたことは、あなたのもの", "あなたのもの", W / 2, 110, 54, fadeIn(s, 2, t));
     } else {
-      const items = [["1", "あったことを、日付と一緒に書きとめる", 5], ["2", "信頼できる人に、ひとりでいいから話す", 6], ["3", "相談窓口に、相談してみる", 7]];
-      title("できることは、小さくていい", "小さくていい", W / 2, 100, 50, fadeIn(s, 4, t));
-      items.forEach(([n, str, li], k) => {
+      title("できることは、小さくていい", "小さくていい", W / 2, 140, 54, fadeIn(s, 4, t));
+      [["1", "あったことを、日付と一緒にメモしておく", 5], ["2", "信頼できる人に、ひとりでいいから話してみる", 6]].forEach(([n, str, li], k) => {
         const a = fadeIn(s, li, t);
-        g.globalAlpha = a; text(n, 220, 220 + k * 90, 52, C.red); text(str, 270, 220 + k * 90, 38, C.white, 900, "left"); g.globalAlpha = 1;
+        g.globalAlpha = a; text(n, 190, 290 + k * 110, 60, C.red); text(str, 250, 290 + k * 110, 40, C.white, 900, "left"); g.globalAlpha = 1;
       });
-      if (i >= 7) {
-        const a = fadeIn(s, 7, t);
-        g.globalAlpha = a;
-        g.strokeStyle = C.white; g.lineWidth = 3; rrect(250, 470, 780, 120, 14); g.stroke();
-        text("DV相談ナビ  #8008", 640, 505, 34, C.white);
-        text("DV相談＋  0120-279-889（24時間）", 640, 553, 30, C.white, 500);
-        g.globalAlpha = 1;
-      }
     }
   },
   outro(s, t) {
     title("あなたの記憶は、あなたのもの。", "あなたのもの", W / 2, 300, 62, fadeIn(s, 0, t, 0.8));
     g.globalAlpha = fadeIn(s, 1, t, 0.8);
-    text("※この動画は医療的な診断ではありません。つらいときは専門の窓口に相談してください。", W / 2, 420, 22, C.grey, 500);
+    text("※この動画は医療的な診断を目的としたものではありません。", W / 2, 420, 22, C.grey, 500);
     g.globalAlpha = 1;
   },
 };
@@ -348,12 +374,12 @@ window.renderThumb = function (variant) {
     title("それ、ガスライティングかも", "ガスライティング", W / 2, 110, 88);
     figure(470, 680, 1.25, { t: 0.5, pose: "point", color: C.white, hair: true, mood: "stern" });
     figure(860, 680, 1.25, { t: 0.5, pose: "shrink", flip: true, mood: "worried", marks: true });
-    bubble("気にしすぎ", 560, 270, 40);
+    bubble("また被害妄想？", 560, 270, 40);
     arrow(1080, 260, 960, 380);
   } else {
     title("8つのサイン", "8つ", W / 2, 110, 100);
     figure(640, 680, 1.3, { t: 0.5, pose: "bow", mood: "worried" });
-    for (let k = 0; k < 7; k++) bubble("ごめん", 640 + Math.cos(k * 2.4) * 380, 380 + Math.sin(k * 2.4) * 150, 34, 0.95);
+    for (let k = 0; k < 7; k++) bubble("すみません", 640 + Math.cos(k * 2.4) * 380, 380 + Math.sin(k * 2.4) * 150, 34, 0.95);
   }
 };
 window.init = async function (timeline) {
