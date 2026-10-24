@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "NotoJP"; font-weight: 500; src: url("assets/NotoSansJP-500.ttf"); }
+  @font-face { font-family: "NotoJP"; font-weight: 900; src: url("assets/NotoSansJP-900.ttf"); }
+  html, body { margin: 0; background: #000; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+// 毒親育ち解説のレンダラー（Inspire and Thrive 型：黒地・白い棒人間・キーワードだけ赤）
+const W = 1280, H = 720;
+const cv = document.getElementById("c");
+const g = cv.getContext("2d");
+const C = { bg: "#000", white: "#f5f5f2", grey: "#9aa0aa", red: "#ff3b3b", dim: "#5b606a", warm: "#ffd27a", ink: "#000" };
+let TL = null;
+
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const ease = x => { x = clamp(x); return x * x * (3 - 2 * x); };
+const lerp = (a, b, x) => a + (b - a) * x;
+
+function sceneAt(t) { for (const s of TL.scenes) if (t >= s.start && t < s.end) return s; return TL.scenes[TL.scenes.length - 1]; }
+function lineAt(s, t) { let i = -1; s.lines.forEach((l, k) => { if (t >= l.start) i = k; }); return i; }
+function since(s, i, t) { return s.lines[i] ? t - s.lines[i].start : -1; }
+function fadeIn(s, i, t, d = 0.4) { return i >= 0 && s.lines[i] ? ease(since(s, i, t) / d) : 0; }
+
+// ---------- 部品 ----------
+function rrect(x, y, w, h, r) {
+  g.beginPath();
+  g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+function text(str, x, y, size, color, weight = 900, align = "center") {
+  g.font = `${weight} ${size}px NotoJP`; g.fillStyle = color; g.textAlign = align; g.textBaseline = "middle";
+  g.fillText(str, x, y);
+}
+// 見出し：key の部分だけ赤
+function title(str, key, x, y, size, a = 1) {
+  if (a <= 0) return;
+  g.save(); g.globalAlpha = a; g.font = `900 ${size}px NotoJP`; g.textBaseline = "middle";
+  const parts = key && str.includes(key) ? [str.slice(0, str.indexOf(key)), key, str.slice(str.indexOf(key) + key.length)] : [str, "", ""];
+  const w = parts.reduce((s, p) => s + g.measureText(p).width, 0);
+  let cx = x - w / 2;
+  parts.forEach((p, k) => { g.fillStyle = k === 1 ? C.red : C.white; g.textAlign = "left"; g.fillText(p, cx, y); cx += g.measureText(p).width; });
+  g.restore();
+}
+// 棒人間。pose: stand / bow / shrink / point / think / write / phone / slump / open
+function figure(x, y, s, o = {}) {
+  const col = o.color || C.white, pose = o.pose || "stand", t = o.t || 0;
+  g.save(); g.translate(x, y); g.scale(s * (o.flip ? -1 : 1), s);
+  g.globalAlpha = o.alpha ?? 1;
+  g.strokeStyle = col; g.fillStyle = col; g.lineCap = "round"; g.lineJoin = "round";
+  const breathe = Math.sin(t * 2) * 2;
+  let hx = 0, hy = -205 + breathe, neck = [0, -170], hip = [0, -80];
+  if (pose === "bow") { hx = 45; hy = -160; neck = [30, -140]; }
+  if (pose === "shrink" || pose === "slump") { hx = 8; hy = -190; neck = [4, -158]; }
+  // 胴体
+  g.lineWidth = 26; g.beginPath(); g.moveTo(...neck); g.lineTo(...hip); g.stroke();
+  // 脚
+  g.lineWidth = 18; g.beginPath(); g.moveTo(...hip); g.lineTo(-22, 0); g.moveTo(...hip); g.lineTo(22, 0); g.stroke();
+  // 腕
+  g.beginPath();
+  const sh = [neck[0], neck[1] + 12];
+  if (pose === "point") { g.moveTo(...sh); g.lineTo(70, -150); g.lineTo(115, -160); g.moveTo(...sh); g.lineTo(-20, -90); }
+  else if (pose === "bow") { g.moveTo(...sh); g.lineTo(55, -95); g.moveTo(...sh); g.lineTo(40, -95); }
+  else if (pose === "shrink") { g.moveTo(...sh); g.lineTo(30, -120); g.lineTo(20, -175); g.moveTo(...sh); g.lineTo(-25, -120); g.lineTo(-10, -170); }
+  else if (pose === "think") { g.moveTo(...sh); g.lineTo(35, -110); g.lineTo(28, -175); g.moveTo(...sh); g.lineTo(-25, -95); }
+  else if (pose === "write" || pose === "phone") { g.moveTo(...sh); g.lineTo(45, -115); g.lineTo(80, -125); g.moveTo(...sh); g.lineTo(35, -105); g.lineTo(70, -110); }
+  else if (pose === "open") { g.moveTo(...sh); g.lineTo(60, -175); g.moveTo(...sh); g.lineTo(-60, -175); }
+  else if (pose === "slump") { g.moveTo(...sh); g.lineTo(18, -75); g.moveTo(...sh); g.lineTo(-18, -75); }
+  else { g.moveTo(...sh); g.lineTo(30, -90); g.moveTo(...sh); g.lineTo(-30, -90); }
+  g.stroke();
+  // 頭
+  g.beginPath(); g.arc(hx, hy, 38, 0, Math.PI * 2); g.fill();
+  if (o.hair) { g.beginPath(); g.ellipse(hx - 30, hy - 10, 14, 30, 0.5, 0, Math.PI * 2); g.fill(); }
+  // 顔（右向き）
+  g.fillStyle = C.ink;
+  const ey = hy - 4;
+  if (o.mood === "happy") { g.lineWidth = 4; g.strokeStyle = C.ink; g.beginPath(); g.arc(hx + 6, ey, 5, Math.PI, 0); g.arc(hx + 24, ey, 5, Math.PI, 0); g.stroke(); g.beginPath(); g.arc(hx + 15, hy + 10, 9, 0.2, Math.PI - 0.2); g.stroke(); }
+  else { g.beginPath(); g.arc(hx + 6, ey, 4.5, 0, Math.PI * 2); g.arc(hx + 24, ey, 4.5, 0, Math.PI * 2); g.fill(); }
+  if (o.mood === "worried") { g.lineWidth = 3.5; g.strokeStyle = C.ink; g.beginPath(); g.moveTo(hx, ey - 12); g.lineTo(hx + 10, ey - 15); g.moveTo(hx + 30, ey - 12); g.lineTo(hx + 20, ey - 15); g.stroke(); }
+  if (o.mood === "stern") { g.lineWidth = 4; g.strokeStyle = C.ink; g.beginPath(); g.moveTo(hx, ey - 16); g.lineTo(hx + 11, ey - 10); g.moveTo(hx + 30, ey - 16); g.lineTo(hx + 19, ey - 10); g.stroke(); }
+  g.restore();
+  // 「!?」と汗
+  if (o.marks) {
+    const a = 0.6 + 0.4 * Math.sin(t * 6);
+    g.globalAlpha = a; text("!?", x + 55 * s, y - 280 * s, 44 * s, C.white); g.globalAlpha = 1;
+    g.strokeStyle = C.white; g.lineWidth = 4;
+    for (let k = 0; k < 3; k++) { g.beginPath(); g.arc(x - 20 * s, y - 210 * s, (55 + k * 12) * s, -2.3 - k * 0.05, -1.9); g.stroke(); }
+  }
+}
+function bubble(str, x, y, size = 30, a = 1, tail = "left", col = C.white, txt = C.ink) {
+  if (a <= 0) return;
+  g.save(); g.globalAlpha = a;
+  g.font = `900 ${size}px NotoJP`;
+  const w = g.measureText(str).width + size * 1.4, h = size * 2;
+  g.fillStyle = col; rrect(x - w / 2, y - h / 2, w, h, h / 2.2); g.fill();
+  g.beginPath();
+  const tx = tail === "left" ? x - w / 4 : x + w / 4;
+  g.moveTo(tx - 12, y + h / 2 - 2); g.lineTo(tx + (tail === "left" ? -26 : 26), y + h / 2 + 26); g.lineTo(tx + 14, y + h / 2 - 2); g.fill();
+  text(str, x, y + 1, size, txt);
+  g.restore();
+}
+function thought(x, y, r, a = 1) {
+  g.save(); g.globalAlpha = a; g.fillStyle = C.white;
+  g.beginPath(); g.ellipse(x, y, r * 1.3, r, 0, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.arc(x - r * 0.9, y + r * 1.15, r * 0.18, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.arc(x - r * 1.2, y + r * 1.5, r * 0.1, 0, Math.PI * 2); g.fill();
+  g.restore();
+}
+function heart(x, y, s, col) {
+  g.save(); g.translate(x, y); g.scale(s, s); g.fillStyle = col;
+  g.beginPath(); g.moveTo(0, 30); g.bezierCurveTo(-60, -10, -30, -60, 0, -28); g.bezierCurveTo(30, -60, 60, -10, 0, 30); g.fill(); g.restore();
+}
+function arrow(x1, y1, x2, y2, col = C.red, a = 1) {
+  g.save(); g.globalAlpha = a; g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 8; g.lineCap = "round";
+  g.beginPath(); g.moveTo(x1, y1); g.quadraticCurveTo((x1 + x2) / 2 + 40, (y1 + y2) / 2 - 40, x2, y2); g.stroke();
+  const an = Math.atan2(y2 - y1, x2 - x1);
+  g.beginPath(); g.moveTo(x2, y2); g.lineTo(x2 - 26 * Math.cos(an - 0.5), y2 - 26 * Math.sin(an - 0.5)); g.lineTo(x2 - 26 * Math.cos(an + 0.5), y2 - 26 * Math.sin(an + 0.5)); g.fill();
+  g.restore();
+}
+function floor() { g.fillStyle = "#0d0e11"; g.fillRect(0, 600, W, 120); }
+function subtitle(s, t) {
+  const i = lineAt(s, t); if (i < 0) return;
+  const l = s.lines[i]; if (t > l.end + 0.3) return;
+  g.save();
+  g.font = "500 34px NotoJP"; g.textAlign = "center"; g.textBaseline = "middle";
+  // 長い行は、真ん中に近い「。」か「、」で2行に分ける
+  let rows = [l.text];
+  if (g.measureText(l.text).width > W - 120) {
+    const mid = l.text.length / 2;
+    let cut = -1;
+    [...l.text].forEach((ch, k) => { if ((ch === "。" || ch === "、" || ch === "」") && k < l.text.length - 1 && (cut < 0 || Math.abs(k - mid) < Math.abs(cut - mid))) cut = k; });
+    if (cut < 0) cut = Math.floor(mid) - 1;
+    rows = [l.text.slice(0, cut + 1), l.text.slice(cut + 1)];
+  }
+  const w = Math.min(W - 40, Math.max(...rows.map(r => g.measureText(r).width)));
+  const h = rows.length * 46 + 14, top = H - 34 - h;
+  g.fillStyle = "rgba(0,0,0,0.75)"; rrect(W / 2 - w / 2 - 20, top, w + 40, h, 10); g.fill();
+  g.fillStyle = C.white;
+  rows.forEach((r, k) => g.fillText(r, W / 2, top + 30 + k * 46, W - 60));
+  g.restore();
+}
+function card(s, t) {
+  if (!s.card) return false;
+  const p = (t - s.start) / 2.2;
+  if (p >= 1) return false;
+  g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
+  const a = ease(p * 4) * (1 - ease((p - 0.82) * 6));
+  g.globalAlpha = a; text(`サイン ${s.num}`, W / 2, 270, 46, C.red); g.globalAlpha = 1;
+  title(s.big, s.key, W / 2, 370, 76, a);
+  return true;
+}
+function header(s, t) { if (s.big) title(s.big, s.key, W / 2, 78, 54, 1); if (s.num) text(s.num, 70, 78, 54, C.red); }
+
+// ---------- シーン ----------
+const S = {
+  intro(s, t) {
+    const i = lineAt(s, t);
+    floor();
+    const grow = i >= 4 ? ease(since(s, 4, t) / 2) : 0;
+    figure(380, 600, 1.15, { t, pose: i >= 0 && i < 3 ? "point" : "stand", color: C.grey, hair: true, mood: "stern", alpha: i >= 4 ? 1 - grow * 0.6 : 1 });
+    figure(840, 600, lerp(0.6, 1, grow), { t, pose: i >= 0 && i < 4 ? "shrink" : "stand", flip: true, mood: "worried", marks: i >= 0 && i < 4 });
+    const dim = i <= 2 ? 1 : 0.3;
+    bubble("誰のおかげで、ごはんが食べられると思ってるの", 560, 290, 26, fadeIn(s, 0, t) * dim);
+    bubble("お姉ちゃんなんだから、がまんしなさい", 520, 205, 28, fadeIn(s, 1, t) * dim);
+    bubble("あなたのためを思って、言ってるのよ", 560, 120, 28, fadeIn(s, 2, t) * dim);
+    if (i >= 4 && i < 5) text("大人になっても", 840, 300, 30, C.grey);
+    if (i >= 5) {
+      g.fillStyle = `rgba(0,0,0,${0.75 * fadeIn(s, 5, t)})`; g.fillRect(0, 0, W, H);
+      text("大人になっても消えない", W / 2, 250, 40, C.grey, 900);
+      title("毒親育ちの8つのクセ", "毒親育ち", W / 2, 340, 84, fadeIn(s, 5, t));
+    }
+  },
+  what(s, t) {
+    const i = lineAt(s, t);
+    if (i <= 1) {
+      // 本と「診断名ではない」
+      const a = fadeIn(s, 0, t);
+      g.globalAlpha = a;
+      g.fillStyle = C.white; rrect(470, 170, 230, 300, 10); g.fill();
+      g.fillStyle = C.red; g.fillRect(470, 170, 26, 300);
+      text("毒になる親", 598, 300, 30, C.ink);
+      g.globalAlpha = 1;
+      title("医学的な診断名ではない", "診断名ではない", W / 2, 90, 48, fadeIn(s, 0, t, 2.5));
+      if (i >= 1) { heart(880, 330, 1.4, C.red); g.strokeStyle = C.bg; g.lineWidth = 6; g.globalAlpha = fadeIn(s, 1, t); g.beginPath(); g.moveTo(880, 290); g.lineTo(865, 315); g.lineTo(895, 335); g.lineTo(875, 365); g.stroke(); g.globalAlpha = 1; }
+    } else if (i === 2) {
+      floor();
+      ["どなる", "無視する", "過干渉", "比べる"].forEach((lab, k) => {
+        const a = ease((t - s.lines[2].start - k * 0.7) / 0.5), x = 200 + k * 293;
+        figure(x - 40, 560, 0.7, { t, pose: k === 1 ? "stand" : "point", color: C.grey, hair: k % 2 === 0, mood: "stern", alpha: a, flip: k === 1 });
+        figure(x + 60, 560, 0.42, { t, pose: "shrink", flip: true, mood: "worried", alpha: a });
+        g.globalAlpha = a; text(lab, x, 240, 34, C.white); g.globalAlpha = 1;
+      });
+    } else if (i <= 4) {
+      floor();
+      figure(640, 600, 1, { t, pose: "shrink", mood: "worried" });
+      bubble("親を悪く言うなんて", 400, 230, 30, fadeIn(s, 3, t), "right", C.grey);
+      bubble("親孝行しなさい", 880, 280, 30, fadeIn(s, 3, t, 1.4), "left", C.grey);
+      if (i >= 4) title("「つらかった」と言いにくい", "言いにくい", W / 2, 90, 50, fadeIn(s, 4, t));
+    } else {
+      title("これは「診断」ではありません", "診断", W / 2, 300, 62, fadeIn(s, 5, t));
+      if (i >= 6) text("「これ、自分だ」と思うものがあったら", W / 2, 400, 34, C.grey, 500);
+    }
+  },
+  perfect(s, t) {
+    if (card(s, t)) return; header(s, t); floor();
+    const i = lineAt(s, t);
+    if (i <= 1) {
+      // 90点のテスト
+      g.fillStyle = C.white; rrect(330, 180, 280, 340, 8); g.fill();
+      g.fillStyle = C.ink; for (let r = 0; r < 6; r++) g.fillRect(360, 280 + r * 34, 160, 5);
+      g.strokeStyle = C.red; g.lineWidth = 5; g.beginPath(); g.arc(540, 240, 50, 0, Math.PI * 2); g.stroke();
+      text("90", 540, 240, 48, C.red);
+      figure(860, 600, 1.1, { t, pose: "point", flip: true, color: C.grey, hair: true, mood: "stern" });
+      bubble("あと10点は？", 780, 200, 34, fadeIn(s, 1, t), "right");
+    } else {
+      figure(380, 600, 1, { t, pose: "think", mood: "worried" });
+      const items = ["資料をつくった", "メールを返した", "会議で発言した", "ミスをひとつした"];
+      items.forEach((it, k) => {
+        const y = 230 + k * 70, bad = k === 3;
+        g.fillStyle = bad ? C.red : C.dim; text(bad ? "✕" : "✓", 620, y, 34, bad ? C.red : C.dim);
+        text(it, 670, y, bad ? 36 : 30, bad ? C.white : C.dim, 900, "left");
+      });
+      if (i >= 3) { g.strokeStyle = C.red; g.lineWidth = 6; rrect(600, 405, 420, 60, 12); g.stroke(); }
+    }
+  },
+  mood(s, t) {
+    if (card(s, t)) return; header(s, t); floor();
+    const i = lineAt(s, t);
+    if (i <= 1) {
+      // 家：親の頭上に雨雲
+      g.strokeStyle = C.dim; g.lineWidth = 6; g.beginPath(); g.moveTo(240, 600); g.lineTo(240, 300); g.lineTo(640, 170); g.lineTo(1040, 300); g.lineTo(1040, 600); g.stroke();
+      figure(500, 600, 1.05, { t, color: C.grey, hair: true, mood: "stern" });
+      g.fillStyle = C.dim; [[470, 290, 40], [510, 275, 48], [555, 292, 38]].forEach(([x, y, r]) => { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); });
+      g.strokeStyle = "#8fb3ff"; g.lineWidth = 3; for (let k = 0; k < 6; k++) { const yy = 330 + ((t * 160 + k * 30) % 60); g.beginPath(); g.moveTo(460 + k * 18, yy); g.lineTo(456 + k * 18, yy + 14); g.stroke(); }
+      figure(800, 600, 0.6, { t, pose: "shrink", flip: true, mood: "worried", marks: i >= 1 });
+    } else {
+      // 職場
+      g.fillStyle = "#2a2d35"; g.fillRect(200, 470, 880, 20);
+      figure(380, 600, 1, { t, mood: "stern", color: C.grey });
+      bubble("はぁ…", 430, 250, 34, fadeIn(s, 2, t), "left", C.grey);
+      figure(880, 600, 1, { t, flip: true, mood: "worried", marks: true });
+      if (i >= 3) { thought(990, 200, 90, fadeIn(s, 3, t)); g.globalAlpha = fadeIn(s, 3, t); text("わたし、", 990, 185, 26, C.ink); text("何かしたかな", 990, 220, 26, C.ink); g.globalAlpha = 1; }
+    }
+  },
+  praise(s, t) {
+    if (card(s, t)) return; header(s, t); floor();
+    const i = lineAt(s, t);
+    figure(380, 600, 1, { t, pose: "open", color: C.grey, mood: "happy" });
+    figure(880, 600, 1, { t, pose: i >= 1 ? "shrink" : "stand", flip: true, mood: "worried", marks: i >= 1 });
+    bubble("すごいね！", 430, 230, 36, fadeIn(s, 1, t));
+    bubble("いえいえ、全然…", 860, 230, 32, fadeIn(s, 1, t, 2), "right");
+    if (i >= 2) { thought(640, 160, 70, fadeIn(s, 2, t)); g.globalAlpha = fadeIn(s, 2, t); text("どう受け取れば…？", 640, 160, 22, C.ink); g.globalAlpha = 1; }
+  },
+  rely(s, t) {
+    if (card(s, t)) return; header(s, t); floor();
+    const i = lineAt(s, t);
+    const n = i < 0 ? 1 : Math.min(6, 2 + i * 2);
+    const sway = Math.sin(t * 2.5) * 6 * (n / 6);
+    figure(640, 600, 1, { t, pose: "open", mood: "worried" });
+    for (let k = 0; k < n; k++) { g.fillStyle = k % 2 ? "#c9a06b" : "#b48a57"; rrect(560 + sway * k * 0.6, 340 - k * 44, 160, 42, 4); g.fill(); }
+    if (i >= 2) { g.fillStyle = C.white; rrect(880, 300, 36, 150, 18); g.fill(); g.fillStyle = C.red; rrect(888, 340, 20, 104, 10); g.fill(); text("38℃", 960, 330, 32, C.red, 900, "left"); }
+    if (i >= 1) bubble("自分でなんとかしなきゃ", 330, 240, 28, fadeIn(s, 1, t), "right", C.grey);
+    if (i >= 3) {
+      g.save(); g.globalAlpha = 0.35 * fadeIn(s, 3, t); g.setLineDash([10, 10]); g.strokeStyle = C.white; g.lineWidth = 4;
+      rrect(820, 180, 170, 70, 30); g.stroke(); g.restore();
+      g.globalAlpha = 0.45 * fadeIn(s, 3, t); text("助けて", 905, 215, 32, C.white); g.globalAlpha = 1;
+    }
+  },
+  likes(s, t) {
+    if (card(s, t)) return; header(s, t); floor();
+    const i = lineAt(s, t);
+    if (i <= 1) {
+      figure(640, 600, 0.75, { t, pose: "stand", mood: "worried" });
+      figure(900, 600, 1.2, { t, pose: "point", flip: true, color: C.grey, hair: true, mood: "stern", alpha: 0.85 });
+      bubble("こっちにしなさい", 870, 200, 30, fadeIn(s, 1, t), "right");
+      ["服", "部活", "進路"].forEach((lab, k) => { const a = fadeIn(s, 1, t, 0.5 + k * 0.4); g.globalAlpha = a; g.strokeStyle = C.white; g.lineWidth = 3; rrect(180 + k * 0, 210 + k * 100, 200, 70, 12); g.stroke(); text(lab, 280, 245 + k * 100, 30, C.white); text("✓", 350, 245 + k * 100, 30, C.red); g.globalAlpha = 1; });
+    } else {
+      figure(420, 600, 1, { t, color: C.grey, mood: "happy" });
+      bubble("何がしたい？", 470, 230, 34, fadeIn(s, 2, t));
+      figure(860, 600, 1, { t, flip: true, mood: "worried", marks: true });
+      thought(960, 190, 75, fadeIn(s, 2, t, 1)); g.globalAlpha = fadeIn(s, 2, t, 1); text("……", 960, 190, 34, C.ink); g.globalAlpha = 1;
+      if (i >= 3) { g.globalAlpha = fadeIn(s, 3, t); text("相手が喜びそうな答えを探す", W / 2 - 120, 150, 28, C.grey, 500); g.globalAlpha = 1; }
+    }
+  },
+  rest(s, t) {
+    if (card(s, t)) return; header(s, t); floor();
+    const i = lineAt(s, t);
+    // ソファ
+    g.fillStyle = "#3a3f4b"; rrect(330, 430, 620, 120, 30); g.fill(); rrect(330, 360, 80, 190, 30); g.fill(); rrect(870, 360, 80, 190, 30); g.fill();
+    // ソファに寝ころぶ（足が左、頭が右）
+    g.save(); g.translate(400, 425); g.rotate(Math.PI / 2);
+    figure(0, 0, 0.9, { t, pose: "stand", mood: i >= 2 ? "worried" : "happy" });
+    g.restore();
+    if (i >= 2) {
+      const a = fadeIn(s, 2, t, 1.2) * (0.55 + 0.15 * Math.sin(t * 2));
+      g.globalAlpha = a; text("「だらだらして」", 820, 230, 46, C.grey); g.globalAlpha = 1;
+    }
+    if (i >= 3) { g.strokeStyle = C.white; g.lineWidth = 4; for (let k = 0; k < 3; k++) { g.beginPath(); g.arc(590, 330, (40 + k * 12), -2.4 - k * 0.05, -2.0); g.stroke(); } }
+  },
+  notify(s, t) {
+    if (card(s, t)) return; header(s, t); floor();
+    const i = lineAt(s, t);
+    if (i <= 1 || i === 3) {
+      const buzz = i >= 1 ? Math.sin(t * 60) * 4 : 0;
+      g.fillStyle = C.grey; rrect(560 + buzz, 160, 230, 400, 30); g.fill();
+      g.fillStyle = "#111"; rrect(573 + buzz, 180, 204, 360, 18); g.fill();
+      if (i >= 1) { g.fillStyle = C.white; rrect(585 + buzz, 210, 180, 70, 12); g.fill(); text("母", 615 + buzz, 233, 22, C.ink, 900, "left"); text("今度いつ帰ってくるの？", 600 + buzz, 260, 15, C.dim, 500, "left"); }
+      figure(380, 600, 1, { t, pose: "shrink", mood: "worried", marks: i >= 1 });
+      if (i >= 1) { g.strokeStyle = C.white; g.lineWidth = 4; for (let k = 0; k < 2; k++) { g.beginPath(); g.arc(675 + buzz, 360, 160 + k * 20, -0.3, 0.3); g.stroke(); g.beginPath(); g.arc(675 + buzz, 360, 160 + k * 20, Math.PI - 0.3, Math.PI + 0.3); g.stroke(); } }
+    } else {
+      // お盆・正月のカレンダー
+      [["8月", "お盆"], ["1月", "正月"]].forEach(([m, ev], k) => {
+        const x = 400 + k * 480, a = fadeIn(s, 2, t, 0.5 + k * 0.6);
+        g.globalAlpha = a;
+        g.fillStyle = "#e8e2d4"; rrect(x - 140, 170, 280, 300, 12); g.fill();
+        g.fillStyle = "#c94a4a"; g.fillRect(x - 140, 170, 280, 60); text(m, x, 200, 34, "#fff");
+        text(ev, x, 330, 60, C.ink);
+        g.globalAlpha = 1;
+      });
+      text("なんとなく、気が重い", W / 2, 540, 34, C.grey, 500);
+    }
+  },
+  guilt(s, t) {
+    if (card(s, t)) return; header(s, t); floor();
+    const i = lineAt(s, t);
+    const pull = i >= 2 ? Math.sin(t * 3) * 6 : 0;
+    figure(640 + pull, 600, 1, { t, pose: "open", mood: "worried" });
+    bubble("つらかった", 330, 260, 36, fadeIn(s, 2, t), "right", C.red, "#fff");
+    bubble("育ててもらったのに", 960, 230, 30, fadeIn(s, 1, t), "left", C.grey);
+    bubble("親孝行しなきゃ", 990, 320, 30, fadeIn(s, 1, t, 1.2), "left", C.grey);
+    if (i >= 2) { arrow(580, 330, 420, 330, C.red, fadeIn(s, 2, t)); arrow(700, 330, 860, 330, C.grey, fadeIn(s, 2, t)); }
+    if (i >= 3) { g.strokeStyle = C.white; g.lineWidth = 3; g.setLineDash([8, 8]); g.beginPath(); g.moveTo(640, 140); g.lineTo(640, 590); g.stroke(); g.setLineDash([]); }
+  },
+  after(s, t) {
+    const i = lineAt(s, t);
+    const gr = g.createRadialGradient(W / 2, H, 0, W / 2, H, 800);
+    gr.addColorStop(0, "rgba(255,210,122,0.18)"); gr.addColorStop(1, "rgba(0,0,0,0)");
+    g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    floor();
+    if (i <= 2) {
+      figure(640, 600, 1, { t, pose: "slump", mood: "worried" });
+      if (i >= 2) title("あなたの「欠点」ではない", "欠点", W / 2, 110, 58, fadeIn(s, 2, t));
+    } else if (i <= 4) {
+      // 子どもの頃のあなたと、生き延びるための方法
+      const gr2 = g.createRadialGradient(640, 450, 0, 640, 450, 260);
+      gr2.addColorStop(0, "rgba(255,210,122,0.3)"); gr2.addColorStop(1, "rgba(0,0,0,0)");
+      g.fillStyle = gr2; g.fillRect(380, 190, 520, 520);
+      figure(640, 600, 0.6, { t, mood: "worried" });
+      title("生き延びるための方法", "生き延びる", W / 2, 100, 54, fadeIn(s, 3, t));
+      ["空気を読む", "がまんする", "ちゃんとする", "頼らない"].forEach((lab, k) => {
+        const a = i >= 4 ? ease((t - s.lines[4].start - k * 0.5) / 0.5) : 0;
+        const x = [400, 880, 360, 920][k], y = [280, 280, 430, 430][k];
+        bubble(lab, x, y, 28, a, k % 2 ? "left" : "right", C.warm);
+      });
+    } else if (i <= 6) {
+      figure(560, 600, 1, { t, pose: "stand", mood: undefined });
+      ["空気を読む", "がまんする", "ちゃんとする", "頼らない"].forEach((lab, k) => {
+        const drop = i >= 6 ? ease((t - s.lines[6].start - k * 0.6) / 1.2) : 0;
+        g.globalAlpha = 1 - drop * 0.75;
+        g.fillStyle = C.warm; rrect(760, 240 + k * 70 + drop * (300 - k * 70), 200, 50, 12); g.fill();
+        text(lab, 860, 265 + k * 70 + drop * (300 - k * 70), 24, C.ink);
+        g.globalAlpha = 1;
+      });
+      if (i >= 6) title("少しずつ、手放していい", "手放していい", W / 2, 100, 54, fadeIn(s, 6, t));
+      else title("いまはもう、大人", "大人", W / 2, 100, 54, fadeIn(s, 5, t));
+    } else {
+      figure(640, 600, 1, { t, pose: "stand" });
+      if (i === 7) text("親にも、事情があったのかもしれない", W / 2, 130, 40, C.grey, 900);
+      else { text("それでも", W / 2, 70, 30, C.grey, 500); title("あなたが傷ついたことは、本当のこと", "本当のこと", W / 2, 130, 54, fadeIn(s, 8, t)); }
+    }
+  },
+  outro(s, t) {
+    title("よくここまで、がんばってきましたね。", "がんばってきました", W / 2, 300, 58, fadeIn(s, 0, t, 0.8));
+    g.globalAlpha = fadeIn(s, 1, t, 0.8);
+    text("※この動画は医療的な診断を目的としたものではありません。", W / 2, 420, 22, C.grey, 500);
+    g.globalAlpha = 1;
+  },
+};
+
+window.renderFrame = function (t) {
+  const s = sceneAt(t);
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
+  S[s.visual](s, t);
+  subtitle(s, t);
+  const f = Math.min(clamp(t / 1.0), clamp((TL.duration - t) / 1.2));
+  if (f < 1) { g.fillStyle = `rgba(0,0,0,${1 - f})`; g.fillRect(0, 0, W, H); }
+};
+window.renderThumb = function (variant) {
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
+  if (variant === "a") {
+    title("毒親育ちの8つのクセ", "毒親育ち", W / 2, 110, 92);
+    figure(450, 690, 1.45, { t: 0.5, pose: "point", color: C.white, hair: true, mood: "stern" });
+    figure(900, 690, 0.85, { t: 0.5, pose: "shrink", flip: true, mood: "worried", marks: true });
+    bubble("あなたのためを思って", 620, 260, 40);
+    arrow(1110, 300, 990, 420);
+  } else {
+    title("母からのLINEが、こわい", "母", W / 2, 110, 84);
+    g.fillStyle = C.grey; rrect(640, 200, 260, 440, 34); g.fill();
+    g.fillStyle = "#111"; rrect(655, 222, 230, 400, 20); g.fill();
+    g.fillStyle = C.white; rrect(668, 250, 204, 84, 14); g.fill();
+    text("母", 700, 278, 30, C.ink, 900, "left"); text("今度いつ帰ってくるの？", 686, 310, 15, C.dim, 500, "left");
+    figure(420, 690, 1.3, { t: 0.5, pose: "shrink", mood: "worried", marks: true });
+  }
+};
+window.init = async function (timeline) {
+  TL = timeline;
+  await document.fonts.load("900 40px NotoJP");
+  await document.fonts.load("500 40px NotoJP");
+  return true;
+};
+</script>
+</body>
+</html>
