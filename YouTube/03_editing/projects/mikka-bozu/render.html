@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "NotoJP"; font-weight: 500; src: url("assets/NotoSansJP-500.ttf"); }
+  @font-face { font-family: "NotoJP"; font-weight: 900; src: url("assets/NotoSansJP-900.ttf"); }
+  html, body { margin: 0; background: #000; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+// 「三日坊主。」のレンダラー（Day One Films 型：暗い部屋・丸い頭のキャラ・大きな手書き風の文字）
+const W = 1280, H = 720;
+const cv = document.getElementById("c");
+const g = cv.getContext("2d");
+const C = {
+  wall: "#11141c", wall2: "#171b26", floor: "#0b0d13", skin: "#e9dfcc", skinShade: "#c9bea9",
+  hoodie: "#1e222b", hoodie2: "#2a2f3a", white: "#f4f1ea", red: "#ff3b3b", amber: "#ffb35c",
+  phone: "#ff6aa8", dawn1: "#2b3a5c", dawn2: "#e9a26b", ink: "#0a0b0f",
+};
+let TL = null;
+
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const ease = x => { x = clamp(x); return x * x * (3 - 2 * x); };
+const lerp = (a, b, x) => a + (b - a) * x;
+// 決まった乱数（毎フレーム同じ揺れにするため）
+const rnd = k => { const x = Math.sin(k * 127.1) * 43758.5453; return x - Math.floor(x); };
+
+function sceneAt(t) {
+  for (const s of TL.scenes) if (t >= s.start && t < s.end) return s;
+  return TL.scenes[TL.scenes.length - 1];
+}
+function lineAt(s, t) { let i = -1; s.lines.forEach((l, k) => { if (t >= l.start) i = k; }); return i; }
+function since(s, i, t) { return s.lines[i] ? t - s.lines[i].start : -1; }
+
+// ---------- 部品 ----------
+function rrect(x, y, w, h, r) {
+  g.beginPath();
+  g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+function text(str, x, y, size, color, weight = 900, align = "center") {
+  g.font = `${weight} ${size}px NotoJP`; g.fillStyle = color; g.textAlign = align; g.textBaseline = "middle";
+  g.fillText(str, x, y);
+}
+// 手書き風の大きな文字：太い黒フチ＋わずかな揺れ
+function bigText(str, x, y, size, color = C.white, align = "center", a = 1) {
+  if (a <= 0) return;
+  g.save(); g.globalAlpha = a;
+  g.font = `900 ${size}px NotoJP`; g.textAlign = align; g.textBaseline = "middle";
+  g.lineJoin = "round"; g.strokeStyle = C.ink; g.lineWidth = size * 0.16;
+  g.strokeText(str, x, y);
+  g.fillStyle = color;
+  for (let k = 0; k < 2; k++) g.fillText(str, x + (rnd(k + size) - 0.5) * 2, y + (rnd(k * 3 + size) - 0.5) * 2);
+  g.restore();
+}
+function glow(x, y, r, color, a) {
+  const gr = g.createRadialGradient(x, y, 0, x, y, r);
+  gr.addColorStop(0, color); gr.addColorStop(1, "rgba(0,0,0,0)");
+  g.globalAlpha = a; g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2); g.globalAlpha = 1;
+}
+function vignette() {
+  const gr = g.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 0.95);
+  gr.addColorStop(0, "rgba(0,0,0,0)"); gr.addColorStop(1, "rgba(0,0,0,0.75)");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+}
+
+// 顔つきのキャラクター。mood: determined / tired / sad / calm / shock
+function head(x, y, r, mood = "calm", t = 0, look = 0) {
+  g.save(); g.translate(x, y);
+  g.fillStyle = C.skin; g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill();
+  g.fillStyle = C.skinShade; g.beginPath(); g.arc(r * 0.12, r * 0.12, r, 0.2, 1.6); g.arc(0, 0, r * 0.96, 1.6, 0.2, true); g.fill();
+  const ex = r * 0.34, ey = -r * 0.02, er = r * 0.1;
+  const blink = (Math.sin(t * 0.9) > 0.985) ? 0.15 : 1;
+  g.fillStyle = C.ink; g.strokeStyle = C.ink; g.lineCap = "round"; g.lineWidth = r * 0.07;
+  for (const sx of [-1, 1]) {
+    const cx = sx * ex + look * r * 0.12;
+    if (mood === "tired" || mood === "sad") {
+      g.beginPath(); g.ellipse(cx, ey + er * 0.4, er, er * 0.55 * blink, 0, 0, Math.PI * 2); g.fill();
+      g.beginPath(); g.moveTo(cx - er * 1.4, ey - er * 0.2); g.lineTo(cx + er * 1.4, ey - er * 0.2); g.stroke();
+      if (mood === "tired") { g.strokeStyle = "#9a8f7c"; g.beginPath(); g.arc(cx, ey + er * 1.6, er * 1.1, 0.3, Math.PI - 0.3); g.stroke(); g.strokeStyle = C.ink; }
+    } else {
+      g.beginPath(); g.ellipse(cx, ey, er, er * (mood === "shock" ? 1.3 : 1) * blink, 0, 0, Math.PI * 2); g.fill();
+    }
+    // 眉
+    g.beginPath();
+    // sx は目の左右。cx - sx*… が内側（鼻側）
+    if (mood === "determined") { g.moveTo(cx - sx * er * 1.4, ey - er * 1.5); g.lineTo(cx + sx * er * 1.8, ey - er * 2.7); }
+    else if (mood === "sad" || mood === "tired") { g.moveTo(cx - sx * er * 1.4, ey - er * 2.7); g.lineTo(cx + sx * er * 1.6, ey - er * 2.0); }
+    else { g.moveTo(cx - er * 1.5, ey - er * 2.4); g.lineTo(cx + er * 1.5, ey - er * 2.4); }
+    g.stroke();
+  }
+  // 口
+  g.beginPath();
+  if (mood === "determined") { g.moveTo(-r * 0.16, r * 0.42); g.lineTo(r * 0.16, r * 0.4); }
+  else if (mood === "sad") { g.arc(0, r * 0.55, r * 0.14, Math.PI + 0.5, -0.5); }
+  else if (mood === "shock") { g.ellipse(0, r * 0.45, r * 0.07, r * 0.1, 0, 0, Math.PI * 2); }
+  else if (mood === "calm") { g.arc(0, r * 0.3, r * 0.14, 0.5, Math.PI - 0.5); }
+  else { g.moveTo(-r * 0.1, r * 0.45); g.lineTo(r * 0.1, r * 0.45); }
+  g.stroke();
+  g.restore();
+}
+function body(x, y, s, hood = true) {
+  g.save(); g.translate(x, y); g.scale(s, s);
+  g.fillStyle = C.hoodie; rrect(-95, 0, 190, 230, 60); g.fill();
+  if (hood) { g.fillStyle = C.hoodie2; g.beginPath(); g.ellipse(0, 4, 80, 26, 0, 0, Math.PI * 2); g.fill(); }
+  g.strokeStyle = "#3a404d"; g.lineWidth = 4;
+  g.beginPath(); g.moveTo(-20, 30); g.lineTo(-24, 80); g.moveTo(20, 30); g.lineTo(24, 80); g.stroke();
+  g.restore();
+}
+function sweat(x, y, s, a) {
+  g.globalAlpha = a; g.fillStyle = "#8fd3ff";
+  g.beginPath(); g.moveTo(x, y - 14 * s); g.quadraticCurveTo(x + 9 * s, y, x, y + 8 * s); g.quadraticCurveTo(x - 9 * s, y, x, y - 14 * s); g.fill();
+  g.globalAlpha = 1;
+}
+
+// 部屋
+function room(o = {}) {
+  g.fillStyle = C.wall; g.fillRect(0, 0, W, H);
+  g.fillStyle = C.wall2; g.fillRect(0, 0, W, 40);
+  g.fillStyle = C.floor; g.fillRect(0, 590, W, 130);
+  // 窓
+  const wx = 860, wy = 110, ww = 300, wh = 250;
+  const sky = g.createLinearGradient(0, wy, 0, wy + wh);
+  const d = o.dawn ?? 0;
+  sky.addColorStop(0, d > 0 ? `rgba(43,58,92,1)` : "#070910");
+  sky.addColorStop(1, d > 0 ? `rgba(233,162,107,${d})` : "#0d111a");
+  g.fillStyle = sky; g.fillRect(wx, wy, ww, wh);
+  if (o.rain) {
+    g.strokeStyle = "rgba(170,190,220,0.45)"; g.lineWidth = 2;
+    for (let k = 0; k < 40; k++) {
+      const rx = wx + rnd(k) * ww, ry = wy + ((rnd(k + 9) * wh + o.t * 420 * (0.7 + rnd(k + 3) * 0.6)) % wh);
+      g.beginPath(); g.moveTo(rx, ry); g.lineTo(rx - 4, ry + 18); g.stroke();
+    }
+  }
+  g.strokeStyle = "#252b38"; g.lineWidth = 12; g.strokeRect(wx, wy, ww, wh);
+  g.lineWidth = 6; g.beginPath(); g.moveTo(wx + ww / 2, wy); g.lineTo(wx + ww / 2, wy + wh); g.stroke();
+  if (d > 0) glow(wx + ww / 2, wy + wh, 420, `rgba(233,162,107,0.35)`, d);
+}
+function bed(x, y) {
+  g.fillStyle = "#1a1f2a"; rrect(x, y, 560, 150, 18); g.fill();
+  g.fillStyle = "#232a38"; rrect(x - 10, y - 30, 120, 60, 20); g.fill();
+}
+function blanket(x, y, w, h) { g.fillStyle = "#2b3346"; rrect(x, y, w, h, 40); g.fill(); }
+function clock(x, y, s, str, a = 1) {
+  g.save(); g.translate(x, y); g.scale(s, s);
+  glow(0, 0, 160, "rgba(255,59,59,0.5)", 0.6 * a);
+  g.fillStyle = "#1b1e26"; rrect(-90, -45, 180, 90, 14); g.fill();
+  g.font = "900 54px NotoJP"; g.textAlign = "center"; g.textBaseline = "middle";
+  g.fillStyle = C.red; g.globalAlpha = a; g.fillText(str, 0, 2); g.globalAlpha = 1;
+  g.restore();
+}
+function desk(x, y, lamp = 1) {
+  if (lamp > 0) glow(x + 60, y - 120, 360, "rgba(255,179,92,0.55)", lamp);
+  g.fillStyle = "#2a2219"; g.fillRect(x - 220, y, 440, 22); g.fillRect(x - 200, y + 22, 20, 140); g.fillRect(x + 180, y + 22, 20, 140);
+  g.strokeStyle = "#3a3f4b"; g.lineWidth = 8; g.beginPath(); g.moveTo(x + 120, y); g.lineTo(x + 120, y - 120); g.lineTo(x + 60, y - 150); g.stroke();
+  g.fillStyle = C.amber; g.beginPath(); g.moveTo(x + 30, y - 140); g.lineTo(x + 90, y - 165); g.lineTo(x + 80, y - 120); g.fill();
+}
+function phoneGlow(x, y, a) { glow(x, y, 300, "rgba(255,106,168,0.55)", a); glow(x, y, 160, "rgba(255,179,92,0.5)", a); }
+
+function subtitle(s, t) {
+  const i = lineAt(s, t); if (i < 0) return;
+  const l = s.lines[i]; if (t > l.end + 0.3) return;
+  const a = ease((t - l.start) * 4) * ease((l.end + 0.3 - t) * 4);
+  g.save(); g.globalAlpha = a;
+  g.font = `500 ${l.inner ? 34 : 38}px NotoJP`; g.textAlign = "center"; g.textBaseline = "middle";
+  g.lineJoin = "round"; g.strokeStyle = "rgba(0,0,0,0.85)"; g.lineWidth = 8;
+  g.strokeText(l.text, W / 2, H - 70);
+  g.fillStyle = l.inner ? "#b9b2a5" : C.white; g.fillText(l.text, W / 2, H - 70);
+  g.restore();
+}
+function card(s, t) {
+  if (!s.card) return false;
+  const p = (t - s.start) / 2.0;
+  if (p >= 1) return false;
+  g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
+  bigText(s.big, W / 2, H / 2, 150, C.white, "center", ease(p * 4) * (1 - ease((p - 0.8) * 5)));
+  return true;
+}
+
+// ---------- シーン ----------
+const S = {
+  alarm(s, t) {
+    if (card(s, t)) return;
+    const i = lineAt(s, t), lt = t - s.start - 2;
+    room({ dawn: 0.15 + 0.1 * clamp(lt / 14), t });
+    bed(80, 470); blanket(180, 470, 460, 120);
+    const sit = i >= 1 ? ease(since(s, 1, t) / 1.2) : 0;
+    body(330, lerp(470, 360, sit), 0.9);
+    head(330, lerp(440, 320, sit), 78, i >= 2 ? "determined" : (i >= 1 ? "shock" : "tired"), t);
+    clock(720, 520, i === 0 ? 1.3 : 1, "5:00");
+    if (i >= 2) bigText("DAY 1.", 70, 90, 96, C.white, "left", ease(since(s, 2, t) * 3));
+    vignette();
+  },
+  run(s, t) {
+    const i = Math.max(0, lineAt(s, t));
+    if (i === 0) {
+      // 夜明けの道を走る
+      const sky = g.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0, C.dawn1); sky.addColorStop(1, C.dawn2);
+      g.fillStyle = sky; g.fillRect(0, 0, W, H);
+      g.fillStyle = "#151a26";
+      for (let k = 0; k < 9; k++) { const bx = ((k * 190 - t * 120) % (W + 200) + W + 200) % (W + 200) - 200; g.fillRect(bx, 330 - rnd(k) * 120, 150, 400); }
+      g.fillStyle = "#0d1018"; g.fillRect(0, 560, W, 160);
+      const bob = Math.abs(Math.sin(t * 9)) * 14;
+      body(560, 400 - bob, 0.75);
+      g.strokeStyle = C.hoodie; g.lineWidth = 22; g.lineCap = "round";
+      const sw = Math.sin(t * 9) * 40;
+      g.beginPath(); g.moveTo(545, 560 - bob - 10); g.lineTo(545 + sw, 600); g.moveTo(575, 560 - bob - 10); g.lineTo(575 - sw, 600); g.stroke();
+      head(560, 360 - bob, 58, "determined", t, 1);
+      sweat(610, 330 - bob, 1, 0.8);
+    } else {
+      room({ dawn: 0.4, t });
+      desk(560, 470, 1);
+      body(560, 380, 0.8);
+      head(560, 340, 62, i >= 3 ? "calm" : "determined", t, 0);
+      g.fillStyle = C.white; g.fillRect(470, 450, 120, 18); g.fillStyle = "#cfc8b8"; g.fillRect(600, 452, 70, 14);
+      if (i >= 2) {
+        // スマホを引き出しへ
+        const p = ease(since(s, 2, t) / 1.4);
+        g.fillStyle = "#2a2219"; g.fillRect(380, 492, 170, 50);
+        g.fillStyle = "#3b3226"; g.fillRect(380 + 170 * (1 - p) * 0.6, 492, 170, 50);
+        g.fillStyle = "#0b0c10"; rrect(lerp(470, 420, p), lerp(420, 505, p), 46, 80, 8); g.fill();
+      }
+    }
+    vignette();
+  },
+  day2(s, t) {
+    if (card(s, t)) return;
+    const i = lineAt(s, t);
+    room({ dawn: 0.25, t });
+    bed(80, 470); blanket(180, 470, 460, 120);
+    const up = i >= 2 ? ease(since(s, 2, t) / 2.0) : 0;
+    const x = lerp(400, 760, up), lean = i >= 1 ? 0.12 : 0;
+    g.save(); g.translate(x, 470); g.rotate(lean); body(0, -110, 0.9); head(0, -150, 76, "tired", t); g.restore();
+    if (i >= 1) sweat(x + 70, 300, 1.2, 0.9);
+    clock(1000, 520, 0.8, "5:00", 0.7);
+    vignette();
+  },
+  rain(s, t) {
+    if (card(s, t)) return;
+    const i = lineAt(s, t);
+    room({ rain: true, t, dawn: 0.05 });
+    bed(80, 470);
+    head(250, 425, 70, i >= 5 ? "sad" : "tired", t, 0.3);
+    blanket(180, 450, 500, 140);
+    clock(760, 520, 0.9, "5:00", 0.6 + 0.4 * (Math.sin(t * 3) > 0 ? 1 : 0));
+    // 心の声：頭のまわりに浮かぶ
+    s.lines.forEach((l, k) => {
+      if (!l.inner || t < l.start) return;
+      const a = ease((t - l.start) * 2) * (1 - ease((t - l.end - 2.5) * 1.5));
+      g.globalAlpha = a * 0.85;
+      const pos = [[520, 250], [720, 330], [560, 170]][k - 2] || [560, 250];
+      text(l.text, pos[0], pos[1] - (t - l.start) * 6, 34, "#b9b2a5", 900);
+      g.globalAlpha = 1;
+    });
+    vignette();
+  },
+  phone(s, t) {
+    const i = lineAt(s, t);
+    room({ rain: true, t, dawn: i >= 2 ? 0.6 : 0.05 });
+    bed(80, 470);
+    const pa = i >= 1 ? ease(since(s, 1, t) / 1.0) : 0;
+    phoneGlow(330, 400, pa);
+    head(250, 430, 72, "tired", t, 0.5);
+    blanket(180, 450, 500, 140);
+    g.fillStyle = "#0b0c10"; rrect(310, 395, 40, 70, 7); g.fill();
+    g.fillStyle = `rgba(255,140,190,${pa})`; rrect(314, 400, 32, 58, 5); g.fill();
+    clock(800, 520, 0.9, i >= 2 ? "12:47" : "5:12");
+    if (i >= 3) bigText("三日坊主。", W / 2, 130, 120, C.white, "center", ease(since(s, 3, t) * 2));
+    vignette();
+  },
+  calendar(s, t) {
+    const i = lineAt(s, t);
+    g.fillStyle = C.wall; g.fillRect(0, 0, W, H);
+    const months = ["1月", "4月", "9月"];
+    const m = i <= 0 ? 0 : Math.min(2, i - 1);
+    // カレンダー
+    g.fillStyle = "#e8e2d4"; rrect(390, 90, 500, 480, 12); g.fill();
+    g.fillStyle = "#c94a4a"; g.fillRect(390, 90, 500, 80);
+    text(months[m], 640, 130, 48, "#fff");
+    for (let d = 0; d < 28; d++) {
+      const cx = 430 + (d % 7) * 70, cy = 210 + Math.floor(d / 7) * 85;
+      text(String(d + 1), cx + 20, cy + 20, 24, "#6b665c", 500);
+      if (d < 3) { g.strokeStyle = C.red; g.lineWidth = 5; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + 40, cy + 40); g.moveTo(cx + 40, cy); g.lineTo(cx, cy + 40); g.stroke(); }
+    }
+    g.strokeStyle = C.red; g.lineWidth = 6; g.beginPath(); g.arc(450, 230, 34, 0, Math.PI * 2); g.stroke();
+    text("DAY 1", 450, 280, 20, C.red);
+    // ページがめくれる影
+    const flip = i >= 1 ? ((t - s.lines[1].start) % 1.6) / 1.6 : 0;
+    if (i >= 1 && i < 3) { g.fillStyle = `rgba(0,0,0,${0.5 * (1 - flip)})`; g.fillRect(390, 90, 500 * (1 - flip), 480); }
+    vignette();
+  },
+  math(s, t) {
+    const i = lineAt(s, t);
+    g.fillStyle = "#07080c"; g.fillRect(0, 0, W, H);
+    glow(W / 2, H / 2, 500, "rgba(255,179,92,0.12)", 1);
+    if (i < 1) {
+      // ある夜、机で数える
+      desk(640, 520, 0.8); body(640, 430, 0.7); head(640, 395, 55, "calm", t, 0);
+      g.fillStyle = C.white; g.fillRect(580, 500, 110, 16);
+    }
+    if (i >= 1) {
+      const shown = Math.min(10, Math.floor(since(s, 1, t) * 5) + 1);
+      for (let k = 0; k < shown; k++) {
+        const cx = 190 + k * 100, cy = 200;
+        g.strokeStyle = C.white; g.lineWidth = 7; g.lineCap = "round";
+        for (let j = 0; j < 3; j++) { g.beginPath(); g.moveTo(cx + j * 18, cy - 40); g.lineTo(cx + j * 18 + 4, cy + 40); g.stroke(); }
+      }
+    }
+    if (i >= 2) bigText("3日 × 10回 = 30日", W / 2, 380, 96, C.amber, "center", ease(since(s, 2, t) * 2));
+    if (i >= 3) {
+      const a = ease(since(s, 3, t) * 2) * (i >= 4 ? 0.35 : 1);
+      g.globalAlpha = a; text("やらなかった人 ＝ 0日", W / 2, 500, 40, "#7d7a73"); g.globalAlpha = 1;
+    }
+    if (i >= 5) {
+      g.fillStyle = "rgba(7,8,12,0.75)"; g.fillRect(0, 0, W, H);
+      bigText("戻ってきた回数が", W / 2, 290, 80, C.white, "center", ease(since(s, 5, t) * 2));
+      bigText("きみをつくる。", W / 2, 400, 96, C.amber, "center", ease(since(s, 5, t) * 2 - 0.5));
+    }
+    vignette();
+  },
+  day4(s, t) {
+    if (card(s, t)) return;
+    const i = lineAt(s, t), lt = t - s.start - 2;
+    const dawn = i >= 4 ? lerp(0.2, 1, ease(since(s, 4, t) / 5)) : 0.1;
+    room({ rain: true, t, dawn });
+    bed(80, 470);
+    const up = i >= 3 ? ease(since(s, 3, t) / 1.5) : 0;
+    if (up < 0.5) blanket(180, 470, 460, 120);
+    body(lerp(330, 640, ease((since(s, 4, t)) / 3)), lerp(470, 360, up), 0.9);
+    head(lerp(330, 640, ease((since(s, 4, t)) / 3)), lerp(440, 320, up), 78, i >= 3 ? "determined" : "tired", t, i >= 4 ? 1 : 0);
+    if (up >= 0.5) blanket(180, 520, 460, 70);
+    clock(1040, 540, 0.8, "5:00");
+    const end = TL.duration - 4.0;
+    if (t > end - 1) {
+      g.fillStyle = `rgba(0,0,0,${ease((t - end + 1) / 1.2)})`; g.fillRect(0, 0, W, H);
+      bigText("DAY 4.", W / 2, H / 2, 170, C.white, "center", ease((t - end) / 1.0));
+    }
+    vignette();
+  },
+};
+
+window.renderFrame = function (t) {
+  const s = sceneAt(t);
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  S[s.visual](s, t);
+  subtitle(s, t);
+  const f = Math.min(clamp(t / 1.2), clamp((TL.duration - t) / 1.0));
+  if (f < 1) { g.fillStyle = `rgba(0,0,0,${1 - f})`; g.fillRect(0, 0, W, H); }
+};
+window.renderThumb = function (variant) {
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  if (variant === "a") {
+    room({ rain: true, t: 1.3, dawn: 0.05 });
+    phoneGlow(560, 470, 1);
+    head(470, 470, 150, "tired", 0, 0.6);
+    g.fillStyle = "#0b0c10"; rrect(580, 420, 70, 120, 10); g.fill();
+    g.fillStyle = "rgba(255,140,190,1)"; rrect(586, 428, 58, 104, 7); g.fill();
+    clock(1050, 560, 1, "5:00");
+    vignette();
+    bigText("三日坊主。", W / 2, 130, 150);
+  } else {
+    room({ rain: true, t: 1.3, dawn: 0.9 });
+    body(640, 430, 1.3);
+    head(640, 360, 120, "determined", 0);
+    vignette();
+    bigText("DAY 4.", W / 2, 120, 170);
+  }
+};
+window.init = async function (timeline) {
+  TL = timeline;
+  await document.fonts.load("900 40px NotoJP");
+  await document.fonts.load("500 40px NotoJP");
+  return true;
+};
+</script>
+</body>
+</html>
