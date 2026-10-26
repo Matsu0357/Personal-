@@ -1,6 +1,6 @@
 # 英語音読ショート #01 投稿情報
 
-動画: `../../05_exports/english_scroll_01_v3.mp4`（FishAudio 音声・速さ0.8・51.6秒。v1 は仮音声、v2 は速さ0.88）／カバー: `../../04_thumbnails/english_scroll_01_cover.png`
+動画: `../../05_exports/english_scroll_01_v4.mp4`（TikTok 版・リピート練習つき・82.7秒）／カバー: `../../04_thumbnails/english_scroll_01_cover.png`
 
 ## YouTubeショート
 - タイトル: これ、声に出して読める？【中級英語リーディング #01】It's Okay to Start Again #shorts
@@ -11,6 +11,7 @@
   #英語音読 #シャドーイング #英語リスニング #英語学習 #shorts
 
 ## TikTok
+- 投稿設定: **「AI 生成コンテンツ」のラベルをオン**（音声が FishAudio のため）。個人アカウントで投稿
 - キャプション: 最後まで読めたら🎤とコメントしてね｜中級英語リーディング #01
 - ハッシュタグ: #英語音読 #シャドーイング #英語学習 #英語リスニング #readingpractice #englishshadowing
 

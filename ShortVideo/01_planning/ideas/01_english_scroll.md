@@ -26,12 +26,12 @@
 - 和訳: **入れる**（各行の下に日本語訳 ＝ B案）
 - 音声: **FishAudio**（声 `933563129e564b19a115bedd57b7406a`、速さ0.8、商用プラン契約済み）
 
-- 長さ: **60秒以内**（YouTubeショートを基準。TikTok の長尺版は伸び方を見てから）
+- 長さ: **1分以上（約80秒）**。TikTok 先行で収益化を目指すため（設計 `../plans/tiktok-monetization.md`）。通し読みのあとにリピート練習を入れる
 - 見た目: **英文＋和訳が1行ずつ流れ、読んでいる行をハイライト（競合調査の B 型）**。背景は濃紺のニューススタジオ風（プロンプター）
 - 原稿のテーマ: **時事ニュースではなく、ニュース風の読み物**（自己啓発・日常・雑学）。約110語・11行前後
 - 冒頭: 「これ、声に出して読める？」のフック／最後: 「今日の表現」3つ＋コメントのお願い
 - シリーズ名: 「中級英語リーディング #番号」
 
 ## 制作した回
-- #01 It's Okay to Start Again → 台本 `../scripts/english_scroll_01.md`／制作 `../../03_editing/projects/english_scroll/`／書き出し `../../05_exports/english_scroll_01_v3.mp4`（FishAudio・速さ0.8）
-- #02 The Power of Saying "No" → 台本 `../scripts/english_scroll_02.md`／書き出し `../../05_exports/english_scroll_02_v1.mp4`
+- #01 It's Okay to Start Again → 台本 `../scripts/english_scroll_01.md`／制作 `../../03_editing/projects/english_scroll/`／書き出し `../../05_exports/english_scroll_01_v4.mp4`（TikTok 版）
+- #02 The Power of Saying "No" → 台本 `../scripts/english_scroll_02.md`／書き出し `../../05_exports/english_scroll_02_v2.mp4`（TikTok 版）

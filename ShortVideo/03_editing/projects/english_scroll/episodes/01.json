@@ -23,6 +23,7 @@
     { "en": "Small steps, taken again and again, become real change.", "ja": "小さな一歩をくり返すと、本当の変化になります。" },
     { "en": "It's okay to start again. Today is a good day to begin.", "ja": "もう一度始めていい。今日は、始めるのにちょうどいい日です。" }
   ],
+  "repeat": [4, 6, 10],
   "words": [
     { "en": "give up on ~", "ja": "～をあきらめる" },
     { "en": "turn into ~", "ja": "～に変わる" },

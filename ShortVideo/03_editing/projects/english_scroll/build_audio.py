@@ -28,6 +28,9 @@ PACE = {
     "intro": 2.6,     # タイトルとフックを見せる時間
     "gap_line": 0.55,  # 行と行のあいだ（声に出して追いかける余裕）
     "outro": 3.2,     # 単語まとめ・フォローのお願い
+    "repeat_card": 1.8,  # 「リピート練習」のカード
+    "turn_extra": 0.5,   # あなたの番：文の長さ＋この秒数
+    "repeat_gap": 0.4,
 }
 
 
@@ -116,7 +119,26 @@ def main():
         lines.append({**ln, "start": round(t, 3), "end": round(t + dur, 3)})
         clips.append((t, s))
         t += dur + PACE["gap_line"]
-    outro = t - PACE["gap_line"] + 0.6
+    read_end = t - PACE["gap_line"] + 0.4
+
+    # リピート練習：大事な文をもう一度読み、そのあとに視聴者が声に出す間を空ける
+    repeat, chimes = None, []
+    if sc.get("repeat"):
+        t = read_end + 0.4
+        repeat = {"start": round(t, 3), "items": []}
+        t += PACE["repeat_card"]
+        for i in sc["repeat"]:
+            s = clips[i][1]
+            dur = len(s) / SR
+            turn = dur + PACE["turn_extra"]
+            repeat["items"].append({"i": i, "start": round(t, 3), "end": round(t + dur, 3),
+                                    "turn_end": round(t + dur + 0.25 + turn, 3)})
+            clips.append((t, s))
+            chimes.append(t + dur + 0.25)
+            t += dur + 0.25 + turn + PACE["repeat_gap"]
+        outro = t
+    else:
+        outro = read_end + 0.2
     total = outro + PACE["outro"]
 
     n = int(total * SR) + SR
@@ -125,6 +147,14 @@ def main():
         i = int(st * SR)
         voice[i:i + len(s)] += s
     voice /= max(1e-6, np.abs(voice).max() / 0.9)
+    # あなたの番の合図：やわらかい2音
+    tt = np.arange(int(0.6 * SR)) / SR
+    env = np.exp(-6 * tt) * np.minimum(1, tt / 0.005)
+    ding = (np.sin(2 * np.pi * HZ(84) * tt) * env * 0.18).astype(np.float32)
+    ding[int(0.09 * SR):] += (np.sin(2 * np.pi * HZ(88) * tt) * env * 0.15).astype(np.float32)[: len(ding) - int(0.09 * SR)]
+    for at in chimes:
+        i = int(at * SR)
+        voice[i:i + len(ding)] += ding[: n - i]
     mix = voice + bgm(n)
     mix /= max(1.0, np.abs(mix).max() / 0.95)
     with wave.open(os.path.join(BUILD, "audio.wav"), "wb") as w:
@@ -134,11 +164,12 @@ def main():
         w.writeframes((mix * 32767).astype(np.int16).tobytes())
 
     timeline = {k: sc[k] for k in ("title_en", "title_ja", "hook", "level", "episode", "words")}
-    timeline.update({"lines": lines, "outro": round(outro, 3), "duration": round(total, 3)})
+    timeline.update({"lines": lines, "read_end": round(read_end, 3), "repeat": repeat,
+                     "outro": round(outro, 3), "duration": round(total, 3)})
     json.dump(timeline, open(os.path.join(BUILD, "timeline.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"{len(lines)} lines, total {total:.1f}s")
-    if total > 60:
-        print("※ 60秒を超えています。YouTubeショートは3分まで投稿できますが、60秒以内が目安です", file=sys.stderr)
+    if total < 61:
+        print("※ 1分未満です。TikTok の Creator Rewards Program は1分以上の動画だけが対象です", file=sys.stderr)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # 英語音読ショート #02 投稿情報
 
-動画: `../../05_exports/english_scroll_02_v1.mp4`（FishAudio・速さ0.8・50.9秒）／カバー: `../../04_thumbnails/english_scroll_02_cover.png`
+動画: `../../05_exports/english_scroll_02_v2.mp4`（TikTok 版・リピート練習つき・80.1秒）／カバー: `../../04_thumbnails/english_scroll_02_cover.png`
 
 ## YouTubeショート
 - タイトル: これ、声に出して読める？【中級英語リーディング #02】The Power of Saying "No" #shorts
@@ -11,6 +11,7 @@
   #英語音読 #シャドーイング #英語リスニング #英語学習 #shorts
 
 ## TikTok
+- 投稿設定: **「AI 生成コンテンツ」のラベルをオン**（音声が FishAudio のため）。個人アカウントで投稿
 - キャプション: 断るのが苦手な人へ。最後まで読めたら🎤とコメントしてね｜中級英語リーディング #02
 - ハッシュタグ: #英語音読 #シャドーイング #英語学習 #英語リスニング #readingpractice #englishshadowing
 

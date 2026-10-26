@@ -74,7 +74,7 @@ function scrollAt(t) {
     const mv = 0.45, p = (t - (next.start - mv)) / mv;
     if (p > 0) return lerp(center(k), center(k + 1), ease(p));
   }
-  if (t > TL.outro) return center(k) + lerp(0, 220, ease((t - TL.outro) / 0.8));
+  if (t > TL.read_end) return center(k) + lerp(0, 220, ease((t - TL.read_end) / 0.8));
   return center(k);
 }
 
@@ -138,7 +138,7 @@ function hook(t) {
 function prompter(t) {
   const off = scrollAt(t);
   const k = curIndex(t);
-  const showA = ease((t - (TL.lines[0].start - 1.2)) / 0.8) * (1 - 0.85 * ease((t - TL.outro) / 0.5));
+  const showA = ease((t - (TL.lines[0].start - 1.2)) / 0.8) * (1 - (TL.repeat ? 1 : 0.85) * ease((t - TL.read_end) / 0.5));
   if (showA <= 0) return;
   g.save();
   g.beginPath(); g.rect(0, VIEW_TOP, W, VIEW_BOT - VIEW_TOP); g.clip();
@@ -149,8 +149,8 @@ function prompter(t) {
     // 中央に近いほど明るく
     const d = Math.abs(top + it.h / 2 - FOCUS_Y);
     const near = clamp(1 - d / 520);
-    const active = i === k && t < TL.outro + 0.2;
-    const done = i < k || t >= TL.outro + 0.2;
+    const active = i === k && t < TL.read_end;
+    const done = i < k || t >= TL.read_end;
     let alpha = (0.18 + 0.82 * near) * showA;
     if (active) {
       // 読み上げ中の行：黄色のバーと半透明のパネル
@@ -178,6 +178,59 @@ function prompter(t) {
   }
 }
 
+// リピート練習：1文ずつ「聞く → あなたの番」
+function repeat(t) {
+  const R = TL.repeat;
+  if (!R || t < R.start || t > TL.outro + 0.4) return;
+  const a = ease((t - R.start) / 0.4) * (1 - ease((t - TL.outro) / 0.4));
+  g.save(); g.globalAlpha = a;
+  const cx = W / 2 - 45;
+  const first = R.items[0].start;
+  if (t < first) {
+    // カード
+    const s = lerp(0.9, 1, ease((t - R.start) / 0.4));
+    g.translate(cx, FOCUS_Y - 40); g.scale(s, s);
+    txt("REPEAT", 0, -150, "800 40px Inter", C.hi, "center");
+    txt("リピート練習", 0, -60, "900 92px NotoJP", C.white, "center");
+    txt("音声のあとに、声に出してみよう 🎤", 0, 50, "700 38px NotoJP", C.ja, "center");
+    g.restore();
+    return;
+  }
+  let k = 0;
+  R.items.forEach((it, j) => { if (t >= it.start - 0.2) k = j; });
+  const it = R.items[k], l = TL.lines[it.i];
+  const fadeIn = ease((t - (it.start - 0.2)) / 0.3);
+  g.globalAlpha = a * fadeIn;
+  txt(`${k + 1} / ${R.items.length}`, X0, 560, "800 36px Inter", C.dim);
+  const en = wrap(l.en, "800 64px Inter", TW - 20);
+  const ja = wrap(l.ja, "500 38px NotoJP", TW - 20);
+  const h = en.length * 84 + 24 + ja.length * 54;
+  const top = FOCUS_Y - 60 - h / 2;
+  rrect(X0 - 24, top - 36, TW + 48, h + 72, 22); g.fillStyle = C.panel; g.fill();
+  const listening = t < it.end + 0.25;
+  en.forEach((s, j) => txt(s, X0 + 6, top + 42 + j * 84, "800 64px Inter", C.white));
+  ja.forEach((s, j) => txt(s, X0 + 6, top + en.length * 84 + 24 + 27 + j * 54, "500 38px NotoJP", C.ja));
+  const by = top + h + 110;
+  if (listening) {
+    txt("🎧 LISTEN", X0, by, "800 44px Inter", C.ja);
+    const prog = clamp((t - it.start) / (it.end - it.start));
+    g.fillStyle = "rgba(201,210,232,0.5)"; g.fillRect(X0 - 16, top + h + 30, (TW + 40) * prog, 5);
+  } else {
+    // あなたの番：黄色のバッジと減っていくバー
+    const p = clamp((t - (it.end + 0.25)) / (it.turn_end - it.end - 0.25));
+    const pop = 1 + 0.08 * (1 - ease((t - it.end - 0.25) / 0.25));
+    g.save(); g.translate(X0, by); g.scale(pop, pop);
+    g.font = "900 52px NotoJP";
+    const bw = g.measureText("あなたの番 🎤").width + 60;
+    rrect(0, -48, bw, 96, 18); g.fillStyle = C.hi; g.fill();
+    txt("あなたの番 🎤", 30, 2, "900 52px NotoJP", C.ink);
+    g.restore();
+    g.fillStyle = "rgba(255,255,255,0.12)"; rrect(X0, by + 80, TW, 12, 6); g.fill();
+    g.fillStyle = C.hi; rrect(X0, by + 80, TW * (1 - p), 12, 6); g.fill();
+  }
+  g.restore();
+}
+
 function outro(t) {
   const a = ease((t - TL.outro) / 0.5);
   if (a <= 0) return;
@@ -202,7 +255,8 @@ function progress(t) {
   g.fillStyle = "rgba(255,255,255,0.12)"; rrect(X0, y, TW, 8, 4); g.fill();
   g.fillStyle = C.hi; rrect(X0, y, TW * clamp(t / TL.duration), 8, 4); g.fill();
   const k = Math.max(0, curIndex(t));
-  txt(`${Math.min(k + 1, TL.lines.length)} / ${TL.lines.length}`, X1, y - 30, "700 28px Inter", C.dim, "right");
+  const label = t >= TL.read_end ? (t < TL.outro ? "REPEAT" : "") : `${Math.min(k + 1, TL.lines.length)} / ${TL.lines.length}`;
+  txt(label, X1, y - 30, "700 28px Inter", C.dim, "right");
   txt(TL.level, X0, y - 30, "500 28px NotoJP", C.dim);
 }
 
@@ -210,6 +264,7 @@ window.renderFrame = t => {
   background(t);
   header(t);
   prompter(t);
+  repeat(t);
   hook(t);
   outro(t);
   progress(t);

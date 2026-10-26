@@ -23,6 +23,7 @@
     { "en": "Most people will understand more than you expect.", "ja": "たいていの人は、思っている以上にわかってくれます。" },
     { "en": "Protecting your time is a way of respecting yourself.", "ja": "自分の時間を守ることは、自分を大切にすることなのです。" }
   ],
+  "repeat": [3, 6, 8],
   "words": [
     { "en": "let ~ down", "ja": "～をがっかりさせる" },
     { "en": "agree to ~", "ja": "～を引き受ける" },
