@@ -1,6 +1,6 @@
 # 01 英語学習：英文スクロール（ニュース原稿・プロンプター風）
 
-ステータス: 制作中（#01・#02 完成／競合調査済み → [english-scroll-competitors.md](../research/english-scroll-competitors.md)）
+ステータス: テスト期間30本 完成（競合調査済み → [english-scroll-competitors.md](../research/english-scroll-competitors.md)）
 
 ## 形式
 - 縦型（9:16）の画面で、英文が下から上へゆっくり流れる（テレビのプロンプターや映画のエンドロールに近い動き）。
@@ -35,3 +35,4 @@
 ## 制作した回
 - #01 It's Okay to Start Again → 台本 `../scripts/english_scroll_01.md`／制作 `../../03_editing/projects/english_scroll/`／書き出し `../../05_exports/english_scroll_01_v4.mp4`（TikTok 版）
 - #02 The Power of Saying "No" → 台本 `../scripts/english_scroll_02.md`／書き出し `../../05_exports/english_scroll_02_v2.mp4`（TikTok 版）
+- #03〜#30 → 台本 `../scripts/english_scroll_XX.md`／書き出し `../../05_exports/english_scroll_XX_v1.mp4`／投稿表 `../../06_publishing/schedule/tiktok-test-30days.md`
