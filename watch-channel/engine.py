@@ -189,7 +189,8 @@ def build(ep, render=True):
     idx = np.arange(total)
     env = (c[np.minimum(idx + win // 2, total)] - c[np.maximum(idx - win // 2, 0)]) / win
     duck = 1 - 0.45 * np.clip(env / 0.04, 0, 1)
-    mix = vtrack + SE_GAIN * fxtrack + BGM_GAIN * duck * se.bgm(total / se.SR)
+    bgm = np.resize(se.bgm(total / se.SR), total)  # 丸めで 1 サンプルずれることがあるので長さを合わせる
+    mix = vtrack + SE_GAIN * fxtrack + BGM_GAIN * duck * bgm
     mix *= 0.89 / np.max(np.abs(mix))
     raw = os.path.join(work, "mix.f32")
     mix.astype(np.float32).tofile(raw)
