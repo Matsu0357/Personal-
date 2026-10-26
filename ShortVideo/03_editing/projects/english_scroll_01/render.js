@@ -49,6 +49,7 @@ const BUILD = path.join(__dirname, "build");
     "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "mjpeg", "-i", "-",
     "-i", path.join(BUILD, "audio.wav"),
     "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p",
+    "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", "48000",  // SNS 向けの音量にそろえる
     "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart",
     path.join(BUILD, "video.mp4"),
   ], { stdio: ["pipe", "inherit", "inherit"] });
