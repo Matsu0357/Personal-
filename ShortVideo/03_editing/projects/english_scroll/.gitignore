@@ -1,2 +1,2 @@
-build/
+build_*/
 assets/*.ttf

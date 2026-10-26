@@ -1,0 +1,31 @@
+{
+  "title_en": "The Power of Saying \"No\"",
+  "title_ja": "「ノー」と言う力",
+  "hook": "これ、声に出して読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 2,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    { "en": "Do you find it hard to say \"no\" to people?", "ja": "人に「ノー」と言うのは苦手ですか？" },
+    { "en": "A coworker asks for help, and you agree right away.", "ja": "同僚に手伝いを頼まれると、すぐに引き受けてしまう。" },
+    { "en": "A friend invites you out, even though you're exhausted.", "ja": "くたくたなのに、友だちの誘いに乗ってしまう。" },
+    { "en": "You say \"yes\" because you don't want to let anyone down.", "ja": "誰もがっかりさせたくなくて、「イエス」と言ってしまう。" },
+    { "en": "But every \"yes\" uses a little of your time and energy.", "ja": "でも「イエス」のたびに、時間と元気が少しずつ減っていきます。" },
+    { "en": "When you agree to everything, nothing is left for you.", "ja": "何でも引き受けていると、自分のための分が残りません。" },
+    { "en": "Saying \"no\" doesn't make you selfish or unkind.", "ja": "「ノー」と言っても、わがままでも冷たくもありません。" },
+    { "en": "It simply means you know your limits.", "ja": "それは、自分の限界をわかっているということです。" },
+    { "en": "Try something gentle, like \"I'd love to, but I can't this time.\"", "ja": "「ぜひ行きたいけど、今回は無理なんだ」のように、やわらかく伝えてみましょう。" },
+    { "en": "Most people will understand more than you expect.", "ja": "たいていの人は、思っている以上にわかってくれます。" },
+    { "en": "Protecting your time is a way of respecting yourself.", "ja": "自分の時間を守ることは、自分を大切にすることなのです。" }
+  ],
+  "words": [
+    { "en": "let ~ down", "ja": "～をがっかりさせる" },
+    { "en": "agree to ~", "ja": "～を引き受ける" },
+    { "en": "know one's limits", "ja": "自分の限界を知る" }
+  ]
+}

@@ -1,6 +1,6 @@
 # 01 英語学習：英文スクロール（ニュース原稿・プロンプター風）
 
-ステータス: 試作1本目完成（競合調査済み → [english-scroll-competitors.md](../research/english-scroll-competitors.md)）
+ステータス: 制作中（#01・#02 完成／競合調査済み → [english-scroll-competitors.md](../research/english-scroll-competitors.md)）
 
 ## 形式
 - 縦型（9:16）の画面で、英文が下から上へゆっくり流れる（テレビのプロンプターや映画のエンドロールに近い動き）。
@@ -32,5 +32,6 @@
 - 冒頭: 「これ、声に出して読める？」のフック／最後: 「今日の表現」3つ＋コメントのお願い
 - シリーズ名: 「中級英語リーディング #番号」
 
-## 試作
-- #01 It's Okay to Start Again → 台本 `../scripts/english_scroll_01.md`／制作 `../../03_editing/projects/english_scroll_01/`／書き出し `../../05_exports/english_scroll_01_v3.mp4`（FishAudio・速さ0.8）
+## 制作した回
+- #01 It's Okay to Start Again → 台本 `../scripts/english_scroll_01.md`／制作 `../../03_editing/projects/english_scroll/`／書き出し `../../05_exports/english_scroll_01_v3.mp4`（FishAudio・速さ0.8）
+- #02 The Power of Saying "No" → 台本 `../scripts/english_scroll_02.md`／書き出し `../../05_exports/english_scroll_02_v1.mp4`

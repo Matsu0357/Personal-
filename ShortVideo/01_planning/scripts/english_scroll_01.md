@@ -1,7 +1,7 @@
 # 英語音読ショート #01 台本「It's Okay to Start Again／もう一度、始めればいい」
 
 レベル: 中級（B1〜B2）／約110語／仕上がり 48秒
-データ: `../../03_editing/projects/english_scroll_01/script.json`
+データ: `../../03_editing/projects/english_scroll/episodes/01.json`
 
 フック: これ、声に出して読める？
 
@@ -22,7 +22,7 @@
 今日の表現: give up on ～（～をあきらめる）／turn into ～（～に変わる）／the same as ～（～と同じ）
 
 ## 次回以降のテーマ候補（自己啓発・日常・雑学の読み物）
-- #02 The Power of Saying "No"（断る力）
+- #02 The Power of Saying "No"（断る力）→ 制作済み `english_scroll_02.md`
 - #03 Why We Feel Tired on Sundays（日曜の夕方がゆううつな理由）※事実を書くときは出典を確認
 - #04 A Letter to Myself Ten Years Ago（10年前の自分への手紙）
 - #05 Small Habits That Changed My Morning（朝を変えた小さな習慣）

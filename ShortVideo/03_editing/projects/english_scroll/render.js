@@ -1,15 +1,16 @@
 // render.html を Playwright で1コマずつ描いて、ffmpeg で動画にする。縦型 1080x1920
-// 使い方（先に python3 build_audio.py）:
-//   node render.js                 → build/video.mp4（音声付き）
-//   node render.js --preview 1,8   → build/preview_1.jpg などの確認用画像
-//   node render.js --thumb         → build/cover.png（カバー画像）
+// 使い方（先に python3 build_audio.py 02）。回の番号を最初に書く:
+//   node render.js 02                  → build_02/video.mp4（音声付き）
+//   node render.js 02 --preview 1,8    → build_02/preview_1.jpg などの確認用画像
+//   node render.js 02 --thumb          → build_02/cover.png（カバー画像）
 const { chromium } = require("playwright");
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
 const FPS = 30;
-const BUILD = path.join(__dirname, "build");
+const EP = /^\d+$/.test(process.argv[2] || "") ? process.argv[2] : "01";
+const BUILD = path.join(__dirname, `build_${EP}`);
 
 (async () => {
   const timeline = JSON.parse(fs.readFileSync(path.join(BUILD, "timeline.json"), "utf8"));
@@ -63,5 +64,5 @@ const BUILD = path.join(__dirname, "build");
   ff.stdin.end();
   await new Promise(r => ff.on("close", r));
   await browser.close();
-  console.log("done: build/video.mp4");
+  console.log(`done: build_${EP}/video.mp4`);
 })();

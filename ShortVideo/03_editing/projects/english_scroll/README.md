@@ -1,4 +1,9 @@
-# 英語音読ショート #01「It's Okay to Start Again」（試作）
+# 英語音読ショート「中級英語リーディング」制作フォルダ
+
+| 回 | タイトル | 台本データ | 書き出し |
+| --- | --- | --- | --- |
+| #01 | It's Okay to Start Again | `episodes/01.json` | `05_exports/english_scroll_01_v3.mp4` |
+| #02 | The Power of Saying "No" | `episodes/02.json` | `05_exports/english_scroll_02_v1.mp4` |
 
 企画: `../../../01_planning/ideas/01_english_scroll.md`／競合調査: `../../../01_planning/research/english-scroll-competitors.md`
 
@@ -12,16 +17,16 @@
 
 ## 作り方
 ```
-python3 build_audio.py      # 音声 → build/audio.wav, build/timeline.json
-node render.js --preview 1,10,47   # 確認用の静止画
-node render.js              # build/video.mp4
-node render.js --thumb      # build/cover.png
+python3 build_audio.py 02           # 音声 → build_02/audio.wav, build_02/timeline.json
+node render.js 02 --preview 1,10,47  # 確認用の静止画
+node render.js 02                    # build_02/video.mp4
+node render.js 02 --thumb            # build_02/cover.png
 ```
 - フォント（`assets/NotoSansJP.ttf`, `assets/Inter.ttf`）は Git に入れていない。Google Fonts から同じ名前で置く
-- 台本は `script.json`。行は `{"en", "ja"}`、`words` が最後の「今日の表現」
+- 台本は `episodes/XX.json`（新しい回は前の回をコピーして書きかえる）。行は `{"en", "ja"}`、`words` が最後の「今日の表現」
 
 ## 音声（FishAudio）
-- 声: `933563129e564b19a115bedd57b7406a`（`script.json` の `voice.fish_reference_id`）
+- 声: `933563129e564b19a115bedd57b7406a`（各回の台本の `voice.fish_reference_id`）
 - APIキーは**リポジトリに入れない**。クラウド環境の設定（ネットワークシークレット、なければ環境変数 `FISH_AUDIO_API_KEY`）に保存する。自分のPCで作るときは `export FISH_AUDIO_API_KEY=...` してから `python3 build_audio.py`
 - キーが使えないときは警告を出して edge-tts で作る
 - 使うモデルは `FISH_AUDIO_MODEL`（既定 `s1`）。API の仕様が変わっていたら `tts_fish()` を直す

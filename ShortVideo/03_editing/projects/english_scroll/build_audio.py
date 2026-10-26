@@ -1,8 +1,8 @@
-"""script.json → 英文を1行ずつ読み上げ → build/timeline.json と BGM入りの build/audio.wav
+"""episodes/XX.json → 英文を1行ずつ読み上げ → build/timeline.json と BGM入りの build/audio.wav
 
-使い方: python3 build_audio.py
+使い方: python3 build_audio.py 02      → episodes/02.json を読んで build_02/ に出力
 音声:
-  - script.json の voice.fish_reference_id が入っていれば FishAudio
+  - 台本の voice.fish_reference_id が入っていれば FishAudio
     APIキーは環境変数 FISH_AUDIO_API_KEY から読む（クラウド環境のネットワークシークレットで
     api.fish.audio への認証が自動で付く場合は、環境変数がなくても通る）
   - FishAudio が使えないときは試作用に edge-tts（本番では使わない）
@@ -19,7 +19,9 @@ import wave
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BUILD = os.path.join(HERE, "build")
+EP = sys.argv[1] if len(sys.argv) > 1 else "01"
+SCRIPT = os.path.join(HERE, "episodes", f"{EP}.json")
+BUILD = os.path.join(HERE, f"build_{EP}")
 SR = 48000
 
 PACE = {
@@ -87,7 +89,7 @@ def bgm(n):
 
 def main():
     os.makedirs(BUILD, exist_ok=True)
-    sc = json.load(open(os.path.join(HERE, "script.json"), encoding="utf-8"))
+    sc = json.load(open(SCRIPT, encoding="utf-8"))
     v = sc["voice"]
     use_fish = bool(v.get("fish_reference_id"))
     if use_fish:
