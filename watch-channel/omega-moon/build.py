@@ -23,7 +23,7 @@ W, H = 1080, 1920
 FONT = "Hiragino Sans, Noto Sans JP, IPAGothic, sans-serif"
 VOICE = "bb3bf6a073cb48c1a5b6c436053ce243"  # Fish Audio「男性ナレーター」
 SPEED = 1.1
-SE_GAIN = 0.65  # SE 全体の音量
+SE_GAIN = 0.45  # SE 全体の音量
 BGM_GAIN = 0.09
 TITLE = "オメガが月に行った話"
 
