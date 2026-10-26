@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFF4E0"/>
+      <stop offset="1" stop-color="#FFD9A8"/>
+    </linearGradient>
+    <radialGradient id="lens" cx="0.4" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#EAF6FF"/>
+      <stop offset="1" stop-color="#9FCBEA"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  <text x="600" y="70" text-anchor="middle" font-family="Hiragino Sans, Noto Sans JP, sans-serif" font-size="40" font-weight="800" fill="#3B2A1A">キャラ原案</text>
+
+  <!-- ===== 案① 時計頭くん ===== -->
+  <g>
+    <ellipse cx="330" cy="640" rx="95" ry="14" fill="#000" opacity="0.15"/>
+    <!-- legs -->
+    <path d="M305 555 L298 625" stroke="#1B1B1F" stroke-width="16" stroke-linecap="round"/>
+    <path d="M355 555 L362 625" stroke="#1B1B1F" stroke-width="16" stroke-linecap="round"/>
+    <ellipse cx="290" cy="630" rx="20" ry="10" fill="#1B1B1F"/>
+    <ellipse cx="370" cy="630" rx="20" ry="10" fill="#1B1B1F"/>
+    <!-- arms -->
+    <path d="M268 500 Q235 530 240 565" stroke="#1B1B1F" stroke-width="15" fill="none" stroke-linecap="round"/>
+    <path d="M392 500 Q430 470 440 435" stroke="#1B1B1F" stroke-width="15" fill="none" stroke-linecap="round"/>
+    <!-- body -->
+    <ellipse cx="330" cy="515" rx="70" ry="60" fill="#1B1B1F"/>
+    <!-- crown (リューズ) -->
+    <rect x="324" y="226" width="12" height="14" fill="#B8862E"/>
+    <rect x="314" y="208" width="32" height="22" rx="6" fill="#D4A24C"/>
+    <path d="M320 212 V226 M326 212 V226 M332 212 V226 M338 212 V226" stroke="#B8862E" stroke-width="2"/>
+    <!-- head = watch case -->
+    <circle cx="330" cy="360" r="122" fill="#1B1B1F" stroke="#D4A24C" stroke-width="12"/>
+    <circle cx="330" cy="360" r="104" fill="none" stroke="#2E2E36" stroke-width="2"/>
+    <g transform="translate(330 360)" stroke="#D4A24C" stroke-linecap="round">
+      <line x1="0" y1="-98" x2="0" y2="-84" stroke-width="5"/>
+      <line x1="0" y1="98" x2="0" y2="84" stroke-width="5"/>
+      <line x1="-98" y1="0" x2="-84" y2="0" stroke-width="5"/>
+      <line x1="98" y1="0" x2="84" y2="0" stroke-width="5"/>
+      <g stroke-width="3" opacity="0.8">
+        <line x1="0" y1="-98" x2="0" y2="-90" transform="rotate(30)"/>
+        <line x1="0" y1="-98" x2="0" y2="-90" transform="rotate(60)"/>
+        <line x1="0" y1="-98" x2="0" y2="-90" transform="rotate(120)"/>
+        <line x1="0" y1="-98" x2="0" y2="-90" transform="rotate(150)"/>
+        <line x1="0" y1="-98" x2="0" y2="-90" transform="rotate(210)"/>
+        <line x1="0" y1="-98" x2="0" y2="-90" transform="rotate(240)"/>
+        <line x1="0" y1="-98" x2="0" y2="-90" transform="rotate(300)"/>
+        <line x1="0" y1="-98" x2="0" y2="-90" transform="rotate(330)"/>
+      </g>
+    </g>
+    <!-- eyes -->
+    <ellipse cx="292" cy="358" rx="28" ry="37" fill="#FFF"/>
+    <ellipse cx="368" cy="358" rx="28" ry="37" fill="#FFF"/>
+    <circle cx="298" cy="368" r="13" fill="#111"/>
+    <circle cx="374" cy="368" r="13" fill="#111"/>
+    <circle cx="302" cy="362" r="4.5" fill="#FFF"/>
+    <circle cx="378" cy="362" r="4.5" fill="#FFF"/>
+    <!-- tiny hands as a smile-ish accent -->
+    <path d="M330 420 L330 440" stroke="#D4A24C" stroke-width="4" stroke-linecap="round"/>
+    <path d="M330 420 L344 412" stroke="#D4A24C" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="330" cy="420" r="4" fill="#D4A24C"/>
+    <text x="330" y="700" text-anchor="middle" font-family="Hiragino Sans, Noto Sans JP, sans-serif" font-size="32" font-weight="800" fill="#3B2A1A">案① 時計頭くん</text>
+  </g>
+
+  <!-- ===== 案② 小さな時計職人 ===== -->
+  <g>
+    <ellipse cx="870" cy="640" rx="95" ry="14" fill="#000" opacity="0.15"/>
+    <path d="M845 560 L838 625" stroke="#1B1B1F" stroke-width="16" stroke-linecap="round"/>
+    <path d="M895 560 L902 625" stroke="#1B1B1F" stroke-width="16" stroke-linecap="round"/>
+    <ellipse cx="830" cy="630" rx="20" ry="10" fill="#1B1B1F"/>
+    <ellipse cx="910" cy="630" rx="20" ry="10" fill="#1B1B1F"/>
+    <!-- left arm -->
+    <path d="M808 505 Q775 535 780 570" stroke="#1B1B1F" stroke-width="15" fill="none" stroke-linecap="round"/>
+    <!-- body -->
+    <ellipse cx="870" cy="520" rx="70" ry="60" fill="#1B1B1F"/>
+    <!-- apron -->
+    <path d="M838 478 H902 L918 572 Q870 586 822 572 Z" fill="#8B5A2B"/>
+    <path d="M838 478 Q870 450 902 478" stroke="#6B4320" stroke-width="5" fill="none"/>
+    <rect x="850" y="512" width="40" height="28" rx="4" fill="#6B4320"/>
+    <path d="M858 512 V500" stroke="#C0C0C8" stroke-width="3" stroke-linecap="round"/>
+    <path d="M866 512 V496" stroke="#D4A24C" stroke-width="3" stroke-linecap="round"/>
+    <!-- right arm holding screwdriver -->
+    <path d="M932 505 Q985 495 1010 470" stroke="#1B1B1F" stroke-width="15" fill="none" stroke-linecap="round"/>
+    <rect x="1004" y="440" width="16" height="30" rx="5" fill="#C8432F"/>
+    <path d="M1012 440 V410" stroke="#C0C0C8" stroke-width="4" stroke-linecap="round"/>
+    <!-- head -->
+    <circle cx="870" cy="370" r="112" fill="#1B1B1F"/>
+    <!-- left eye -->
+    <ellipse cx="832" cy="372" rx="27" ry="35" fill="#FFF"/>
+    <circle cx="838" cy="382" r="12.5" fill="#111"/>
+    <circle cx="842" cy="376" r="4.5" fill="#FFF"/>
+    <!-- loupe over right eye -->
+    <path d="M908 330 Q950 300 975 330" stroke="#3E2A17" stroke-width="4" fill="none"/>
+    <circle cx="912" cy="366" r="46" fill="#6B4A2B" stroke="#3E2A17" stroke-width="6"/>
+    <circle cx="912" cy="366" r="33" fill="url(#lens)"/>
+    <ellipse cx="912" cy="370" rx="24" ry="29" fill="#FFF"/>
+    <circle cx="918" cy="380" r="13" fill="#111"/>
+    <circle cx="923" cy="373" r="5" fill="#FFF"/>
+    <path d="M890 348 Q898 338 910 336" stroke="#FFF" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8"/>
+    <text x="870" y="700" text-anchor="middle" font-family="Hiragino Sans, Noto Sans JP, sans-serif" font-size="32" font-weight="800" fill="#3B2A1A">案② 小さな時計職人</text>
+  </g>
+</svg>
