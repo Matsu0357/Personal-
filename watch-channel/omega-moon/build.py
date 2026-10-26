@@ -2,7 +2,7 @@
 
     python3 build.py   ->  out/omega-moon.mp4
 
-各カットの SVG/PNG、Fish Audio のナレーション、ffmpeg で結合した mp4 を out/ に書き出す。
+各カットの SVG/PNG、Fish Audio のナレーション、SE を混ぜた音声、ffmpeg で 1 パス書き出しした mp4 を out/ に置く。
 """
 import json
 import os
@@ -10,9 +10,12 @@ import random
 import subprocess
 import sys
 
+import numpy as np
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
 from craftsman import craftsman, LENS_DEF  # noqa: E402
+import se  # noqa: E402
 
 OUT = os.path.join(HERE, "out")
 W, H = 1080, 1920
@@ -306,9 +309,38 @@ const {chromium} = require('playwright');
     subprocess.run(["node", "-e", js], check=True)
 
 
+def decode(path):
+    r = subprocess.run(["ffmpeg", "-v", "error", "-i", path, "-f", "f32le", "-ac", "1", "-ar", str(se.SR), "-"],
+                       capture_output=True, check=True)
+    return np.frombuffer(r.stdout, dtype=np.float32)
+
+
+EXPR_SE = {"thinking": (se.question, 0.45), "surprised": (se.shock, 0.6),
+           "happy": (se.sparkle, 0.3), "sad": (se.sad, 0.35)}
+TAIL = 0.3  # ナレーション後の間
+
+
+def cues(i, scene, expr, prev):
+    """カット i（1 始まり）の頭から鳴らす SE: [(開始秒, 波形, 音量)]"""
+    out = []
+    changed = prev is None or prev[0].split("_")[0] != scene.split("_")[0]
+    if changed and prev is not None:
+        out.append((0.0, se.whoosh(), 0.3))
+    if expr in EXPR_SE and (changed or prev[1] != expr):
+        fn, gain = EXPR_SE[expr]
+        out.append((0.05, fn(), gain))
+    if i == 4:
+        out.append((0.4, se.car_pass(), 0.4))
+    if i == 15:
+        out.append((0.0, se.alarm(), 0.18))
+    if i == 20:
+        out.append((0.1, se.chime(), 0.35))
+    return out
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
-    pairs, segs = [], []
+    pairs = []
     for i, (scene, expr, text, reading) in enumerate(CUTS, 1):
         svg = os.path.join(OUT, f"cut{i:02d}.svg")
         with open(svg, "w") as f:
@@ -316,19 +348,43 @@ def main():
         pairs.append([svg, svg[:-4] + ".png"])
         tts(reading or text.replace("\n", ""), os.path.join(OUT, f"cut{i:02d}.mp3"))
     render_pngs(pairs)
-    for i in range(1, len(CUTS) + 1):
-        png, mp3, seg = (os.path.join(OUT, f"cut{i:02d}.{ext}") for ext in ("png", "mp3", "mp4"))
-        d = duration(mp3) + 0.3
-        subprocess.run(["ffmpeg", "-y", "-v", "error", "-loop", "1", "-i", png, "-i", mp3,
-                        "-af", "apad", "-t", f"{d:.2f}", "-r", "30", "-c:v", "libx264", "-tune", "stillimage",
-                        "-pix_fmt", "yuv420p", "-c:a", "aac", "-ar", "44100", "-ac", "2", seg], check=True)
-        segs.append(seg)
-    lst = os.path.join(OUT, "segments.txt")
+
+    # タイムラインを組んでナレーションと SE を 1 本にミックス
+    voice, fx, frames, t, prev = [], [], [], 0.0, None
+    for i, (scene, expr, _, _) in enumerate(CUTS, 1):
+        v = decode(os.path.join(OUT, f"cut{i:02d}.mp3"))
+        c = cues(i, scene, expr, prev)
+        lead = 0.3 if c else 0.08
+        dur = round(lead + len(v) / se.SR + TAIL, 2)
+        voice.append((t + lead, v, 1.0))
+        fx += [(t + s, w, g) for s, w, g in c]
+        if scene == "apollo13_timer" and (prev is None or prev[0] != scene):
+            fx.append((t, se.ticking(dur), 0.22))
+        frames.append((os.path.join(OUT, f"cut{i:02d}.png"), dur))
+        t += dur
+        prev = (scene, expr)
+    mix = np.zeros(int(se.SR * (t + 0.5)))
+    for start, w, g in voice + fx:
+        s0 = int(se.SR * start)
+        n = min(len(w), len(mix) - s0)
+        mix[s0:s0 + n] += g * w[:n]
+    mix *= 0.89 / np.max(np.abs(mix))
+    wav = os.path.join(OUT, "mix.f32")
+    mix.astype(np.float32).tofile(wav)
+
+    lst = os.path.join(OUT, "frames.txt")
     with open(lst, "w") as f:
-        f.writelines(f"file '{s}'\n" for s in segs)
+        for png, d in frames:
+            f.write(f"file '{png}'\nduration {d}\n")
+        f.write(f"file '{frames[-1][0]}'\n")
     final = os.path.join(OUT, "omega-moon.mp4")
-    subprocess.run(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy",
-                    "-movflags", "+faststart", final], check=True)
+    subprocess.run(["ffmpeg", "-y", "-v", "error",
+                    "-f", "concat", "-safe", "0", "-i", lst,
+                    "-f", "f32le", "-ar", str(se.SR), "-ac", "1", "-i", wav,
+                    "-map", "0:v", "-map", "1:a", "-vf", "fps=30,format=yuv420p",
+                    "-c:v", "libx264", "-profile:v", "high", "-tune", "stillimage",
+                    "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
+                    "-t", f"{t:.2f}", "-movflags", "+faststart", final], check=True)
     print(final, f"{duration(final):.1f}s")
 
 
