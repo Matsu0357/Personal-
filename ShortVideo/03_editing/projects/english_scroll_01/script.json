@@ -6,7 +6,7 @@
   "episode": 1,
   "voice": {
     "fish_reference_id": "933563129e564b19a115bedd57b7406a",
-    "fish_speed": 0.88,
+    "fish_speed": 0.8,
     "edge_voice": "en-US-AriaNeural",
     "edge_rate": "-8%"
   },

@@ -24,7 +24,7 @@
 ## 決まったこと
 - 対象レベル: **中級**
 - 和訳: **入れる**（各行の下に日本語訳 ＝ B案）
-- 音声: **FishAudio**（AI音声）
+- 音声: **FishAudio**（声 `933563129e564b19a115bedd57b7406a`、速さ0.8、商用プラン契約済み）
 
 - 長さ: **60秒以内**（YouTubeショートを基準。TikTok の長尺版は伸び方を見てから）
 - 見た目: **英文＋和訳が1行ずつ流れ、読んでいる行をハイライト（競合調査の B 型）**。背景は濃紺のニューススタジオ風（プロンプター）
@@ -33,4 +33,4 @@
 - シリーズ名: 「中級英語リーディング #番号」
 
 ## 試作
-- #01 It's Okay to Start Again → 台本 `../scripts/english_scroll_01.md`／制作 `../../03_editing/projects/english_scroll_01/`／書き出し `../../05_exports/english_scroll_01_v2.mp4`（FishAudio 版）
+- #01 It's Okay to Start Again → 台本 `../scripts/english_scroll_01.md`／制作 `../../03_editing/projects/english_scroll_01/`／書き出し `../../05_exports/english_scroll_01_v3.mp4`（FishAudio・速さ0.8）

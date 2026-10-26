@@ -26,9 +26,9 @@ node render.js --thumb      # build/cover.png
 - キーが使えないときは警告を出して edge-tts で作る
 - 使うモデルは `FISH_AUDIO_MODEL`（既定 `s1`）。API の仕様が変わっていたら `tts_fish()` を直す
 - v1 は試作用の edge-tts 音声。**v2 から FishAudio**
-- 速さは `voice.fish_speed`（0.88）。そのままだと約220語/分で中級には速いので、少し落としている。行間は `build_audio.py` の `gap_line`
+- 速さは `voice.fish_speed`（0.8）。そのままだと約220語/分で中級には速いので、少し落としている。行間は `build_audio.py` の `gap_line`
 
 ## 本番前にやること
 - [x] FishAudio の声を決めて作り直す（v2）
-- [ ] FishAudio が商用利用できるプランか確認
+- [x] FishAudio が商用利用できるプランか確認（商用プラン契約済み）
 - [ ] 英文・和訳をネイティブ／英語の得意な人に一度見てもらう
