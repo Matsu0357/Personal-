@@ -1,0 +1,3 @@
+out/cut*
+out/segments.txt
+__pycache__/
