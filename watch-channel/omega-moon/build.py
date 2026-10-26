@@ -4,6 +4,7 @@
 
 各カットの SVG/PNG、Fish Audio のナレーション、SE を混ぜた音声、ffmpeg で 1 パス書き出しした mp4 を out/ に置く。
 """
+import hashlib
 import json
 import os
 import random
@@ -20,7 +21,10 @@ import se  # noqa: E402
 OUT = os.path.join(HERE, "out")
 W, H = 1080, 1920
 FONT = "Hiragino Sans, Noto Sans JP, IPAGothic, sans-serif"
-VOICE = "45c5d3723c9c42f598e4776dcfd5f02d"  # Fish Audio「落ち着いた男性」
+VOICE = "bb3bf6a073cb48c1a5b6c436053ce243"  # Fish Audio「男性ナレーター」
+SPEED = 1.1
+SE_GAIN = 0.65  # SE 全体の音量
+BGM_GAIN = 0.09
 TITLE = "オメガが月に行った話"
 
 # (場面, 表情, 字幕, 読み上げ用テキスト[省略時は字幕])
@@ -282,13 +286,18 @@ def cut_svg(scene, expr, text):
 
 # ---------- ビルド ----------
 
-def tts(text, path):
-    if os.path.exists(path):
-        return
-    body = json.dumps({"text": text, "reference_id": VOICE, "format": "mp3", "latency": "normal"})
-    subprocess.run(["curl", "-sS", "--fail", "-X", "POST", "https://api.fish.audio/v1/tts",
-                    "-H", "Content-Type: application/json", "-H", "model: s1",
-                    "--data-binary", body, "-o", path], check=True)
+def tts(text):
+    """ナレーションを生成してパスを返す。声・速度・テキストが同じならキャッシュを使う"""
+    key = hashlib.sha1(f"{VOICE}|{SPEED}|{text}".encode()).hexdigest()[:16]
+    path = os.path.join(OUT, "tts", f"{key}.mp3")
+    if not os.path.exists(path):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        body = json.dumps({"text": text, "reference_id": VOICE, "format": "mp3", "latency": "normal",
+                           "prosody": {"speed": SPEED, "volume": 0}})
+        subprocess.run(["curl", "-sS", "--fail", "-X", "POST", "https://api.fish.audio/v1/tts",
+                        "-H", "Content-Type: application/json", "-H", "model: s1",
+                        "--data-binary", body, "-o", path], check=True)
+    return path
 
 
 def duration(path):
@@ -340,19 +349,19 @@ def cues(i, scene, expr, prev):
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    pairs = []
+    pairs, mp3s = [], []
     for i, (scene, expr, text, reading) in enumerate(CUTS, 1):
         svg = os.path.join(OUT, f"cut{i:02d}.svg")
         with open(svg, "w") as f:
             f.write(cut_svg(scene, expr, text))
         pairs.append([svg, svg[:-4] + ".png"])
-        tts(reading or text.replace("\n", ""), os.path.join(OUT, f"cut{i:02d}.mp3"))
+        mp3s.append(tts(reading or text.replace("\n", "")))
     render_pngs(pairs)
 
     # タイムラインを組んでナレーションと SE を 1 本にミックス
     voice, fx, frames, t, prev = [], [], [], 0.0, None
     for i, (scene, expr, _, _) in enumerate(CUTS, 1):
-        v = decode(os.path.join(OUT, f"cut{i:02d}.mp3"))
+        v = decode(mp3s[i - 1])
         c = cues(i, scene, expr, prev)
         lead = 0.3 if c else 0.08
         dur = round(lead + len(v) / se.SR + TAIL, 2)
@@ -363,11 +372,19 @@ def main():
         frames.append((os.path.join(OUT, f"cut{i:02d}.png"), dur))
         t += dur
         prev = (scene, expr)
-    mix = np.zeros(int(se.SR * (t + 0.5)))
-    for start, w, g in voice + fx:
-        s0 = int(se.SR * start)
-        n = min(len(w), len(mix) - s0)
-        mix[s0:s0 + n] += g * w[:n]
+    total = int(se.SR * (t + 0.5))
+    vtrack, fxtrack = np.zeros(total), np.zeros(total)
+    for track, items in ((vtrack, voice), (fxtrack, fx)):
+        for start, w, g in items:
+            s0 = int(se.SR * start)
+            n = min(len(w), total - s0)
+            track[s0:s0 + n] += g * w[:n]
+    # BGM はナレーション中だけ少し下げる
+    win = int(se.SR * 0.4)
+    c = np.concatenate([[0], np.cumsum(np.abs(vtrack))])
+    env = (c[np.minimum(np.arange(total) + win // 2, total)] - c[np.maximum(np.arange(total) - win // 2, 0)]) / win
+    duck = 1 - 0.45 * np.clip(env / 0.04, 0, 1)
+    mix = vtrack + SE_GAIN * fxtrack + BGM_GAIN * duck * se.bgm(total / se.SR)
     mix *= 0.89 / np.max(np.abs(mix))
     wav = os.path.join(OUT, "mix.f32")
     mix.astype(np.float32).tofile(wav)
