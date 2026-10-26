@@ -1,0 +1,78 @@
+{
+  "title_en": "Why Mistakes Help You Learn",
+  "title_ja": "失敗が学びになる理由",
+  "hook": "最後まで読めたら🎤してね",
+  "level": "中級（B1〜B2）",
+  "episode": 15,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "When you speak English, are you afraid of making mistakes?",
+      "ja": "英語を話すとき、まちがえるのがこわいですか？"
+    },
+    {
+      "en": "You're not alone. Almost every learner feels this way.",
+      "ja": "あなただけではありません。ほとんどの学習者が同じように感じています。"
+    },
+    {
+      "en": "But think about how a child learns to talk.",
+      "ja": "でも、子どもがどうやって話せるようになるか考えてみて。"
+    },
+    {
+      "en": "Children make lots of mistakes every day.",
+      "ja": "子どもは毎日、たくさんまちがえます。"
+    },
+    {
+      "en": "Nobody laughs at them, and they keep trying.",
+      "ja": "誰も笑わないし、子どもは挑戦し続けます。"
+    },
+    {
+      "en": "Each mistake shows them what to fix next time.",
+      "ja": "ひとつひとつの失敗が、次に直すところを教えてくれるのです。"
+    },
+    {
+      "en": "Adults are the same, but we feel more embarrassed.",
+      "ja": "大人も同じですが、わたしたちはもっと恥ずかしいと感じます。"
+    },
+    {
+      "en": "Remember, the person you're talking to cares about your message.",
+      "ja": "話している相手が気にしているのは、あなたが伝えたいことだと覚えておいて。"
+    },
+    {
+      "en": "They're not checking your grammar.",
+      "ja": "相手は、あなたの文法をチェックしていません。"
+    },
+    {
+      "en": "Every mistake you make is proof that you're trying.",
+      "ja": "まちがえるたびに、それは挑戦している証拠です。"
+    },
+    {
+      "en": "So speak up, make mistakes, and keep going.",
+      "ja": "だから声に出して、まちがえて、続けていきましょう。"
+    }
+  ],
+  "repeat": [
+    1,
+    4,
+    9
+  ],
+  "words": [
+    {
+      "en": "be afraid of ~ing",
+      "ja": "～するのがこわい"
+    },
+    {
+      "en": "laugh at ~",
+      "ja": "～を笑う"
+    },
+    {
+      "en": "proof",
+      "ja": "証拠"
+    }
+  ]
+}

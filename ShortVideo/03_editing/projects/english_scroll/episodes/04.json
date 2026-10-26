@@ -1,0 +1,78 @@
+{
+  "title_en": "Small Habits That Changed My Mornings",
+  "title_ja": "朝を変えた小さな習慣",
+  "hook": "1分ちょっと、英語を声に出そう",
+  "level": "中級（B1〜B2）",
+  "episode": 4,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "A year ago, my mornings were always a mess.",
+      "ja": "1年前、わたしの朝はいつもバタバタでした。"
+    },
+    {
+      "en": "I woke up late and checked my phone in bed.",
+      "ja": "寝坊して、ベッドの中でスマホを見ていました。"
+    },
+    {
+      "en": "By the time I got up, I already felt tired.",
+      "ja": "起きるころには、もう疲れていました。"
+    },
+    {
+      "en": "So I decided to change just three small things.",
+      "ja": "そこで、小さなことを3つだけ変えることにしました。"
+    },
+    {
+      "en": "First, I put my phone in another room at night.",
+      "ja": "まず、夜はスマホを別の部屋に置くようにしました。"
+    },
+    {
+      "en": "Second, I drink a glass of water as soon as I wake up.",
+      "ja": "次に、起きたらすぐに水を1杯飲むようにしました。"
+    },
+    {
+      "en": "Third, I write down one thing I want to do that day.",
+      "ja": "3つめに、その日やりたいことを1つ書き出します。"
+    },
+    {
+      "en": "None of these take more than a few minutes.",
+      "ja": "どれも数分しかかかりません。"
+    },
+    {
+      "en": "But together, they make my mornings calm and clear.",
+      "ja": "でも合わせると、朝が落ち着いて、頭がすっきりします。"
+    },
+    {
+      "en": "You don't need a perfect routine to feel better.",
+      "ja": "気分よく過ごすのに、完璧な習慣はいりません。"
+    },
+    {
+      "en": "Just start with one small change tomorrow morning.",
+      "ja": "まずは明日の朝、小さな変化を1つ始めてみましょう。"
+    }
+  ],
+  "repeat": [
+    2,
+    5,
+    9
+  ],
+  "words": [
+    {
+      "en": "by the time ~",
+      "ja": "～するころには"
+    },
+    {
+      "en": "as soon as ~",
+      "ja": "～するとすぐに"
+    },
+    {
+      "en": "write down ~",
+      "ja": "～を書き留める"
+    }
+  ]
+}

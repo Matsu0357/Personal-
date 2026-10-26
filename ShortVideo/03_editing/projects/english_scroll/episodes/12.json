@@ -1,0 +1,78 @@
+{
+  "title_en": "How to Say Sorry Well",
+  "title_ja": "上手な謝り方",
+  "hook": "これ、声に出して読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 12,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Saying sorry is easy. Saying it well is harder.",
+      "ja": "「ごめん」と言うのは簡単。上手に言うのは難しい。"
+    },
+    {
+      "en": "A good apology has three simple parts.",
+      "ja": "いい謝罪には、3つのシンプルな要素があります。"
+    },
+    {
+      "en": "First, say exactly what you did wrong.",
+      "ja": "まず、何がいけなかったのかをはっきり言います。"
+    },
+    {
+      "en": "\"I'm sorry I was late and didn't call you.\"",
+      "ja": "「遅れたうえに、連絡しなくてごめんね」"
+    },
+    {
+      "en": "Second, show that you understand how they felt.",
+      "ja": "次に、相手がどう感じたかをわかっていると示します。"
+    },
+    {
+      "en": "\"You must have been worried and frustrated.\"",
+      "ja": "「心配したし、いらいらしたよね」"
+    },
+    {
+      "en": "Third, tell them what you'll do differently next time.",
+      "ja": "3つめに、次はどう変えるかを伝えます。"
+    },
+    {
+      "en": "\"Next time, I'll message you if I'm running late.\"",
+      "ja": "「次からは、遅れそうなときはメッセージするね」"
+    },
+    {
+      "en": "Try not to add \"but\" after your apology.",
+      "ja": "謝ったあとに「でも」をつけないようにしましょう。"
+    },
+    {
+      "en": "\"I'm sorry, but...\" usually sounds like an excuse.",
+      "ja": "「ごめん、でも…」は、たいてい言いわけに聞こえます。"
+    },
+    {
+      "en": "A real apology can make a relationship even stronger.",
+      "ja": "本当の謝罪は、関係をもっと強くすることもあります。"
+    }
+  ],
+  "repeat": [
+    3,
+    5,
+    7
+  ],
+  "words": [
+    {
+      "en": "must have been ~",
+      "ja": "～だったにちがいない"
+    },
+    {
+      "en": "run late",
+      "ja": "遅れる"
+    },
+    {
+      "en": "excuse",
+      "ja": "言いわけ"
+    }
+  ]
+}

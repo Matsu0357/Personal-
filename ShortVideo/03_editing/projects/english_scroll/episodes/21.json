@@ -1,0 +1,78 @@
+{
+  "title_en": "My First Job Interview",
+  "title_ja": "初めての面接",
+  "hook": "聞くだけじゃもったいない。読んでみて",
+  "level": "中級（B1〜B2）",
+  "episode": 21,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "I still remember my very first job interview.",
+      "ja": "初めての面接のことを、今でも覚えています。"
+    },
+    {
+      "en": "I wore a suit that was a little too big for me.",
+      "ja": "少し大きすぎるスーツを着ていきました。"
+    },
+    {
+      "en": "My hands were shaking, and my mouth was dry.",
+      "ja": "手はふるえ、口はからからでした。"
+    },
+    {
+      "en": "The interviewer asked, \"Why do you want this job?\"",
+      "ja": "面接官は「なぜこの仕事をしたいのですか？」と聞きました。"
+    },
+    {
+      "en": "I had practiced the answer many times, but I forgot it.",
+      "ja": "何度も答えを練習していたのに、忘れてしまいました。"
+    },
+    {
+      "en": "So I just told the truth. I said I loved helping people.",
+      "ja": "だから、正直に話しました。人を助けるのが大好きだと言いました。"
+    },
+    {
+      "en": "I talked about volunteering at a library as a student.",
+      "ja": "学生時代に図書館でボランティアをしたことを話しました。"
+    },
+    {
+      "en": "The interviewer smiled and started asking more questions.",
+      "ja": "面接官はほほえんで、さらに質問をしてくれました。"
+    },
+    {
+      "en": "A week later, I got a phone call. I got the job.",
+      "ja": "1週間後、電話がかかってきました。採用でした。"
+    },
+    {
+      "en": "I learned that being honest is more powerful than being perfect.",
+      "ja": "完璧であるより、正直であるほうが力になると学びました。"
+    },
+    {
+      "en": "Your real story is your best answer.",
+      "ja": "あなた自身の本当の話が、いちばんの答えなのです。"
+    }
+  ],
+  "repeat": [
+    2,
+    5,
+    9
+  ],
+  "words": [
+    {
+      "en": "shake",
+      "ja": "ふるえる"
+    },
+    {
+      "en": "tell the truth",
+      "ja": "本当のことを言う"
+    },
+    {
+      "en": "get the job",
+      "ja": "採用される"
+    }
+  ]
+}

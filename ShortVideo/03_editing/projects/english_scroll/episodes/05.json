@@ -1,0 +1,78 @@
+{
+  "title_en": "Why I Started Walking Every Day",
+  "title_ja": "毎日歩くようになった理由",
+  "hook": "最後まで読めたら🎤してね",
+  "level": "中級（B1〜B2）",
+  "episode": 5,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Last spring, I was stressed and couldn't sleep well.",
+      "ja": "去年の春、ストレスがたまって、よく眠れませんでした。"
+    },
+    {
+      "en": "A friend suggested that I take a short walk after dinner.",
+      "ja": "友だちに、夕食のあと少し歩いてみたらと言われました。"
+    },
+    {
+      "en": "At first, I thought it sounded boring.",
+      "ja": "最初は、つまらなそうだと思いました。"
+    },
+    {
+      "en": "But I tried it anyway, just for ten minutes.",
+      "ja": "でも、とりあえず10分だけやってみました。"
+    },
+    {
+      "en": "I noticed the sky, the trees, and the sound of my steps.",
+      "ja": "空や木、自分の足音に気づくようになりました。"
+    },
+    {
+      "en": "My mind slowly became quiet.",
+      "ja": "頭の中が、少しずつ静かになっていきました。"
+    },
+    {
+      "en": "Ten minutes became twenty, and then thirty.",
+      "ja": "10分が20分になり、やがて30分になりました。"
+    },
+    {
+      "en": "Now walking is my favorite part of the day.",
+      "ja": "今では、歩くことが1日でいちばん好きな時間です。"
+    },
+    {
+      "en": "It doesn't cost money, and you can do it anywhere.",
+      "ja": "お金はかからないし、どこでもできます。"
+    },
+    {
+      "en": "Sometimes the simplest things make the biggest difference.",
+      "ja": "いちばんシンプルなことが、いちばん大きな違いを生むこともあります。"
+    },
+    {
+      "en": "Why not take a short walk tonight?",
+      "ja": "今夜、少し歩いてみませんか？"
+    }
+  ],
+  "repeat": [
+    1,
+    3,
+    9
+  ],
+  "words": [
+    {
+      "en": "suggest that ~",
+      "ja": "～してはどうかと提案する"
+    },
+    {
+      "en": "anyway",
+      "ja": "とにかく・それでも"
+    },
+    {
+      "en": "make a difference",
+      "ja": "違いを生む"
+    }
+  ]
+}

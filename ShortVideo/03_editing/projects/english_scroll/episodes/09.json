@@ -1,0 +1,78 @@
+{
+  "title_en": "What Makes a Good Friend",
+  "title_ja": "いい友だちとは",
+  "hook": "1分ちょっと、英語を声に出そう",
+  "level": "中級（B1〜B2）",
+  "episode": 9,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "What makes someone a good friend?",
+      "ja": "人をいい友だちにするものは、何でしょう？"
+    },
+    {
+      "en": "It's not how often you see each other.",
+      "ja": "それは、会う回数ではありません。"
+    },
+    {
+      "en": "Some friends you meet every week, and some only once a year.",
+      "ja": "毎週会う友だちもいれば、年に1回しか会わない友だちもいます。"
+    },
+    {
+      "en": "A good friend is happy for you when things go well.",
+      "ja": "いい友だちは、うまくいったときに一緒に喜んでくれます。"
+    },
+    {
+      "en": "They don't feel jealous or try to compete with you.",
+      "ja": "ねたんだり、張り合おうとしたりしません。"
+    },
+    {
+      "en": "When things go badly, they don't try to fix everything.",
+      "ja": "うまくいかないとき、全部を解決しようとはしません。"
+    },
+    {
+      "en": "They just sit with you and listen.",
+      "ja": "ただそばにいて、話を聞いてくれます。"
+    },
+    {
+      "en": "With a good friend, you can be quiet without feeling awkward.",
+      "ja": "いい友だちとなら、黙っていても気まずくありません。"
+    },
+    {
+      "en": "You can be yourself, even on your worst day.",
+      "ja": "いちばんひどい日でも、ありのままでいられます。"
+    },
+    {
+      "en": "If you have a friend like this, you are lucky.",
+      "ja": "こんな友だちがいたら、あなたは幸運です。"
+    },
+    {
+      "en": "Why not send them a message today?",
+      "ja": "今日、その人にメッセージを送ってみませんか？"
+    }
+  ],
+  "repeat": [
+    3,
+    4,
+    8
+  ],
+  "words": [
+    {
+      "en": "be happy for ~",
+      "ja": "～のことを喜ぶ"
+    },
+    {
+      "en": "compete with ~",
+      "ja": "～と張り合う"
+    },
+    {
+      "en": "be yourself",
+      "ja": "ありのままでいる"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "title_en": "Cooking for One",
+  "title_ja": "自分のために料理する",
+  "hook": "1分ちょっと、英語を声に出そう",
+  "level": "中級（B1〜B2）",
+  "episode": 24,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "When I started living alone, I stopped cooking.",
+      "ja": "ひとり暮らしを始めたとき、料理をやめてしまいました。"
+    },
+    {
+      "en": "It felt like too much work for just one person.",
+      "ja": "ひとり分だけなんて、手間がかかりすぎる気がしました。"
+    },
+    {
+      "en": "I ate convenience store food almost every night.",
+      "ja": "ほぼ毎晩、コンビニのごはんを食べていました。"
+    },
+    {
+      "en": "One evening, I decided to make a simple soup.",
+      "ja": "ある晩、シンプルなスープを作ることにしました。"
+    },
+    {
+      "en": "I chopped some vegetables and listened to music.",
+      "ja": "野菜を刻みながら、音楽を聴きました。"
+    },
+    {
+      "en": "The kitchen filled with a warm, delicious smell.",
+      "ja": "キッチンは、あたたかくておいしそうなにおいでいっぱいになりました。"
+    },
+    {
+      "en": "I set the table, even though nobody else was there.",
+      "ja": "ほかに誰もいないのに、テーブルをととのえました。"
+    },
+    {
+      "en": "That simple bowl of soup tasted better than anything I'd bought.",
+      "ja": "その一杯のシンプルなスープは、買ったどんなものよりおいしく感じました。"
+    },
+    {
+      "en": "Cooking for yourself is a small way of saying, \"I matter.\"",
+      "ja": "自分のために料理するのは、「わたしは大切」と伝える小さな方法です。"
+    },
+    {
+      "en": "It doesn't have to be fancy or perfect.",
+      "ja": "豪華でも完璧でもなくていいのです。"
+    },
+    {
+      "en": "What could you make for yourself this weekend?",
+      "ja": "この週末、自分のために何を作れそうですか？"
+    }
+  ],
+  "repeat": [
+    1,
+    6,
+    8
+  ],
+  "words": [
+    {
+      "en": "live alone",
+      "ja": "ひとり暮らしをする"
+    },
+    {
+      "en": "set the table",
+      "ja": "食卓をととのえる"
+    },
+    {
+      "en": "matter",
+      "ja": "大切である"
+    }
+  ]
+}

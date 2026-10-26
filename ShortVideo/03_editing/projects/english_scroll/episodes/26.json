@@ -1,0 +1,78 @@
+{
+  "title_en": "The Best Day of My Trip",
+  "title_ja": "旅でいちばんの日",
+  "hook": "聞くだけじゃもったいない。読んでみて",
+  "level": "中級（B1〜B2）",
+  "episode": 26,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "On my trip to a small island, it rained for three days.",
+      "ja": "小さな島への旅で、3日間雨が降り続きました。"
+    },
+    {
+      "en": "All my plans for the beach were ruined.",
+      "ja": "ビーチでの予定は全部だめになりました。"
+    },
+    {
+      "en": "On the third day, I went into a tiny café to escape the rain.",
+      "ja": "3日目、雨をさけて小さなカフェに入りました。"
+    },
+    {
+      "en": "The owner was an old fisherman who loved to tell stories.",
+      "ja": "店主は、話好きの年配の漁師さんでした。"
+    },
+    {
+      "en": "He told me about storms, big fish, and his first love.",
+      "ja": "嵐のこと、大きな魚のこと、初恋のことを話してくれました。"
+    },
+    {
+      "en": "Other travelers joined us, and we shared food and laughter.",
+      "ja": "ほかの旅行者も加わって、料理と笑いを分け合いました。"
+    },
+    {
+      "en": "We stayed there until late at night.",
+      "ja": "夜おそくまで、そこにいました。"
+    },
+    {
+      "en": "I didn't take a single photo that day.",
+      "ja": "その日は、写真を1枚も撮りませんでした。"
+    },
+    {
+      "en": "But it's the day I remember most clearly from the whole trip.",
+      "ja": "でも、旅の中でいちばんはっきり覚えているのはその日です。"
+    },
+    {
+      "en": "The best moments are often the ones we didn't plan.",
+      "ja": "最高の瞬間は、計画していなかったものであることが多いのです。"
+    },
+    {
+      "en": "Has a bad day ever turned into a great memory for you?",
+      "ja": "ついていない日が、すてきな思い出に変わったことはありますか？"
+    }
+  ],
+  "repeat": [
+    1,
+    7,
+    9
+  ],
+  "words": [
+    {
+      "en": "be ruined",
+      "ja": "だめになる"
+    },
+    {
+      "en": "escape ~",
+      "ja": "～をさける・のがれる"
+    },
+    {
+      "en": "not a single ~",
+      "ja": "ひとつの～もない"
+    }
+  ]
+}

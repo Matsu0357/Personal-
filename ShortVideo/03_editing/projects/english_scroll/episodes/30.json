@@ -1,0 +1,78 @@
+{
+  "title_en": "Your Voice, Every Day",
+  "title_ja": "毎日、声に出す",
+  "hook": "最後まで読めたら🎤してね",
+  "level": "中級（B1〜B2）",
+  "episode": 30,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "If you've been reading along with these videos, thank you.",
+      "ja": "これまで動画と一緒に読んできてくれたなら、ありがとう。"
+    },
+    {
+      "en": "When you started, some of these sentences felt hard to say.",
+      "ja": "始めたころは、こういう文を言うのが難しかったかもしれません。"
+    },
+    {
+      "en": "Now, maybe the words come out a little more smoothly.",
+      "ja": "今は、言葉が少しなめらかに出てくるかもしれません。"
+    },
+    {
+      "en": "Progress in a language is slow and often invisible.",
+      "ja": "語学の上達はゆっくりで、目に見えないことが多いものです。"
+    },
+    {
+      "en": "You don't notice it day by day.",
+      "ja": "毎日の中では気づきません。"
+    },
+    {
+      "en": "But one day, you understand a song or a movie line without trying.",
+      "ja": "でもある日、歌や映画のせりふが、自然にわかるようになります。"
+    },
+    {
+      "en": "That moment comes from many quiet days like this one.",
+      "ja": "その瞬間は、今日のような静かな日々の積み重ねから生まれます。"
+    },
+    {
+      "en": "So be proud of the time you've already put in.",
+      "ja": "だから、これまでかけてきた時間を誇りに思ってください。"
+    },
+    {
+      "en": "Every sentence you say out loud makes the next one easier.",
+      "ja": "声に出した1文1文が、次の1文を楽にしてくれます。"
+    },
+    {
+      "en": "Tomorrow, let's keep reading together.",
+      "ja": "明日も、一緒に読み続けましょう。"
+    },
+    {
+      "en": "Thank you for using your voice every day.",
+      "ja": "毎日声を出してくれて、ありがとう。"
+    }
+  ],
+  "repeat": [
+    2,
+    5,
+    7
+  ],
+  "words": [
+    {
+      "en": "read along",
+      "ja": "一緒に読む"
+    },
+    {
+      "en": "day by day",
+      "ja": "日ごとに"
+    },
+    {
+      "en": "put in ~",
+      "ja": "（時間などを）かける"
+    }
+  ]
+}

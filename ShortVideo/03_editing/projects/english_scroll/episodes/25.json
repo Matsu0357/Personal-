@@ -1,0 +1,78 @@
+{
+  "title_en": "It's Okay to Ask for Help",
+  "title_ja": "助けを求めていい",
+  "hook": "最後まで読めたら🎤してね",
+  "level": "中級（B1〜B2）",
+  "episode": 25,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Do you try to do everything by yourself?",
+      "ja": "何でもひとりでやろうとしていますか？"
+    },
+    {
+      "en": "Many of us feel that asking for help is a sign of weakness.",
+      "ja": "助けを求めるのは弱さのしるしだ、と感じる人は多いです。"
+    },
+    {
+      "en": "We don't want to be a burden to anyone.",
+      "ja": "誰の負担にもなりたくないのです。"
+    },
+    {
+      "en": "But think about how you feel when someone asks you for help.",
+      "ja": "でも、誰かに助けを求められたとき、どう感じるか考えてみて。"
+    },
+    {
+      "en": "Most of the time, you're happy to help, right?",
+      "ja": "たいていは、喜んで手伝いますよね？"
+    },
+    {
+      "en": "Other people feel the same way about you.",
+      "ja": "ほかの人も、あなたに対して同じように感じています。"
+    },
+    {
+      "en": "Asking for help gives others a chance to be kind.",
+      "ja": "助けを求めることは、相手にやさしくする機会をあげることでもあります。"
+    },
+    {
+      "en": "It also helps you finish things faster and better.",
+      "ja": "それに、物事をより早く、よりうまく終えられます。"
+    },
+    {
+      "en": "Start small: \"Could you give me a hand with this?\"",
+      "ja": "小さく始めましょう。「これ、ちょっと手伝ってもらえる？」"
+    },
+    {
+      "en": "Strong people know when to ask for support.",
+      "ja": "強い人は、いつ支えを求めるべきかを知っています。"
+    },
+    {
+      "en": "You don't have to carry everything alone.",
+      "ja": "全部をひとりで背負わなくていいのです。"
+    }
+  ],
+  "repeat": [
+    2,
+    6,
+    8
+  ],
+  "words": [
+    {
+      "en": "by oneself",
+      "ja": "ひとりで"
+    },
+    {
+      "en": "be a burden to ~",
+      "ja": "～の負担になる"
+    },
+    {
+      "en": "give ~ a hand",
+      "ja": "～を手伝う"
+    }
+  ]
+}

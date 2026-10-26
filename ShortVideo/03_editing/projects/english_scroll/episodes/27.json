@@ -1,0 +1,78 @@
+{
+  "title_en": "Being Honest with Yourself",
+  "title_ja": "自分に正直になる",
+  "hook": "これ、声に出して読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 27,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "It's easy to lie to other people. It's even easier to lie to yourself.",
+      "ja": "人にうそをつくのは簡単。自分にうそをつくのは、もっと簡単です。"
+    },
+    {
+      "en": "\"I'm fine.\" \"I don't care.\" \"I'll do it tomorrow.\"",
+      "ja": "「大丈夫」「気にしてない」「明日やる」"
+    },
+    {
+      "en": "We say these words to avoid feelings we don't like.",
+      "ja": "わたしたちは、いやな気持ちをさけるためにこういう言葉を使います。"
+    },
+    {
+      "en": "But hiding from the truth doesn't make it go away.",
+      "ja": "でも、本当のことから隠れても、それは消えません。"
+    },
+    {
+      "en": "Try asking yourself one honest question each night.",
+      "ja": "毎晩、自分に正直な質問をひとつしてみましょう。"
+    },
+    {
+      "en": "\"What am I really feeling right now?\"",
+      "ja": "「今、本当は何を感じている？」"
+    },
+    {
+      "en": "You don't need to fix anything. Just notice.",
+      "ja": "何も直さなくていい。ただ気づくだけでいいのです。"
+    },
+    {
+      "en": "Being honest with yourself takes courage.",
+      "ja": "自分に正直になるには、勇気がいります。"
+    },
+    {
+      "en": "But it's the first step to making real changes.",
+      "ja": "でも、それが本当の変化への最初の一歩です。"
+    },
+    {
+      "en": "When you know the truth, you can choose what to do next.",
+      "ja": "本当のことがわかれば、次に何をするか選べます。"
+    },
+    {
+      "en": "What would you say if you were completely honest today?",
+      "ja": "今日、完全に正直になったら、何と言いますか？"
+    }
+  ],
+  "repeat": [
+    3,
+    5,
+    7
+  ],
+  "words": [
+    {
+      "en": "lie to ~",
+      "ja": "～にうそをつく"
+    },
+    {
+      "en": "go away",
+      "ja": "消える"
+    },
+    {
+      "en": "take courage",
+      "ja": "勇気がいる"
+    }
+  ]
+}

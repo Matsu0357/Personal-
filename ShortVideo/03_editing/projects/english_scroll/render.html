@@ -119,6 +119,20 @@ function header(t) {
   g.restore();
 }
 
+// フックの黄色い箱。長いときは「。」で2行にし、幅に収まるよう文字を小さくする
+function hookBox(cx, cy, maxSize) {
+  const rows = TL.hook.split(/(?<=。)/).filter(Boolean);
+  g.font = `900 ${maxSize}px NotoJP`;
+  const widest = Math.max(...rows.map(r => g.measureText(r).width));
+  const size = Math.min(maxSize, Math.floor(maxSize * 800 / widest));
+  g.font = `900 ${size}px NotoJP`;
+  const w = Math.max(...rows.map(r => g.measureText(r).width)) + 80;
+  const lh = size * 1.25, h = rows.length * lh + size * 0.7;
+  rrect(cx - w / 2, cy - h / 2, w, h, 24); g.fillStyle = C.hi; g.fill();
+  rows.forEach((r, i) => txt(r, cx, cy - (rows.length - 1) * lh / 2 + i * lh + 2, `900 ${size}px NotoJP`, C.ink, "center"));
+  return h;
+}
+
 function hook(t) {
   // 最初の数秒：「これ、声に出して読める？」
   const first = TL.lines[0].start;
@@ -127,11 +141,8 @@ function hook(t) {
   g.save(); g.globalAlpha = a;
   const s = lerp(0.92, 1, ease(t / 0.4));
   g.translate(W / 2 - 45, FOCUS_Y); g.scale(s, s);
-  g.font = "900 72px NotoJP";
-  const w = g.measureText(TL.hook).width + 80;
-  rrect(-w / 2, -70, w, 140, 24); g.fillStyle = C.hi; g.fill();
-  txt(TL.hook, 0, 2, "900 72px NotoJP", C.ink, "center");
-  txt("🎤 音声のあとに続けて読んでみよう", 0, 130, "700 34px NotoJP", C.white, "center");
+  const h = hookBox(0, 0, 72);
+  txt("🎤 音声のあとに続けて読んでみよう", 0, h / 2 + 60, "700 34px NotoJP", C.white, "center");
   g.restore();
 }
 
@@ -276,12 +287,7 @@ window.renderThumb = () => {
   background(1); header(1); prompter(t); progress(t);
   // 1行目より上を暗くして、フックを大きく
   g.fillStyle = "rgba(11,16,32,0.85)"; g.fillRect(0, VIEW_TOP, W, 330);
-  g.save();
-  g.font = "900 66px NotoJP";
-  const w = g.measureText(TL.hook).width + 80;
-  rrect(W / 2 - 45 - w / 2, 570, w, 140, 26); g.fillStyle = C.hi; g.fill();
-  txt(TL.hook, W / 2 - 45, 642, "900 66px NotoJP", C.ink, "center");
-  g.restore();
+  hookBox(W / 2 - 45, 630, 66);
 };
 </script>
 </body>

@@ -1,0 +1,78 @@
+{
+  "title_en": "Leaving My Comfort Zone",
+  "title_ja": "居心地のいい場所を出る",
+  "hook": "1分ちょっと、英語を声に出そう",
+  "level": "中級（B1〜B2）",
+  "episode": 19,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "For years, I said no to anything new or difficult.",
+      "ja": "何年も、新しいことや難しいことには何でも「ノー」と言っていました。"
+    },
+    {
+      "en": "I stayed in the same job and ate at the same places.",
+      "ja": "同じ仕事を続け、同じ店で食事をしていました。"
+    },
+    {
+      "en": "It felt safe, but I wasn't really happy.",
+      "ja": "安心でしたが、本当に幸せではありませんでした。"
+    },
+    {
+      "en": "One day, a coworker invited me to join a dance class.",
+      "ja": "ある日、同僚にダンス教室に誘われました。"
+    },
+    {
+      "en": "I can't dance at all, so my first answer was no.",
+      "ja": "わたしはまったく踊れないので、最初の答えは「ノー」でした。"
+    },
+    {
+      "en": "But something made me change my mind.",
+      "ja": "でも、何かがわたしの気持ちを変えました。"
+    },
+    {
+      "en": "The first class was awkward, and I stepped on everyone's feet.",
+      "ja": "最初のレッスンはぎこちなくて、みんなの足を踏んでしまいました。"
+    },
+    {
+      "en": "Still, I laughed more that night than I had in months.",
+      "ja": "それでも、その夜は何か月ぶりかというほど笑いました。"
+    },
+    {
+      "en": "Growth rarely feels comfortable while it's happening.",
+      "ja": "成長は、その最中にはめったに心地よくありません。"
+    },
+    {
+      "en": "But the view from outside your comfort zone is worth it.",
+      "ja": "でも、居心地のいい場所の外から見る景色には、それだけの価値があります。"
+    },
+    {
+      "en": "What's one small new thing you could try this week?",
+      "ja": "今週、試せそうな小さな新しいことは何ですか？"
+    }
+  ],
+  "repeat": [
+    5,
+    7,
+    8
+  ],
+  "words": [
+    {
+      "en": "comfort zone",
+      "ja": "居心地のいい場所"
+    },
+    {
+      "en": "change one's mind",
+      "ja": "気が変わる"
+    },
+    {
+      "en": "be worth it",
+      "ja": "それだけの価値がある"
+    }
+  ]
+}

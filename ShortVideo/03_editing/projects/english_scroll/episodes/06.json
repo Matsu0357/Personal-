@@ -1,0 +1,78 @@
+{
+  "title_en": "How to Make Small Talk",
+  "title_ja": "雑談のコツ",
+  "hook": "聞くだけじゃもったいない。読んでみて",
+  "level": "中級（B1〜B2）",
+  "episode": 6,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Do you get nervous when you have to make small talk?",
+      "ja": "雑談をしなければならないとき、緊張しますか？"
+    },
+    {
+      "en": "Many people worry that they have nothing interesting to say.",
+      "ja": "多くの人は、おもしろい話が何もないと心配します。"
+    },
+    {
+      "en": "But good small talk isn't about being interesting.",
+      "ja": "でも、上手な雑談は、おもしろいことを言うことではありません。"
+    },
+    {
+      "en": "It's about being interested in the other person.",
+      "ja": "相手に興味を持つことなのです。"
+    },
+    {
+      "en": "Start with something you can both see or share.",
+      "ja": "ふたりとも見えるものや、共有できることから始めましょう。"
+    },
+    {
+      "en": "\"This place is really busy today, isn't it?\"",
+      "ja": "「今日はここ、すごく混んでますね」"
+    },
+    {
+      "en": "Then ask an open question, like \"How do you know the host?\"",
+      "ja": "それから「主催の方とはどういうお知り合いですか？」のような、自由に答えられる質問をします。"
+    },
+    {
+      "en": "Listen carefully, and ask one more question about their answer.",
+      "ja": "よく聞いて、その答えについてもう1つ質問しましょう。"
+    },
+    {
+      "en": "People love to talk about themselves.",
+      "ja": "人は、自分のことを話すのが大好きです。"
+    },
+    {
+      "en": "You don't have to be funny. You just have to be curious.",
+      "ja": "おもしろくなくていい。興味を持つだけでいいのです。"
+    },
+    {
+      "en": "Next time, try asking one more question than usual.",
+      "ja": "次は、いつもより1つ多く質問してみましょう。"
+    }
+  ],
+  "repeat": [
+    3,
+    6,
+    9
+  ],
+  "words": [
+    {
+      "en": "make small talk",
+      "ja": "雑談をする"
+    },
+    {
+      "en": "be interested in ~",
+      "ja": "～に興味がある"
+    },
+    {
+      "en": "open question",
+      "ja": "自由に答えられる質問"
+    }
+  ]
+}

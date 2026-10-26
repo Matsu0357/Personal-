@@ -1,0 +1,78 @@
+{
+  "title_en": "Saying Thank You More Often",
+  "title_ja": "もっと「ありがとう」を",
+  "hook": "中級英語、噛まずに読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 18,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "When was the last time you really thanked someone?",
+      "ja": "最後に、心から誰かにお礼を言ったのはいつですか？"
+    },
+    {
+      "en": "Not a quick \"thanks,\" but a real, specific thank-you.",
+      "ja": "さっと言う「どうも」ではなく、具体的な本当の「ありがとう」です。"
+    },
+    {
+      "en": "We often forget to thank the people closest to us.",
+      "ja": "わたしたちは、いちばん身近な人にお礼を言い忘れがちです。"
+    },
+    {
+      "en": "Our family, our coworkers, and our old friends.",
+      "ja": "家族、同僚、古くからの友だち。"
+    },
+    {
+      "en": "We think they already know how we feel.",
+      "ja": "気持ちはもう伝わっていると思っているのです。"
+    },
+    {
+      "en": "But hearing it out loud can mean a lot.",
+      "ja": "でも、言葉にして聞くと、とても大きな意味を持つことがあります。"
+    },
+    {
+      "en": "Try being specific: \"Thank you for listening to me yesterday.\"",
+      "ja": "具体的に言ってみましょう。「昨日、話を聞いてくれてありがとう」"
+    },
+    {
+      "en": "Specific thanks show that you really noticed.",
+      "ja": "具体的なお礼は、ちゃんと気づいていたことを示します。"
+    },
+    {
+      "en": "It only takes a few seconds, but people remember it for years.",
+      "ja": "ほんの数秒なのに、人は何年もそれを覚えています。"
+    },
+    {
+      "en": "And something nice happens: you feel happier too.",
+      "ja": "そして、すてきなことが起きます。あなたも幸せな気持ちになるのです。"
+    },
+    {
+      "en": "Who could you thank today?",
+      "ja": "今日は、誰にお礼を言えそうですか？"
+    }
+  ],
+  "repeat": [
+    2,
+    5,
+    6
+  ],
+  "words": [
+    {
+      "en": "thank ~ for ...",
+      "ja": "…のことで～に感謝する"
+    },
+    {
+      "en": "mean a lot",
+      "ja": "大きな意味がある"
+    },
+    {
+      "en": "specific",
+      "ja": "具体的な"
+    }
+  ]
+}

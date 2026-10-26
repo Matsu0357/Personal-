@@ -1,0 +1,78 @@
+{
+  "title_en": "A Small Act of Kindness",
+  "title_ja": "小さな親切",
+  "hook": "中級英語、噛まずに読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 28,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "It was a busy morning at the supermarket.",
+      "ja": "スーパーの、いそがしい朝のことでした。"
+    },
+    {
+      "en": "The woman in front of me was a few coins short.",
+      "ja": "わたしの前の女性は、小銭が少し足りませんでした。"
+    },
+    {
+      "en": "She looked embarrassed and started putting things back.",
+      "ja": "彼女は恥ずかしそうにして、品物を戻し始めました。"
+    },
+    {
+      "en": "Without thinking, I handed the cashier the missing coins.",
+      "ja": "考えるより先に、足りない分の小銭をレジの人にわたしました。"
+    },
+    {
+      "en": "It was only a small amount, but her face lit up.",
+      "ja": "ほんのわずかな額でしたが、彼女の顔がぱっと明るくなりました。"
+    },
+    {
+      "en": "She thanked me again and again.",
+      "ja": "彼女は何度もお礼を言いました。"
+    },
+    {
+      "en": "Later that day, a stranger held the door open for me.",
+      "ja": "その日のあとになって、知らない人がわたしのためにドアを押さえてくれました。"
+    },
+    {
+      "en": "It made me think about how kindness moves from person to person.",
+      "ja": "親切が人から人へと伝わっていく様子を考えました。"
+    },
+    {
+      "en": "You never know how far one small act will go.",
+      "ja": "ひとつの小さな行動がどこまで届くかは、誰にもわかりません。"
+    },
+    {
+      "en": "It rarely takes much money or time to be kind.",
+      "ja": "親切にするのに、お金や時間はほとんどかかりません。"
+    },
+    {
+      "en": "What small kindness could you share today?",
+      "ja": "今日、どんな小さな親切ができそうですか？"
+    }
+  ],
+  "repeat": [
+    1,
+    4,
+    6
+  ],
+  "words": [
+    {
+      "en": "be short",
+      "ja": "足りない"
+    },
+    {
+      "en": "light up",
+      "ja": "ぱっと明るくなる"
+    },
+    {
+      "en": "hold the door open",
+      "ja": "ドアを押さえておく"
+    }
+  ]
+}

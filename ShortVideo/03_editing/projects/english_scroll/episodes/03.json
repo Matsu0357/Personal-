@@ -1,0 +1,78 @@
+{
+  "title_en": "A Letter to My Younger Self",
+  "title_ja": "10年前の自分へ",
+  "hook": "中級英語、噛まずに読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 3,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Dear me, ten years ago, I want to tell you something.",
+      "ja": "10年前のわたしへ。伝えたいことがあります。"
+    },
+    {
+      "en": "You worry so much about what other people think.",
+      "ja": "あなたは、人にどう思われるかをすごく気にしているね。"
+    },
+    {
+      "en": "You compare yourself to everyone and always feel behind.",
+      "ja": "誰とでも自分を比べて、いつも遅れていると感じている。"
+    },
+    {
+      "en": "But most people are too busy to judge you.",
+      "ja": "でも、ほとんどの人は忙しくて、あなたを評価するひまなんてないよ。"
+    },
+    {
+      "en": "The mistakes you're afraid of will teach you the most.",
+      "ja": "こわがっている失敗こそが、いちばん多くを教えてくれる。"
+    },
+    {
+      "en": "The friends who stay will matter more than the ones who leave.",
+      "ja": "去っていく人より、そばに残る友だちのほうが大切になる。"
+    },
+    {
+      "en": "You don't need to have everything figured out yet.",
+      "ja": "まだ全部の答えを出さなくていい。"
+    },
+    {
+      "en": "Life is not a race, and there is no finish line.",
+      "ja": "人生は競争じゃないし、ゴールもない。"
+    },
+    {
+      "en": "Be kind to yourself on the days nothing goes right.",
+      "ja": "何もうまくいかない日こそ、自分にやさしくしてね。"
+    },
+    {
+      "en": "One day, you'll look back and smile at how far you've come.",
+      "ja": "いつか振り返って、ここまで来たことに笑顔になれるから。"
+    },
+    {
+      "en": "With love, from the person you are going to become.",
+      "ja": "愛をこめて。未来のあなたより。"
+    }
+  ],
+  "repeat": [
+    3,
+    4,
+    7
+  ],
+  "words": [
+    {
+      "en": "compare A to B",
+      "ja": "AをBと比べる"
+    },
+    {
+      "en": "figure out ~",
+      "ja": "～の答えを出す"
+    },
+    {
+      "en": "look back",
+      "ja": "振り返る"
+    }
+  ]
+}

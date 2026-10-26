@@ -1,0 +1,78 @@
+{
+  "title_en": "The Art of Listening",
+  "title_ja": "聞く力",
+  "hook": "最後まで読めたら🎤してね",
+  "level": "中級（B1〜B2）",
+  "episode": 20,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Most of us think we are good listeners.",
+      "ja": "わたしたちの多くは、自分は聞き上手だと思っています。"
+    },
+    {
+      "en": "But often, we're just waiting for our turn to talk.",
+      "ja": "でも実は、自分が話す番を待っているだけのことがよくあります。"
+    },
+    {
+      "en": "While the other person speaks, we plan our answer.",
+      "ja": "相手が話している間に、返事を考えているのです。"
+    },
+    {
+      "en": "Real listening means giving someone your full attention.",
+      "ja": "本当に聞くとは、相手に注意を全部向けることです。"
+    },
+    {
+      "en": "Put your phone away and look at the person.",
+      "ja": "スマホをしまって、相手を見ましょう。"
+    },
+    {
+      "en": "Don't jump in with advice too quickly.",
+      "ja": "すぐにアドバイスで割りこまないこと。"
+    },
+    {
+      "en": "Sometimes people don't want solutions. They want to be heard.",
+      "ja": "人は解決策がほしいのではなく、聞いてほしいだけのこともあります。"
+    },
+    {
+      "en": "You can say, \"That sounds really hard. Tell me more.\"",
+      "ja": "「それは本当に大変だね。もっと聞かせて」と言えばいいのです。"
+    },
+    {
+      "en": "When people feel heard, they feel respected.",
+      "ja": "聞いてもらえたと感じると、人は大切にされたと感じます。"
+    },
+    {
+      "en": "Listening is a quiet skill, but a powerful one.",
+      "ja": "聞くことは静かなスキルですが、力強いスキルです。"
+    },
+    {
+      "en": "Today, try to listen a little longer before you speak.",
+      "ja": "今日は、話す前に少しだけ長く聞いてみましょう。"
+    }
+  ],
+  "repeat": [
+    3,
+    6,
+    7
+  ],
+  "words": [
+    {
+      "en": "wait for one's turn",
+      "ja": "自分の番を待つ"
+    },
+    {
+      "en": "put ~ away",
+      "ja": "～をしまう"
+    },
+    {
+      "en": "jump in",
+      "ja": "割りこむ"
+    }
+  ]
+}

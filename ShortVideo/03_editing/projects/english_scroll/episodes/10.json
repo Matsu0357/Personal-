@@ -1,0 +1,78 @@
+{
+  "title_en": "Learning to Rest Without Guilt",
+  "title_ja": "罪悪感なしで休む",
+  "hook": "最後まで読めたら🎤してね",
+  "level": "中級（B1〜B2）",
+  "episode": 10,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Do you feel guilty when you take a day off?",
+      "ja": "休みを取ると、罪悪感を覚えますか？"
+    },
+    {
+      "en": "Many of us believe that rest has to be earned.",
+      "ja": "多くの人は、休むには何かを成し遂げなければと信じています。"
+    },
+    {
+      "en": "We think we can relax only after everything is done.",
+      "ja": "全部終わってからでないと、くつろいではいけないと思っています。"
+    },
+    {
+      "en": "But the truth is, the work is never completely done.",
+      "ja": "でも本当は、仕事が完全に終わることはありません。"
+    },
+    {
+      "en": "Rest isn't a reward. It's something you need.",
+      "ja": "休みはごほうびではなく、必要なものです。"
+    },
+    {
+      "en": "Just like your phone, you need time to recharge.",
+      "ja": "スマホと同じで、充電する時間が必要なのです。"
+    },
+    {
+      "en": "When you rest, your mind has space to think clearly.",
+      "ja": "休むと、頭にはっきり考える余裕が生まれます。"
+    },
+    {
+      "en": "You come back with new ideas and more patience.",
+      "ja": "新しいアイデアと、前よりおだやかな気持ちで戻ってこられます。"
+    },
+    {
+      "en": "So the next time you need a break, take it.",
+      "ja": "だから、次に休みが必要になったら、休みましょう。"
+    },
+    {
+      "en": "You don't have to explain it to anyone.",
+      "ja": "誰かに説明する必要はありません。"
+    },
+    {
+      "en": "Taking care of yourself is part of doing good work.",
+      "ja": "自分を大切にすることも、いい仕事の一部なのです。"
+    }
+  ],
+  "repeat": [
+    0,
+    4,
+    10
+  ],
+  "words": [
+    {
+      "en": "take a day off",
+      "ja": "1日休みを取る"
+    },
+    {
+      "en": "feel guilty",
+      "ja": "罪悪感を覚える"
+    },
+    {
+      "en": "recharge",
+      "ja": "充電する・元気を取り戻す"
+    }
+  ]
+}

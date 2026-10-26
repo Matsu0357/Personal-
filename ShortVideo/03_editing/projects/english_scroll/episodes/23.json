@@ -1,0 +1,78 @@
+{
+  "title_en": "How to Handle Criticism",
+  "title_ja": "批判の受け止め方",
+  "hook": "中級英語、噛まずに読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 23,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Nobody enjoys hearing criticism about their work.",
+      "ja": "自分の仕事を批判されて、うれしい人はいません。"
+    },
+    {
+      "en": "Our first reaction is often to defend ourselves.",
+      "ja": "最初の反応は、たいてい自分を守ることです。"
+    },
+    {
+      "en": "But try to pause before you answer.",
+      "ja": "でも、答える前にひと呼吸おいてみましょう。"
+    },
+    {
+      "en": "Take a breath and ask, \"Is any of this true?\"",
+      "ja": "深呼吸して、「この中に本当のことはある？」と自問するのです。"
+    },
+    {
+      "en": "Even harsh comments sometimes contain useful information.",
+      "ja": "きつい意見にも、役に立つ情報がふくまれていることがあります。"
+    },
+    {
+      "en": "Separate the message from the way it was said.",
+      "ja": "伝えられた中身と、言い方を分けて考えましょう。"
+    },
+    {
+      "en": "If it's helpful, say, \"Thank you. I'll think about that.\"",
+      "ja": "役に立つなら、「ありがとう。考えてみます」と言いましょう。"
+    },
+    {
+      "en": "If it's just unkind, you don't have to accept it.",
+      "ja": "ただ意地悪なだけなら、受け入れる必要はありません。"
+    },
+    {
+      "en": "Criticism is about your work, not your value as a person.",
+      "ja": "批判されているのは仕事であって、人としての価値ではありません。"
+    },
+    {
+      "en": "The people who grow the most learn from feedback.",
+      "ja": "いちばん成長する人は、意見から学ぶ人です。"
+    },
+    {
+      "en": "You can be open-minded and still protect your heart.",
+      "ja": "心を開きながら、自分の心を守ることもできるのです。"
+    }
+  ],
+  "repeat": [
+    1,
+    5,
+    8
+  ],
+  "words": [
+    {
+      "en": "defend oneself",
+      "ja": "自分を守る"
+    },
+    {
+      "en": "separate A from B",
+      "ja": "AとBを分ける"
+    },
+    {
+      "en": "open-minded",
+      "ja": "心の広い"
+    }
+  ]
+}

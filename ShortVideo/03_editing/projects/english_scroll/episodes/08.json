@@ -1,0 +1,78 @@
+{
+  "title_en": "Stop Waiting for Motivation",
+  "title_ja": "やる気を待つのはやめよう",
+  "hook": "中級英語、噛まずに読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 8,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "How often do you wait until you feel like doing something?",
+      "ja": "何かをやる気になるまで待つことは、どれくらいありますか？"
+    },
+    {
+      "en": "We tell ourselves, \"I'll start when I'm motivated.\"",
+      "ja": "「やる気が出たら始めよう」と自分に言い聞かせます。"
+    },
+    {
+      "en": "But motivation is like the weather. It comes and goes.",
+      "ja": "でも、やる気は天気のようなもの。来たり去ったりします。"
+    },
+    {
+      "en": "If you only work on sunny days, you won't get very far.",
+      "ja": "晴れの日にしか動かないなら、あまり遠くへは行けません。"
+    },
+    {
+      "en": "The secret is to start before you feel ready.",
+      "ja": "コツは、準備ができたと感じる前に始めることです。"
+    },
+    {
+      "en": "Tell yourself you'll do it for just two minutes.",
+      "ja": "たった2分だけやる、と自分に言ってみましょう。"
+    },
+    {
+      "en": "Open the book. Put on your running shoes.",
+      "ja": "本を開く。ランニングシューズをはく。"
+    },
+    {
+      "en": "Once you begin, it's much easier to keep going.",
+      "ja": "一度始めれば、続けるのはずっと楽になります。"
+    },
+    {
+      "en": "Action often comes first, and motivation follows.",
+      "ja": "行動が先に来て、やる気はあとからついてくることが多いのです。"
+    },
+    {
+      "en": "So don't wait for the perfect moment.",
+      "ja": "だから、完璧なタイミングを待たないで。"
+    },
+    {
+      "en": "Your two minutes can start right now.",
+      "ja": "あなたの2分は、今すぐ始められます。"
+    }
+  ],
+  "repeat": [
+    2,
+    4,
+    7
+  ],
+  "words": [
+    {
+      "en": "feel like ~ing",
+      "ja": "～したい気がする"
+    },
+    {
+      "en": "come and go",
+      "ja": "来ては去る"
+    },
+    {
+      "en": "keep going",
+      "ja": "続ける"
+    }
+  ]
+}

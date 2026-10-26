@@ -1,0 +1,78 @@
+{
+  "title_en": "My Grandmother's Advice",
+  "title_ja": "祖母の言葉",
+  "hook": "1分ちょっと、英語を声に出そう",
+  "level": "中級（B1〜B2）",
+  "episode": 14,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "My grandmother never went to college, but she was very wise.",
+      "ja": "祖母は大学には行きませんでしたが、とても賢い人でした。"
+    },
+    {
+      "en": "When I was upset, she would make tea and listen.",
+      "ja": "わたしが落ちこんでいると、お茶をいれて話を聞いてくれました。"
+    },
+    {
+      "en": "She rarely gave advice, but when she did, I remembered it.",
+      "ja": "めったに助言はしませんでしたが、したときは心に残りました。"
+    },
+    {
+      "en": "\"Don't make big decisions when you're hungry or angry,\" she said.",
+      "ja": "「おなかがすいているときと怒っているときに、大事なことを決めちゃだめよ」と言いました。"
+    },
+    {
+      "en": "\"Sleep on it, and see how you feel in the morning.\"",
+      "ja": "「ひと晩寝て、朝どう感じるか見てごらん」"
+    },
+    {
+      "en": "She also said, \"Be the first to say hello.\"",
+      "ja": "「自分から先にあいさつしなさい」とも言いました。"
+    },
+    {
+      "en": "Back then, these sounded like small, simple words.",
+      "ja": "当時は、ちょっとしたシンプルな言葉に聞こえました。"
+    },
+    {
+      "en": "Now that I'm older, I understand how true they are.",
+      "ja": "大人になった今、それがどれほど正しいかわかります。"
+    },
+    {
+      "en": "Many times, sleeping on a problem has saved me from mistakes.",
+      "ja": "問題をひと晩寝かせたおかげで、何度も失敗を避けられました。"
+    },
+    {
+      "en": "Wisdom doesn't always come from books.",
+      "ja": "知恵は、いつも本から来るとは限りません。"
+    },
+    {
+      "en": "What's the best advice someone has given you?",
+      "ja": "あなたがもらった、いちばんの助言は何ですか？"
+    }
+  ],
+  "repeat": [
+    3,
+    4,
+    7
+  ],
+  "words": [
+    {
+      "en": "sleep on it",
+      "ja": "ひと晩よく考える"
+    },
+    {
+      "en": "now that ~",
+      "ja": "今や～なので"
+    },
+    {
+      "en": "save A from B",
+      "ja": "AをBから救う"
+    }
+  ]
+}

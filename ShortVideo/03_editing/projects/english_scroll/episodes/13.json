@@ -1,0 +1,78 @@
+{
+  "title_en": "The Power of Writing Things Down",
+  "title_ja": "書き出す力",
+  "hook": "中級英語、噛まずに読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 13,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Is your head full of things you need to remember?",
+      "ja": "頭の中が、覚えておかなきゃいけないことでいっぱいですか？"
+    },
+    {
+      "en": "Bills to pay, emails to answer, and birthdays to remember.",
+      "ja": "払う請求書、返すメール、覚えておく誕生日。"
+    },
+    {
+      "en": "When we try to keep everything in our head, we feel stressed.",
+      "ja": "全部を頭の中に置いておこうとすると、ストレスを感じます。"
+    },
+    {
+      "en": "Our minds are better at having ideas than holding them.",
+      "ja": "頭は、アイデアをしまっておくより、生み出すほうが得意です。"
+    },
+    {
+      "en": "So try this: take a piece of paper and write everything down.",
+      "ja": "だから、これを試してみて。紙を1枚用意して、全部書き出すのです。"
+    },
+    {
+      "en": "Don't worry about the order. Just get it out of your head.",
+      "ja": "順番は気にしない。とにかく頭の外に出しましょう。"
+    },
+    {
+      "en": "Then choose the three most important things for today.",
+      "ja": "それから、今日いちばん大事なことを3つ選びます。"
+    },
+    {
+      "en": "You'll be surprised at how much lighter you feel.",
+      "ja": "気持ちがどれほど軽くなるか、驚くはずです。"
+    },
+    {
+      "en": "The list won't do the work for you.",
+      "ja": "リストが代わりに仕事をしてくれるわけではありません。"
+    },
+    {
+      "en": "But it gives your mind room to focus.",
+      "ja": "でも、頭に集中するための余裕をくれます。"
+    },
+    {
+      "en": "Grab a pen and try it tonight.",
+      "ja": "ペンを手に取って、今夜やってみましょう。"
+    }
+  ],
+  "repeat": [
+    2,
+    4,
+    7
+  ],
+  "words": [
+    {
+      "en": "write ~ down",
+      "ja": "～を書き出す"
+    },
+    {
+      "en": "be surprised at ~",
+      "ja": "～に驚く"
+    },
+    {
+      "en": "give ~ room to ...",
+      "ja": "～に…する余裕を与える"
+    }
+  ]
+}

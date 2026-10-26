@@ -1,0 +1,78 @@
+{
+  "title_en": "The Day I Got Lost in a Foreign City",
+  "title_ja": "海外の街で迷った日",
+  "hook": "これ、声に出して読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 7,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "On my first trip abroad, I got completely lost.",
+      "ja": "初めての海外旅行で、完全に道に迷いました。"
+    },
+    {
+      "en": "My phone was dead, and I couldn't read any of the signs.",
+      "ja": "スマホの電池は切れ、標識はひとつも読めませんでした。"
+    },
+    {
+      "en": "I stood on a corner, feeling scared and a little stupid.",
+      "ja": "角に立ちつくし、こわくて、ちょっと情けない気持ちでした。"
+    },
+    {
+      "en": "Then an old woman walked up and asked if I needed help.",
+      "ja": "すると、おばあさんが近づいてきて、助けが必要か聞いてくれました。"
+    },
+    {
+      "en": "We didn't speak the same language very well.",
+      "ja": "わたしたちは、同じ言葉をうまく話せませんでした。"
+    },
+    {
+      "en": "But she used her hands, a map, and a big smile.",
+      "ja": "でも彼女は、手ぶりと地図と、大きな笑顔で伝えてくれました。"
+    },
+    {
+      "en": "She even walked with me all the way to my hotel.",
+      "ja": "ホテルまでずっと一緒に歩いてくれさえしました。"
+    },
+    {
+      "en": "I never learned her name, but I still remember her face.",
+      "ja": "名前は聞けなかったけれど、今でも顔を覚えています。"
+    },
+    {
+      "en": "That day taught me that kindness doesn't need perfect words.",
+      "ja": "あの日、やさしさに完璧な言葉はいらないと知りました。"
+    },
+    {
+      "en": "Now, when I see a lost traveler, I try to help.",
+      "ja": "今は、迷っている旅行者を見かけたら、助けるようにしています。"
+    },
+    {
+      "en": "Kindness travels further than we think.",
+      "ja": "やさしさは、思っているより遠くまで届くのです。"
+    }
+  ],
+  "repeat": [
+    3,
+    6,
+    8
+  ],
+  "words": [
+    {
+      "en": "get lost",
+      "ja": "道に迷う"
+    },
+    {
+      "en": "ask if ~",
+      "ja": "～かどうか尋ねる"
+    },
+    {
+      "en": "all the way",
+      "ja": "ずっと・はるばる"
+    }
+  ]
+}

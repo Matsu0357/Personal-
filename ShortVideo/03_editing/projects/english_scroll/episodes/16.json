@@ -1,0 +1,78 @@
+{
+  "title_en": "The Last Train Home",
+  "title_ja": "終電",
+  "hook": "聞くだけじゃもったいない。読んでみて",
+  "level": "中級（B1〜B2）",
+  "episode": 16,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "I ran up the stairs, but the doors were already closing.",
+      "ja": "階段をかけ上がったけれど、ドアはもう閉まりかけていました。"
+    },
+    {
+      "en": "I had missed the last train home.",
+      "ja": "終電を逃してしまったのです。"
+    },
+    {
+      "en": "It was midnight, and I felt tired and annoyed.",
+      "ja": "夜中の12時で、疲れていて、いらいらしていました。"
+    },
+    {
+      "en": "A taxi was too expensive, so I decided to walk.",
+      "ja": "タクシーは高すぎるので、歩くことにしました。"
+    },
+    {
+      "en": "It was an hour's walk through quiet streets.",
+      "ja": "静かな通りを1時間歩く道のりでした。"
+    },
+    {
+      "en": "At first, I just complained in my head.",
+      "ja": "最初は、頭の中で文句ばかり言っていました。"
+    },
+    {
+      "en": "But then I noticed how peaceful the city was at night.",
+      "ja": "でもそのうち、夜の街がどれほど穏やかかに気づきました。"
+    },
+    {
+      "en": "The streetlights were soft, and the air smelled like rain.",
+      "ja": "街灯はやわらかく、空気は雨のにおいがしました。"
+    },
+    {
+      "en": "I saw parts of my town I had never seen before.",
+      "ja": "これまで見たことのなかった町の一面を見ました。"
+    },
+    {
+      "en": "By the time I got home, I wasn't angry anymore.",
+      "ja": "家に着くころには、もう怒っていませんでした。"
+    },
+    {
+      "en": "Sometimes a bad moment turns into a small adventure.",
+      "ja": "ときには、ついていない瞬間が小さな冒険に変わるのです。"
+    }
+  ],
+  "repeat": [
+    1,
+    6,
+    9
+  ],
+  "words": [
+    {
+      "en": "miss the last train",
+      "ja": "終電を逃す"
+    },
+    {
+      "en": "complain",
+      "ja": "文句を言う"
+    },
+    {
+      "en": "not ~ anymore",
+      "ja": "もう～ない"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "title_en": "My Weekend Without a Phone",
+  "title_ja": "スマホを手放した週末",
+  "hook": "これ、声に出して読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 22,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Last weekend, I tried something scary. I turned off my phone.",
+      "ja": "先週末、こわいことを試しました。スマホの電源を切ったのです。"
+    },
+    {
+      "en": "For the first few hours, I kept reaching for it.",
+      "ja": "最初の数時間は、何度も手をのばしてしまいました。"
+    },
+    {
+      "en": "I felt like I was missing something important.",
+      "ja": "何か大事なことを見逃している気がしました。"
+    },
+    {
+      "en": "But by the afternoon, something started to change.",
+      "ja": "でも午後になると、何かが変わり始めました。"
+    },
+    {
+      "en": "I read a book from cover to cover.",
+      "ja": "本を1冊、最初から最後まで読みました。"
+    },
+    {
+      "en": "I cooked a real meal instead of ordering delivery.",
+      "ja": "出前を頼むかわりに、ちゃんとした料理を作りました。"
+    },
+    {
+      "en": "I even visited an old friend who lives nearby.",
+      "ja": "近くに住む古い友だちを訪ねさえしました。"
+    },
+    {
+      "en": "When I turned my phone back on, nothing important had happened.",
+      "ja": "スマホの電源を入れ直したとき、大事なことは何も起きていませんでした。"
+    },
+    {
+      "en": "The world was fine without me checking it every five minutes.",
+      "ja": "5分ごとにチェックしなくても、世界はちゃんと回っていました。"
+    },
+    {
+      "en": "I'm not saying phones are bad.",
+      "ja": "スマホが悪いと言っているわけではありません。"
+    },
+    {
+      "en": "But sometimes, the best update is a break.",
+      "ja": "でも、ときには休むことが、いちばんのアップデートなのです。"
+    }
+  ],
+  "repeat": [
+    1,
+    5,
+    8
+  ],
+  "words": [
+    {
+      "en": "reach for ~",
+      "ja": "～に手をのばす"
+    },
+    {
+      "en": "from cover to cover",
+      "ja": "本の最初から最後まで"
+    },
+    {
+      "en": "instead of ~",
+      "ja": "～のかわりに"
+    }
+  ]
+}

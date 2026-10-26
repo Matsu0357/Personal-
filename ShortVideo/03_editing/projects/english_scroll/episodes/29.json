@@ -1,0 +1,78 @@
+{
+  "title_en": "Learning a Language as an Adult",
+  "title_ja": "大人になってからの語学",
+  "hook": "1分ちょっと、英語を声に出そう",
+  "level": "中級（B1〜B2）",
+  "episode": 29,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Some people say it's too late to learn a language as an adult.",
+      "ja": "大人になってから語学を学ぶのは遅すぎる、と言う人もいます。"
+    },
+    {
+      "en": "But adults have some big advantages.",
+      "ja": "でも、大人には大きな強みがあります。"
+    },
+    {
+      "en": "We know why we want to learn.",
+      "ja": "わたしたちは、なぜ学びたいのかを知っています。"
+    },
+    {
+      "en": "Maybe it's for work, travel, or making new friends.",
+      "ja": "仕事のため、旅行のため、新しい友だちを作るためかもしれません。"
+    },
+    {
+      "en": "We can also choose how we learn best.",
+      "ja": "どう学ぶのがいちばん合っているかも、選べます。"
+    },
+    {
+      "en": "Some people like books, and others prefer podcasts or videos.",
+      "ja": "本が好きな人もいれば、ポッドキャストや動画のほうがいい人もいます。"
+    },
+    {
+      "en": "Most importantly, we can make learning a daily habit.",
+      "ja": "何より、学びを毎日の習慣にできます。"
+    },
+    {
+      "en": "For many people, ten minutes a day works better than three hours once a month.",
+      "ja": "多くの人にとって、月に1回3時間より、1日10分のほうがうまくいきます。"
+    },
+    {
+      "en": "Your accent doesn't have to be perfect.",
+      "ja": "発音が完璧である必要はありません。"
+    },
+    {
+      "en": "What matters is that people understand you, and that you enjoy it.",
+      "ja": "大事なのは、伝わることと、楽しむことです。"
+    },
+    {
+      "en": "It's not too late. You're doing it right now.",
+      "ja": "遅すぎることはありません。あなたは今、まさにやっています。"
+    }
+  ],
+  "repeat": [
+    1,
+    6,
+    9
+  ],
+  "words": [
+    {
+      "en": "advantage",
+      "ja": "強み・有利な点"
+    },
+    {
+      "en": "prefer ~",
+      "ja": "～のほうを好む"
+    },
+    {
+      "en": "what matters is ~",
+      "ja": "大事なのは～だ"
+    }
+  ]
+}

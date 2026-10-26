@@ -1,0 +1,78 @@
+{
+  "title_en": "How to Remember New Words",
+  "title_ja": "新しい単語を覚えるには",
+  "hook": "これ、声に出して読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 17,
+  "voice": {
+    "fish_reference_id": "933563129e564b19a115bedd57b7406a",
+    "fish_speed": 0.8,
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    {
+      "en": "Do you forget new English words the day after you learn them?",
+      "ja": "新しい英単語を、覚えた次の日に忘れてしまいますか？"
+    },
+    {
+      "en": "Don't worry. It happens to everyone.",
+      "ja": "大丈夫。誰にでもあることです。"
+    },
+    {
+      "en": "Here are three simple ways to make words stick.",
+      "ja": "単語を定着させる、3つのシンプルな方法を紹介します。"
+    },
+    {
+      "en": "First, say the word out loud in a full sentence.",
+      "ja": "1つめ、その単語を、文の形で声に出して言う。"
+    },
+    {
+      "en": "Not just \"patient,\" but \"Please be patient with me.\"",
+      "ja": "「patient」だけでなく、「Please be patient with me.」と言うのです。"
+    },
+    {
+      "en": "Second, use the word in a message or a diary today.",
+      "ja": "2つめ、その単語を今日、メッセージや日記で使う。"
+    },
+    {
+      "en": "Third, review it again after a few days.",
+      "ja": "3つめ、数日たってから、もう一度見直す。"
+    },
+    {
+      "en": "Each time you see it again, it becomes a little easier.",
+      "ja": "もう一度見るたびに、少しずつ楽になります。"
+    },
+    {
+      "en": "Learning a word isn't one moment. It's many small meetings.",
+      "ja": "単語を覚えるのは一瞬ではなく、何度もの小さな出会いなのです。"
+    },
+    {
+      "en": "So be patient with yourself.",
+      "ja": "だから、自分に対して気長にいきましょう。"
+    },
+    {
+      "en": "Which new word will you use today?",
+      "ja": "今日は、どの新しい単語を使いますか？"
+    }
+  ],
+  "repeat": [
+    3,
+    5,
+    8
+  ],
+  "words": [
+    {
+      "en": "stick",
+      "ja": "定着する・頭に残る"
+    },
+    {
+      "en": "be patient with ~",
+      "ja": "～に対して気長に待つ"
+    },
+    {
+      "en": "review",
+      "ja": "見直す"
+    }
+  ]
+}
