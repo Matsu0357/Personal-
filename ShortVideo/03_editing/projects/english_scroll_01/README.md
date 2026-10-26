@@ -21,7 +21,9 @@ node render.js --thumb      # build/cover.png
 - 台本は `script.json`。行は `{"en", "ja"}`、`words` が最後の「今日の表現」
 
 ## 音声（FishAudio）
-- `script.json` の `voice.fish_reference_id` に FishAudio の声のID（モデルID）を入れ、`FISH_AUDIO_API_KEY` を設定して `python3 build_audio.py` を実行すると FishAudio で読み上げる
+- 声: `933563129e564b19a115bedd57b7406a`（`script.json` の `voice.fish_reference_id`）
+- APIキーは**リポジトリに入れない**。クラウド環境の設定（ネットワークシークレット、なければ環境変数 `FISH_AUDIO_API_KEY`）に保存する。自分のPCで作るときは `export FISH_AUDIO_API_KEY=...` してから `python3 build_audio.py`
+- キーが使えないときは警告を出して edge-tts で作る
 - 使うモデルは `FISH_AUDIO_MODEL`（既定 `s1`）。API の仕様が変わっていたら `tts_fish()` を直す
 - 今の書き出し（v1）は **試作用に edge-tts の英語音声（en-US-AriaNeural）** を使っている。公開前に FishAudio で作り直す
 - 声の選び方：はっきり・ややゆっくりの北米英語、ニュースキャスター風。速すぎたら FishAudio 側の速度か、`build_audio.py` の `gap_line` で調整

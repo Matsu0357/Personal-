@@ -2,14 +2,17 @@
 
 使い方: python3 build_audio.py
 音声:
-  - 環境変数 FISH_AUDIO_API_KEY があり、script.json の voice.fish_reference_id が入っていれば FishAudio
-  - なければ試作用に edge-tts（本番では使わない）
+  - script.json の voice.fish_reference_id が入っていれば FishAudio
+    APIキーは環境変数 FISH_AUDIO_API_KEY から読む（クラウド環境のネットワークシークレットで
+    api.fish.audio への認証が自動で付く場合は、環境変数がなくても通る）
+  - FishAudio が使えないときは試作用に edge-tts（本番では使わない）
 必要: ffmpeg, numpy（edge-tts を使うときは edge-tts）
 """
 import json
 import os
 import subprocess
 import sys
+import urllib.error
 import urllib.request
 import wave
 
@@ -30,9 +33,9 @@ def tts_fish(text, ref_id, out_mp3):
     body = json.dumps({"text": text, "reference_id": ref_id, "format": "mp3", "normalize": True}).encode()
     req = urllib.request.Request(
         "https://api.fish.audio/v1/tts", data=body, method="POST",
-        headers={"Authorization": "Bearer " + os.environ["FISH_AUDIO_API_KEY"],
-                 "Content-Type": "application/json",
-                 "model": os.environ.get("FISH_AUDIO_MODEL", "s1")})
+        headers={"Content-Type": "application/json", "model": os.environ.get("FISH_AUDIO_MODEL", "s1")})
+    if os.environ.get("FISH_AUDIO_API_KEY"):
+        req.add_header("Authorization", "Bearer " + os.environ["FISH_AUDIO_API_KEY"])
     with urllib.request.urlopen(req) as r, open(out_mp3, "wb") as f:
         f.write(r.read())
 
@@ -85,9 +88,15 @@ def main():
     os.makedirs(BUILD, exist_ok=True)
     sc = json.load(open(os.path.join(HERE, "script.json"), encoding="utf-8"))
     v = sc["voice"]
-    use_fish = bool(os.environ.get("FISH_AUDIO_API_KEY") and v.get("fish_reference_id"))
+    use_fish = bool(v.get("fish_reference_id"))
+    if use_fish:
+        try:
+            tts_fish("Hello.", v["fish_reference_id"], os.path.join(BUILD, "fish_check.mp3"))
+        except urllib.error.HTTPError as e:
+            print(f"FishAudio が使えません（HTTP {e.code}）。APIキーを確認してください。試作用の edge-tts で作ります", file=sys.stderr)
+            use_fish = False
     engine = "fish" if use_fish else "edge"
-    print("voice:", engine if use_fish else "edge-tts（試作用）")
+    print("voice:", "FishAudio" if use_fish else "edge-tts（試作用）")
 
     t = PACE["intro"]
     lines, clips = [], []
