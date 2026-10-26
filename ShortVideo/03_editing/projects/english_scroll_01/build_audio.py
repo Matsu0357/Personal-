@@ -29,8 +29,9 @@ PACE = {
 }
 
 
-def tts_fish(text, ref_id, out_mp3):
-    body = json.dumps({"text": text, "reference_id": ref_id, "format": "mp3", "normalize": True}).encode()
+def tts_fish(text, ref_id, out_mp3, speed=1.0):
+    body = json.dumps({"text": text, "reference_id": ref_id, "format": "mp3", "normalize": True,
+                       "prosody": {"speed": speed}}).encode()
     req = urllib.request.Request(
         "https://api.fish.audio/v1/tts", data=body, method="POST",
         headers={"Content-Type": "application/json", "model": os.environ.get("FISH_AUDIO_MODEL", "s1")})
@@ -101,10 +102,11 @@ def main():
     t = PACE["intro"]
     lines, clips = [], []
     for i, ln in enumerate(sc["lines"]):
-        mp3 = os.path.join(BUILD, f"{engine}_{i:02d}.mp3")
+        tag = f"fish{v.get('fish_speed', 1.0)}" if use_fish else "edge"
+        mp3 = os.path.join(BUILD, f"{tag}_{i:02d}.mp3")
         if not (os.path.exists(mp3) and os.path.getsize(mp3) > 0):
             if use_fish:
-                tts_fish(ln["en"], v["fish_reference_id"], mp3)
+                tts_fish(ln["en"], v["fish_reference_id"], mp3, v.get("fish_speed", 1.0))
             else:
                 tts_edge(ln["en"], v["edge_voice"], v["edge_rate"], mp3)
         s = load_mono(mp3)

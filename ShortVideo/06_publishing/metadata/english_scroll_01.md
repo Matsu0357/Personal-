@@ -1,6 +1,6 @@
 # 英語音読ショート #01 投稿情報
 
-動画: `../../05_exports/english_scroll_01_v1.mp4`（試作・音声は仮）／カバー: `../../04_thumbnails/english_scroll_01_cover.png`
+動画: `../../05_exports/english_scroll_01_v2.mp4`（FishAudio 音声・46.8秒。v1 は仮音声の試作）／カバー: `../../04_thumbnails/english_scroll_01_cover.png`
 
 ## YouTubeショート
 - タイトル: これ、声に出して読める？【中級英語リーディング #01】It's Okay to Start Again #shorts

@@ -33,4 +33,4 @@
 - シリーズ名: 「中級英語リーディング #番号」
 
 ## 試作
-- #01 It's Okay to Start Again → 台本 `../scripts/english_scroll_01.md`／制作 `../../03_editing/projects/english_scroll_01/`／書き出し `../../05_exports/english_scroll_01_v1.mp4`
+- #01 It's Okay to Start Again → 台本 `../scripts/english_scroll_01.md`／制作 `../../03_editing/projects/english_scroll_01/`／書き出し `../../05_exports/english_scroll_01_v2.mp4`（FishAudio 版）

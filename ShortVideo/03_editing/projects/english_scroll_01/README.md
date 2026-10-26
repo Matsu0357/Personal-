@@ -25,9 +25,10 @@ node render.js --thumb      # build/cover.png
 - APIキーは**リポジトリに入れない**。クラウド環境の設定（ネットワークシークレット、なければ環境変数 `FISH_AUDIO_API_KEY`）に保存する。自分のPCで作るときは `export FISH_AUDIO_API_KEY=...` してから `python3 build_audio.py`
 - キーが使えないときは警告を出して edge-tts で作る
 - 使うモデルは `FISH_AUDIO_MODEL`（既定 `s1`）。API の仕様が変わっていたら `tts_fish()` を直す
-- 今の書き出し（v1）は **試作用に edge-tts の英語音声（en-US-AriaNeural）** を使っている。公開前に FishAudio で作り直す
-- 声の選び方：はっきり・ややゆっくりの北米英語、ニュースキャスター風。速すぎたら FishAudio 側の速度か、`build_audio.py` の `gap_line` で調整
+- v1 は試作用の edge-tts 音声。**v2 から FishAudio**
+- 速さは `voice.fish_speed`（0.88）。そのままだと約220語/分で中級には速いので、少し落としている。行間は `build_audio.py` の `gap_line`
 
 ## 本番前にやること
-- [ ] FishAudio の声を決めて作り直す（商用利用できるプランか確認）
+- [x] FishAudio の声を決めて作り直す（v2）
+- [ ] FishAudio が商用利用できるプランか確認
 - [ ] 英文・和訳をネイティブ／英語の得意な人に一度見てもらう
