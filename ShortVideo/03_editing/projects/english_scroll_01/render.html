@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "NotoJP"; src: url("assets/NotoSansJP.ttf"); font-weight: 100 900; }
+  @font-face { font-family: "Inter"; src: url("assets/Inter.ttf"); font-weight: 100 900; }
+  html, body { margin: 0; background: #0b1020; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+// 英文スクロール（プロンプター風）のレンダラー。縦型 1080x1920
+// 英文＋和訳が下から上へ流れ、読み上げ中の行が画面中央でハイライトされる
+const W = 1080, H = 1920;
+const cv = document.getElementById("c"), g = cv.getContext("2d");
+const C = {
+  bg1: "#0b1020", bg2: "#14203d", line: "rgba(120,160,255,0.06)",
+  white: "#f4f6fb", dim: "#7b86a3", ja: "#c9d2e8", jaDim: "#56607a",
+  hi: "#ffd23f", red: "#ff4757", ink: "#0b1020", panel: "rgba(255,255,255,0.05)",
+};
+// 文字を置く範囲（TikTok・リールの右側ボタンと下の説明文を避ける）
+const X0 = 90, X1 = 900, TW = X1 - X0;
+const FOCUS_Y = 960;                    // 読み上げ中の行の中心
+const VIEW_TOP = 450, VIEW_BOT = 1560;  // 英文を見せる窓
+const EN_SIZE = 58, EN_LH = 76, JA_SIZE = 36, JA_LH = 50, GAP = 52;
+
+let TL = null, LAY = [];
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const ease = x => { x = clamp(x); return x * x * (3 - 2 * x); };
+const lerp = (a, b, x) => a + (b - a) * x;
+
+function wrap(str, font, width) {
+  g.font = font;
+  const out = [];
+  // 和文は1文字ずつ、英文は単語ごとに折り返す
+  const tokens = /[a-zA-Z]/.test(str) ? str.split(" ").map((w, i, a) => i < a.length - 1 ? w + " " : w) : [...str];
+  let cur = "";
+  for (const tk of tokens) {
+    if (g.measureText((cur + tk).trimEnd()).width > width && cur) { out.push(cur.trimEnd()); cur = tk.trimStart(); }
+    else cur += tk;
+  }
+  if (cur) out.push(cur.trimEnd());
+  // 行頭の句読点を前の行へ
+  for (let i = 1; i < out.length; i++) while (/^[、。？！）」]/.test(out[i])) { out[i - 1] += out[i][0]; out[i] = out[i].slice(1); }
+  return out;
+}
+
+window.init = tl => {
+  TL = tl;
+  let y = 0;
+  LAY = tl.lines.map(l => {
+    const en = wrap(l.en, `700 ${EN_SIZE}px Inter`, TW - 40);
+    const ja = wrap(l.ja, `500 ${JA_SIZE}px NotoJP`, TW - 40);
+    const h = en.length * EN_LH + 10 + ja.length * JA_LH;
+    const item = { en, ja, y, h };
+    y += h + GAP;
+    return item;
+  });
+};
+
+function curIndex(t) { let i = -1; TL.lines.forEach((l, k) => { if (t >= l.start - 0.05) i = k; }); return i; }
+
+// スクロール量：行が読まれはじめる少し前から次の行へ滑らかに移動
+function scrollAt(t) {
+  const center = k => LAY[k].y + LAY[k].h / 2;
+  const L = TL.lines;
+  if (t < L[0].start) return center(0) - lerp(260, 0, ease((t - (L[0].start - 1.6)) / 1.6));
+  let k = curIndex(t);
+  const next = L[k + 1];
+  if (next) {
+    const mv = 0.45, p = (t - (next.start - mv)) / mv;
+    if (p > 0) return lerp(center(k), center(k + 1), ease(p));
+  }
+  if (t > TL.outro) return center(k) + lerp(0, 220, ease((t - TL.outro) / 0.8));
+  return center(k);
+}
+
+function rrect(x, y, w, h, r) {
+  g.beginPath();
+  g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+function txt(s, x, y, font, color, align = "left") {
+  g.font = font; g.fillStyle = color; g.textAlign = align; g.textBaseline = "middle"; g.fillText(s, x, y);
+}
+
+function background(t) {
+  const gr = g.createLinearGradient(0, 0, 0, H);
+  gr.addColorStop(0, C.bg1); gr.addColorStop(0.5, C.bg2); gr.addColorStop(1, C.bg1);
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  // ニューススタジオ風の細い格子（ゆっくり動く）
+  g.strokeStyle = C.line; g.lineWidth = 1;
+  const off = (t * 6) % 60;
+  for (let y = -60 + off; y < H; y += 60) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  for (let x = 0; x < W; x += 60) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+  // 中央のにじみ
+  const rg = g.createRadialGradient(W / 2, FOCUS_Y, 50, W / 2, FOCUS_Y, 700);
+  rg.addColorStop(0, "rgba(90,130,255,0.16)"); rg.addColorStop(1, "rgba(90,130,255,0)");
+  g.fillStyle = rg; g.fillRect(0, 0, W, H);
+}
+
+function header(t) {
+  // 上部の帯：READ ALOUD バッジ＋レベル
+  const a = ease(t / 0.4);
+  g.save(); g.globalAlpha = a;
+  rrect(X0, 150, 250, 58, 10); g.fillStyle = C.red; g.fill();
+  // 録画中のような点滅
+  g.fillStyle = Math.floor(t * 1.5) % 2 ? "#fff" : "rgba(255,255,255,0.35)";
+  g.beginPath(); g.arc(X0 + 30, 179, 9, 0, Math.PI * 2); g.fill();
+  txt("READ ALOUD", X0 + 50, 180, "800 30px Inter", "#fff");
+  txt(`中級リーディング #${String(TL.episode).padStart(2, "0")}`, X0 + 272, 180, "700 32px NotoJP", C.ja);
+  // タイトル
+  txt(TL.title_en, X0, 270, "800 54px Inter", C.white);
+  txt(TL.title_ja, X0, 336, "500 34px NotoJP", C.ja);
+  g.fillStyle = C.hi; g.fillRect(X0, 385, 120, 6);
+  g.restore();
+}
+
+function hook(t) {
+  // 最初の数秒：「これ、声に出して読める？」
+  const first = TL.lines[0].start;
+  const a = ease(t / 0.3) * (1 - ease((t - (first - 0.3)) / 0.4));
+  if (a <= 0) return;
+  g.save(); g.globalAlpha = a;
+  const s = lerp(0.92, 1, ease(t / 0.4));
+  g.translate(W / 2 - 45, FOCUS_Y); g.scale(s, s);
+  g.font = "900 72px NotoJP";
+  const w = g.measureText(TL.hook).width + 80;
+  rrect(-w / 2, -70, w, 140, 24); g.fillStyle = C.hi; g.fill();
+  txt(TL.hook, 0, 2, "900 72px NotoJP", C.ink, "center");
+  txt("🎤 音声のあとに続けて読んでみよう", 0, 130, "700 34px NotoJP", C.white, "center");
+  g.restore();
+}
+
+function prompter(t) {
+  const off = scrollAt(t);
+  const k = curIndex(t);
+  const showA = ease((t - (TL.lines[0].start - 1.2)) / 0.8) * (1 - 0.85 * ease((t - TL.outro) / 0.5));
+  if (showA <= 0) return;
+  g.save();
+  g.beginPath(); g.rect(0, VIEW_TOP, W, VIEW_BOT - VIEW_TOP); g.clip();
+  LAY.forEach((it, i) => {
+    const top = FOCUS_Y - off + it.y;
+    if (top > VIEW_BOT + 20 || top + it.h < VIEW_TOP - 20) return;
+    const l = TL.lines[i];
+    // 中央に近いほど明るく
+    const d = Math.abs(top + it.h / 2 - FOCUS_Y);
+    const near = clamp(1 - d / 520);
+    const active = i === k && t < TL.outro + 0.2;
+    const done = i < k || t >= TL.outro + 0.2;
+    let alpha = (0.18 + 0.82 * near) * showA;
+    if (active) {
+      // 読み上げ中の行：黄色のバーと半透明のパネル
+      const p = ease((t - l.start + 0.1) / 0.25);
+      g.globalAlpha = p * showA;
+      rrect(X0 - 24, top - 22, TW + 48, it.h + 44, 18); g.fillStyle = C.panel; g.fill();
+      g.fillStyle = C.hi; g.fillRect(X0 - 24, top - 22, 8, it.h + 44);
+      // 進み具合（下線）
+      const prog = clamp((t - l.start) / (l.end - l.start));
+      g.fillStyle = "rgba(255,210,63,0.5)"; g.fillRect(X0 - 16, top + it.h + 18, (TW + 40) * prog, 4);
+    }
+    g.globalAlpha = alpha;
+    it.en.forEach((s, j) => txt(s, X0 + 10, top + EN_LH / 2 + j * EN_LH, "700 " + EN_SIZE + "px Inter",
+      active ? C.white : done ? C.dim : C.white));
+    const jy = top + it.en.length * EN_LH + 10;
+    it.ja.forEach((s, j) => txt(s, X0 + 10, jy + JA_LH / 2 + j * JA_LH, "500 " + JA_SIZE + "px NotoJP",
+      active ? C.hi : done ? C.jaDim : C.ja));
+  });
+  g.restore();
+  // 窓の上下をぼかす
+  for (const [y0, y1] of [[VIEW_TOP, VIEW_TOP + 160], [VIEW_BOT, VIEW_BOT - 160]]) {
+    const gr = g.createLinearGradient(0, y0, 0, y1);
+    gr.addColorStop(0, "rgba(11,16,32,1)"); gr.addColorStop(1, "rgba(11,16,32,0)");
+    g.fillStyle = gr; g.fillRect(0, Math.min(y0, y1), W, 160);
+  }
+}
+
+function outro(t) {
+  const a = ease((t - TL.outro) / 0.5);
+  if (a <= 0) return;
+  g.save(); g.globalAlpha = a;
+  const y0 = 600;
+  rrect(X0 - 10, y0, TW + 20, 520, 26); g.fillStyle = "rgba(20,32,61,0.96)"; g.fill();
+  g.strokeStyle = "rgba(255,210,63,0.6)"; g.lineWidth = 3; g.stroke();
+  txt("今日の表現", X0 + 30, y0 + 60, "900 40px NotoJP", C.hi);
+  TL.words.forEach((w, i) => {
+    const y = y0 + 145 + i * 92;
+    txt(w.en, X0 + 30, y, "700 44px Inter", C.white);
+    txt(w.ja, X0 + 30, y + 42, "500 30px NotoJP", C.ja);
+  });
+  txt("読めたら「🎤」とコメントしてね", W / 2 - 45, y0 + 600, "800 38px NotoJP", C.white, "center");
+  txt("毎日1本、英語を声に出そう", W / 2 - 45, y0 + 660, "500 32px NotoJP", C.ja, "center");
+  g.restore();
+}
+
+function progress(t) {
+  // 下部：全体の進み具合
+  const y = 1650;
+  g.fillStyle = "rgba(255,255,255,0.12)"; rrect(X0, y, TW, 8, 4); g.fill();
+  g.fillStyle = C.hi; rrect(X0, y, TW * clamp(t / TL.duration), 8, 4); g.fill();
+  const k = Math.max(0, curIndex(t));
+  txt(`${Math.min(k + 1, TL.lines.length)} / ${TL.lines.length}`, X1, y - 30, "700 28px Inter", C.dim, "right");
+  txt(TL.level, X0, y - 30, "500 28px NotoJP", C.dim);
+}
+
+window.renderFrame = t => {
+  background(t);
+  header(t);
+  prompter(t);
+  hook(t);
+  outro(t);
+  progress(t);
+};
+
+// サムネイル（カバー画像）：フックと最初の2行
+window.renderThumb = () => {
+  const t = TL.lines[0].start + 1.0;
+  background(1); header(1); prompter(t); progress(t);
+  // 1行目より上を暗くして、フックを大きく
+  g.fillStyle = "rgba(11,16,32,0.85)"; g.fillRect(0, VIEW_TOP, W, 330);
+  g.save();
+  g.font = "900 66px NotoJP";
+  const w = g.measureText(TL.hook).width + 80;
+  rrect(W / 2 - 45 - w / 2, 570, w, 140, 26); g.fillStyle = C.hi; g.fill();
+  txt(TL.hook, W / 2 - 45, 642, "900 66px NotoJP", C.ink, "center");
+  g.restore();
+};
+</script>
+</body>
+</html>

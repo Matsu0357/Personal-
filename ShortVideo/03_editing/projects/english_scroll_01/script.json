@@ -1,0 +1,30 @@
+{
+  "title_en": "It's Okay to Start Again",
+  "title_ja": "もう一度、始めればいい",
+  "hook": "これ、声に出して読める？",
+  "level": "中級（B1〜B2）",
+  "episode": 1,
+  "voice": {
+    "fish_reference_id": "",
+    "edge_voice": "en-US-AriaNeural",
+    "edge_rate": "-8%"
+  },
+  "lines": [
+    { "en": "Have you ever given up on something you really wanted to do?", "ja": "本当にやりたかったことを、あきらめたことはありますか？" },
+    { "en": "You started with big plans, but life got busy.", "ja": "大きな計画で始めたのに、毎日が忙しくなった。" },
+    { "en": "One missed day turned into a week, and then a month.", "ja": "1日休んだのが1週間になり、やがて1か月になった。" },
+    { "en": "Now you feel like it's too late to try again.", "ja": "そして今、もう一度やるには遅すぎると感じている。" },
+    { "en": "But here's the truth: stopping is not the same as failing.", "ja": "でも本当は、やめることと失敗することは同じではありません。" },
+    { "en": "Everything you learned before is still with you.", "ja": "前に学んだことは、ちゃんとあなたの中に残っています。" },
+    { "en": "You don't start from zero. You start from experience.", "ja": "ゼロからではなく、経験から始めるのです。" },
+    { "en": "So pick one small thing you can do today.", "ja": "だから、今日できる小さなことをひとつ選びましょう。" },
+    { "en": "Read one page. Say one sentence out loud.", "ja": "1ページ読む。1文を声に出す。" },
+    { "en": "Small steps, taken again and again, become real change.", "ja": "小さな一歩をくり返すと、本当の変化になります。" },
+    { "en": "It's okay to start again. Today is a good day to begin.", "ja": "もう一度始めていい。今日は、始めるのにちょうどいい日です。" }
+  ],
+  "words": [
+    { "en": "give up on ~", "ja": "～をあきらめる" },
+    { "en": "turn into ~", "ja": "～に変わる" },
+    { "en": "the same as ~", "ja": "～と同じ" }
+  ]
+}
