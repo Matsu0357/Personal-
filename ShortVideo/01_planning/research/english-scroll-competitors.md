@@ -30,7 +30,7 @@
 | [@englishwithlovee](https://www.youtube.com/@englishwithlovee/shorts) | 4.46万 | D型（英語のみ・長文チャレンジ） | 853万回、303万回 |
 | [@FluentEnglishStories365](https://www.youtube.com/@FluentEnglishStories365/shorts) | 33.7万 | C型（イラスト＋段落＋単語ハイライト） | 84.6万回 |
 | [@YTSmartEnglish__2025](https://www.youtube.com/@YTSmartEnglish__2025/shorts) | 2.7万 | C型（段落固定・英語のみ、タイトルは日本語もあり） | 93.4万回、57.6万回 |
-| [@Talkful_ai](https://www.youtube.com/@Talkful_ai/shorts) | 約2,500 | **B型（英文＋和訳が1行ずつ流れる、読んでいる行がオレンジ）**。「これでTOEIC700点！」などの見出し | 5.2万回、1.2万回 |
+| [@Talkful_ai](https://www.youtube.com/@Talkful_ai/shorts) | 約2,500 | **B型（英文＋和訳が1行ずつ流れる、読んでいる行がオレンジ）**。「これでTOEIC700点！」などの見出し | 5.2万回 |
 | [@EnglishListeningNews](https://www.youtube.com/@EnglishListeningNews/shorts)（English Mind Gym） | 3.26万 | 20秒ニュース会話＋和訳。地球の映像＋英文 | 数百〜1,500回程度 |
 | [@MoonEnglishschool](https://www.youtube.com/@MoonEnglishschool/shorts) | — | 1文ずつ大きな英文＋和訳（イラスト背景） | 56万回 |
 | [@eigo-wa-tuma-ni-kiku](https://www.youtube.com/@eigo-wa-tuma-ni-kiku/shorts) | 2.4万 | 実写会話 → 2周目に日英字幕 | 103万回 |
